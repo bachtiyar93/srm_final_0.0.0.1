@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "857789042699",
+    "firebase_url": "https://tnb-sweetroom.firebaseio.com",
+    "project_id": "tnb-sweetroom",
+    "storage_bucket": "tnb-sweetroom.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:857789042699:android:844b25be4543c609c2370e",
+        "android_client_info": {
+          "package_name": "com.tnb.srm_final"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "857789042699-aa36eueefqlpm8lja7jrt7abn25vvrmf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyLCMx8xxFFjz4rzBX1VvZKiRbGLVhKXk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "857789042699-aa36eueefqlpm8lja7jrt7abn25vvrmf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
