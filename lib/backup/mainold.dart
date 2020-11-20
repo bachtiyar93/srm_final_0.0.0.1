@@ -2,27 +2,27 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
-import '../splashscreen.dart';
+import '../login_page/src/splashscreen.dart';
 
 
 
-void main() => runApp(App());
+void maint() => runApp(Appt());
 
-class App extends StatelessWidget {
+class Appt extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MyApp(),
+      home: MyApp2(),
     );
   }
 }
 
-class MyApp extends StatefulWidget {
+class MyApp2 extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp2> {
   final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   final TextEditingController _controllerTopic = TextEditingController();

@@ -1,31 +1,70 @@
 import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:srm_final/login_regis/login.dart';
-import 'splashscreen.dart';
+import 'package:srm_final/Body/HomePage/homepage.dart';
+import 'package:srm_final/dashboard_custom/notched.dart';
+import 'package:srm_final/login_page/src/loginPage.dart';
+import 'package:srm_final/login_page/src/welcomePage.dart';
+import 'login_page/src/splashscreen.dart';
+import 'widget/model_hive/anime.dart';
+import 'widget/model_hive/locator.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:path_provider/path_provider.dart' as path_provider;
 
-void main() => runApp(App());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (kIsWeb) {
+    await Hive.initFlutter();
+  } else {
+    final appDirectory = await path_provider.getApplicationDocumentsDirectory();
+    Hive.init(appDirectory.path);
+  }
+  Hive.registerAdapter(ProdukAdapter());
+  setupLocator();
+  runApp(App());
+}
 
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Sweet Room',
+      theme: ThemeData(
+        primarySwatch: Colors.grey,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
       home: MyApp(),
     );
   }
 }
 
 class MyApp extends StatefulWidget {
+
   @override
   _MyAppState createState() => _MyAppState();
 }
-
-class _MyAppState extends State<MyApp> {
+enum LoginStatus { onSplash, onLogin, onDashboard}
+class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
+  LoginStatus _screenStatus = LoginStatus.onDashboard;
   final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   String token = '';
+  int currentIndex = 0;
+  double height = 60;
+  double moveProgress = 0;
+  AnimationController controller;
+  Animation<double> animation;
+  List menuList = [
+    Icons.home,
+    Icons.store,
+    Icons.image,
+    Icons.king_bed_outlined,
+    Icons.person
+  ];
 
   static Future<dynamic> onBackgroundMessageHandler(
       Map<String, dynamic> message) {
@@ -50,25 +89,25 @@ class _MyAppState extends State<MyApp> {
   void _getDataFcm(Map<String, dynamic> message, String type) {
     try {
       String page = '';
-      String name = '';
-      String age = '';
+      String notif = '';
+      String kode = '';
       if (Platform.isIOS) {
-        name = message['name'];
-        age = message['age'];
+        notif = message['notif'];
+        kode = message['kode'];
         page = message['page'];
       } else if (Platform.isAndroid) {
         var data = message['data'];
-        name = data['name'];
-        age = data['age'];
+        notif = data['notif'];
+        kode = data['kode'];
         page = data['page'];
       }
-      debugPrint('name: $name & age: $age & page: $page');
+      debugPrint('notif: $notif & kode: $kode & page: $page');
       switch (type) {
         case 'onResume':
         case 'onLaunch':
           {
-            if (page == "") {
-              Login();
+            if (page == "1") {
+              LoginPage();
             }
             break;
           }
@@ -82,22 +121,25 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  _getSplashStatus() async {
+  _getLoginSplash() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var splash = preferences.getInt('splash');
+    var valueLogin = preferences.getInt('valueLogin');
     preferences.setString('token', token);
     setState(() {
-      if (splash == 1) {
+      if (valueLogin == 1) {
         debugPrint('Splash : Done route to Login Page');
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => Login()),
-        );
+        _screenStatus = LoginStatus.onDashboard;
       } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => SplashConfig()),
-        );
+        if (splash==1) {
+          _screenStatus = LoginStatus.onLogin;
+        } else {
+          _screenStatus = LoginStatus.onSplash;
+        }
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => SplashConfig()),
+        // );
       }
     });
   }
@@ -132,42 +174,138 @@ class _MyAppState extends State<MyApp> {
         this.token = token;
       });
     });
+    controller = AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     super.initState();
-    _getSplashStatus();
+    _getLoginSplash();
   }
 
   @override
   Widget build(BuildContext context) {
-    MediaQueryData mediaQueryData = MediaQuery.of(context);
-    double widthScreen = mediaQueryData.size.width;
+    var KontrolPage;
+    if (menuList[currentIndex] == Icons.person) {
+      KontrolPage = HomePage();
+    }
+    else if (menuList[currentIndex] == Icons.king_bed_outlined) {
+      KontrolPage = HomePage();
+    }
+    else if (menuList[currentIndex] == Icons.image) {
+      KontrolPage = HomePage();
+    }
+    else if (menuList[currentIndex] == Icons.store) {
+      KontrolPage = HomePage();
+    }
+    else {
+      KontrolPage = HomePage();
+    }
+    switch (_screenStatus) {
+      case LoginStatus.onDashboard:
+        return Scaffold(
+          key: _scaffoldState,
+          body: KontrolPage,
+          bottomNavigationBar: LayoutBuilder(
+            builder: (context, constraints) {
+              double width = constraints.maxWidth;
+              double itemWidth = width / menuList.length;
+              double floatingIconRadius = itemWidth * 0.2;
+              return Container(
+                color: Colors.white,
+                child: Stack(children: [
+                  Positioned(
+                    child: Container(
+                      width: width,
+                      child: Stack(
+                        overflow: Overflow.visible,
+                        children: <Widget>[
+                          // floating icon
+                          Positioned(
+                            top: controller.value <= 0.5
+                                ? (controller.value * height - height * 0.2)
+                                : (1 - controller.value) * height -
+                                height * 0.2,
+                            left: moveProgress * itemWidth + itemWidth / 2 -
+                                floatingIconRadius,
+                            child: CircleAvatar(
+                              radius: floatingIconRadius,
+                              backgroundColor: Colors.red,
+                              child: Icon(
+                                menuList[currentIndex],
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
 
-    return Scaffold(
-      key: _scaffoldState,
-      body: SafeArea(
-        child: Center(
-          child: Container(
-            width: widthScreen,
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/ic_logo.png',
-                  height: widthScreen * 0.4,
-                  width: widthScreen * 0.4,
-                ),
-                Text(
-                  "Sweet Room Medan",
-                  style: GoogleFonts.alexBrush(
-                    fontSize: widthScreen * 0.1,
-                    color: Colors.red[900],
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+                          CustomPaint(
+                            child: SizedBox(
+                              height: height,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment
+                                    .spaceAround,
+                                children: menuList
+                                    .asMap()
+                                    .keys
+                                    .map((value) {
+                                  return GestureDetector(
+                                    child: Opacity(
+                                      opacity: currentIndex == value ? 0 : 1,
+                                      child: CircleAvatar(
+                                        backgroundColor: Colors.white,
+                                        child: Icon(menuList[value],
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      changeIndex(value);
+                                    },
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                            painter: NotchedPainter(itemCount: menuList.length,
+                                progress: moveProgress),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ]),
+              );
+            },
+          ), // This trailing comma makes auto-formatting nicer for build methods.
+        );
+      case LoginStatus.onSplash:
+        return SplashConfig();
+        break;
+      case LoginStatus.onLogin:
+        return WelcomePage();
+        break;
+    }
+    }
+    // Switch navigation
+    changeIndex(int newIndex) {
+      double oldPosition = currentIndex.toDouble();
+      double newPosition = newIndex.toDouble();
+      if (oldPosition != newPosition &&
+          controller.status != AnimationStatus.forward) {
+        controller.reset();
+        animation = Tween(begin: oldPosition, end: newPosition)
+            .animate(
+            CurvedAnimation(parent: controller, curve: Curves.easeInOutCubic))
+          ..addListener(() {
+            setState(() => moveProgress = animation.value);
+          })
+          ..addStatusListener((AnimationStatus status) {
+            if (status == AnimationStatus.completed) {
+              setState(() => currentIndex = newIndex);
+            }
+          });
+        controller.forward();
+      }
+    }
+
+    @override
+    void dispose() {
+      controller.dispose();
+      super.dispose();
+    }
 }
