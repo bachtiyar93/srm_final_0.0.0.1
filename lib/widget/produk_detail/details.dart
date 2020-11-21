@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:srm_final/apikey/sumberapi.dart';
 import 'package:srm_final/widget/model_hive/anime.dart';
 import 'package:validators/validators.dart';
 import 'details_row_widget.dart';
+import 'package:http/http.dart' as http;
 
 
 
@@ -38,6 +40,11 @@ class _ProdukDetailsState extends State<ProdukDetails> {
         ),
       ),
     );
+  }
+  @override
+  void initState() {
+     http.post(SumberApi.dilihat, body: {"id": widget.produk.id});
+    super.initState();
   }
   @override
   Widget build(BuildContext context) {

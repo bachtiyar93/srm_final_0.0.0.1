@@ -2,8 +2,10 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:srm_final/widget/model_hive/home_view_model.dart';
 import 'package:srm_final/widget/produk_bar_slide/slide_produk.dart';
 import 'package:srm_final/widget/produkpopuler/produk_populer.dart';
+import 'package:stacked/stacked.dart';
 import 'fungsi/dashboardchat.dart';
 import 'theme/daftarproduk.dart';
 import 'theme/showmenubar.dart';
@@ -37,7 +39,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
+    return ViewModelBuilder<HomeViewModel>.reactive(
+    viewModelBuilder: () => HomeViewModel(),
+    onModelReady: (model) => model.getData(),
+    builder: (context, model, child) => Scaffold(
       key: scaffoldKey,
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
@@ -61,11 +66,11 @@ class _HomePageState extends State<HomePage> {
                 children: <Widget>[
                   titleAndNotifBar(),
                   ProdukTitleBar(),
-                  topBar(),
+                  topBar(model.produkList),
                   kainKami(),
-                  terlaris(),
+                  terlaris(model.produkList),
                   produkReady(),
-                  produkKami(),
+                  produkKami(model.produkList),
                   tipsNews(),
                 ],
               ),
@@ -73,6 +78,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+    )
     );
   }
 
@@ -526,17 +532,17 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-  Widget terlaris() {
-    return ProdukKamiPage();
+  Widget terlaris(List<dynamic> produkList) {
+    return ProdukKamiPage(produkList);
   }
 
-  Widget produkKami() {
-    return ProdukKamiPage();
+  Widget produkKami(List<dynamic> produkList) {
+    return ProdukKamiPage(produkList);
   }
-  Widget topBar() {
+  Widget topBar(List<dynamic> produkList) {
     return Container(
         height: 340,
-        child: SlideProduk());
+        child: SlideProduk(produkList));
   }
 
 

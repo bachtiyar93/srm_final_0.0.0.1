@@ -1,10 +1,12 @@
+import 'dart:core';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:srm_final/widget/model_hive/home_view_model.dart';
-import 'package:stacked/stacked.dart';
 import 'produk_show_slide.dart';
 
 class SlideProduk extends StatefulWidget {
+  SlideProduk(List produkList, {Key key}): this.produkList=produkList ?? [];
+  final List<dynamic> produkList;
+
   @override
   _SlideProdukState createState() => _SlideProdukState();
 }
@@ -27,12 +29,9 @@ class _SlideProdukState extends State<SlideProduk> {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<HomeViewModel>.reactive(
-      viewModelBuilder: () => HomeViewModel(),
-      onModelReady: (model) => model.getData(),
-      builder: (context, model, child) =>  PageView.builder(
+    return PageView.builder(
         controller: pageController,
-          itemCount: model.produkList.length,
+          itemCount: widget.produkList.length,
           itemBuilder: (context, index) {
             double scale = max(viewportFraction, (1 - (pageOffset - index).abs()) + viewportFraction);
             double angle = (pageOffset - index).abs();
@@ -47,12 +46,11 @@ class _SlideProdukState extends State<SlideProduk> {
                   ..rotateY(angle),
                 alignment: Alignment.center,
                 child: ProdukShowSlide(
-                produk: model.produkList[index],
+                produk: widget.produkList[index],
               ),
             ),
             );
           }
-          ),
     );
   }
 }

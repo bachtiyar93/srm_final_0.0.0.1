@@ -10,23 +10,17 @@ class HomeViewModel extends BaseViewModel {
 
   List<dynamic> _produkList = [];
   List<dynamic> get produkList => _produkList;
-  String _text="";
-  String get text=>_text;
-
   final String url = "https://sweetroommedan.com/android/produk_ready.php";
 
   getData() async {
     print("Entered get Data()");
-    _text="Fetching data";
     bool exists = await hiveService.isExists(boxName: "ProdukTabel");
     if (exists) {
-      _text="Fetching from hive";
       print("Getting data from Hive");
       setBusy(true);
       _produkList = await hiveService.getBoxes("ProdukTabel");
       setBusy(false);
     } else {
-      _text="Fetching from Server";
       print("Getting data from Api");
       setBusy(true);
       var result = await apiService.fetchData(url: url);
@@ -46,7 +40,6 @@ class HomeViewModel extends BaseViewModel {
         images: List<String>.from(terima["images"].map((x) => x)));
         _produkList.add(produk);
       }).toList();
-      _text="Caching data";
       await hiveService.addBoxes(_produkList, "ProdukTabel");
       setBusy(false);
     }

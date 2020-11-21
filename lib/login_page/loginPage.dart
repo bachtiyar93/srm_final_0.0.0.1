@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:srm_final/apikey/sumberapi.dart';
-import 'package:srm_final/login_page/src/loginPageMail.dart';
+import 'file:///D:/develop/srm_final/lib/login_page/loginPageMail.dart';
 import 'package:srm_final/main.dart';
 import 'Widget/bezierContainer.dart';
 import 'signup.dart';

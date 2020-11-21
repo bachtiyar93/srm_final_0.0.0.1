@@ -3,4 +3,5 @@ class SumberApi {
   static String logout = 'https://sweetroommedan.com/android/logout.php';
   static String daftar = 'https://sweetroommedan.com/android/daftar.php';
   static String dataproduk ='https://sweetroommedan.com/android/produk_ready.php';
+  static String dilihat ='https://sweetroommedan.com/android/dilihat.php';
 }

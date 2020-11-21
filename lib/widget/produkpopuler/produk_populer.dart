@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:srm_final/widget/model_hive/home_view_model.dart';
 import 'package:srm_final/widget/slidehorizon/produk_item.dart';
-import 'package:stacked/stacked.dart';
 
 class ProdukKamiPage extends StatefulWidget {
+  ProdukKamiPage(List produkList, {Key key}): this.produkList=produkList ?? [];
+  final List<dynamic> produkList;
+
   @override
   _PopularFoodsWidgetState createState() => _PopularFoodsWidgetState();
 }
@@ -18,7 +19,7 @@ class _PopularFoodsWidgetState extends State<ProdukKamiPage> {
         children: <Widget>[
           ProdukTitle(),
           Expanded(
-            child: ProdukItems(),
+            child: ProdukItems(widget.produkList),
           )
         ],
       ),
@@ -68,26 +69,24 @@ class ProdukTitle extends StatelessWidget {
 
 class ProdukItems extends StatelessWidget {
   String query = '';
+  ProdukItems(List produkList, {Key key}): this.produkList=produkList ?? [];
+  final List<dynamic> produkList;
   @override
   Widget build(BuildContext context) {
-    return  ViewModelBuilder<HomeViewModel>.reactive(
-      viewModelBuilder: () => HomeViewModel(),
-      onModelReady: (model) => model.getData(),
-      builder: (context, model, child) => ListView.builder(
+    return  ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: model.produkList.length,
+        itemCount: produkList.length,
         itemBuilder: (context, index) {
           return Container(
             margin: EdgeInsets.all(2),
             child: AspectRatio(
               aspectRatio: 1/1.7,
               child: ProdukItem(
-                produk: model.produkList[index],
+                produk: produkList[index],
               ),
             ),
           );
         },
-      ),
     );
   }
 }

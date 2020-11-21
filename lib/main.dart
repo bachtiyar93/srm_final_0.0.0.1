@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:srm_final/Body/HomePage/homepage.dart';
+import 'package:srm_final/Body/Profile/profile.dart';
 import 'package:srm_final/dashboard_custom/notched.dart';
-import 'package:srm_final/login_page/src/loginPage.dart';
-import 'package:srm_final/login_page/src/welcomePage.dart';
-import 'login_page/src/splashscreen.dart';
+import 'file:///D:/develop/srm_final/lib/login_page/loginPage.dart';
+import 'file:///D:/develop/srm_final/lib/login_page/welcomePage.dart';
+import 'login_page/splashscreen.dart';
 import 'widget/model_hive/anime.dart';
 import 'widget/model_hive/locator.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -183,7 +184,7 @@ class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     var KontrolPage;
     if (menuList[currentIndex] == Icons.person) {
-      KontrolPage = HomePage();
+      KontrolPage = Profile();
     }
     else if (menuList[currentIndex] == Icons.king_bed_outlined) {
       KontrolPage = HomePage();
