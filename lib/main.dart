@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flushbar/flushbar.dart';
+import 'package:flushbar/flushbar_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -7,7 +9,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:srm_final/Body/HomePage/homepage.dart';
 import 'package:srm_final/Body/Profile/profile.dart';
 import 'package:srm_final/dashboard_custom/notched.dart';
-import 'file:///D:/develop/srm_final/lib/login_page/loginPage.dart';
 import 'file:///D:/develop/srm_final/lib/login_page/welcomePage.dart';
 import 'login_page/splashscreen.dart';
 import 'widget/model_hive/anime.dart';
@@ -92,23 +93,44 @@ class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
       String page = '';
       String notif = '';
       String kode = '';
+      String snacktitle = '';
+      String snackbody = '';
       if (Platform.isIOS) {
         notif = message['notif'];
         kode = message['kode'];
         page = message['page'];
+        snacktitle = message['snacktitle'];
+        snackbody = message['snackbody'];
       } else if (Platform.isAndroid) {
         var data = message['data'];
         notif = data['notif'];
         kode = data['kode'];
         page = data['page'];
+        snacktitle = data['snacktitle'];
+        snackbody = data['snackbody'];
       }
-      debugPrint('notif: $notif & kode: $kode & page: $page');
+      debugPrint('notif: $notif & kode: $kode & page: $page $snacktitle $snackbody');
+      showFlushbar(context: context,
+          flushbar: Flushbar(
+            title: snacktitle,
+            message: snackbody,
+            backgroundColor: Colors.red[900].withOpacity(0.3),
+            flushbarPosition: FlushbarPosition.TOP,
+            icon: Icon(
+              Icons.info_outline,
+              size: 28.0,
+              color: Colors.green,
+            ),
+            flushbarStyle: FlushbarStyle.FLOATING,
+            duration: Duration(seconds: 3),
+            boxShadows: [BoxShadow(color: Colors.red[900].withOpacity(0.3), offset: Offset(0.0, 2.0), blurRadius: 3.0,)],
+          )..show(context)
+      );
       switch (type) {
         case 'onResume':
         case 'onLaunch':
           {
             if (page == "1") {
-              LoginPage();
             }
             break;
           }
@@ -121,6 +143,7 @@ class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
       debugPrint("error: $error");
     }
   }
+
 
   _getLoginSplash() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();

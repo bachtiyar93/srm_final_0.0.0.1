@@ -18,7 +18,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
   DateTime backButtonPressTime;
   static const snackBarDuration = Duration(seconds: 2);
   final snackBar = SnackBar(
@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
     viewModelBuilder: () => HomeViewModel(),
     onModelReady: (model) => model.getData(),
     builder: (context, model, child) => Scaffold(
-      key: scaffoldKey,
+      key: _scaffoldState,
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
         onPressed: (){
@@ -625,7 +625,7 @@ class _HomePageState extends State<HomePage> {
 
     if (backButtonHasNotBeenPressedOrSnackBarHasBeenClosed) {
       backButtonPressTime = currentTime;
-      scaffoldKey.currentState.showSnackBar(snackBar);
+      _scaffoldState.currentState.showSnackBar(snackBar);
       return false;
     }
 

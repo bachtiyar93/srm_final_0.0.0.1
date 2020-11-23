@@ -30,6 +30,7 @@ dependencies:
   validators: ^2.0.1
   firebase_analytics: any
   firebase_core: ^0.5.2
+  #design dari adobe di
   adobe_xd: ^1.0.0+1
   # Hive
   hive: ^1.4.4+1

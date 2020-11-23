@@ -1,18 +1,17 @@
-import 'package:srm_final/Body/HomePage/fungsi/sumberapi.dart';
-
-import 'anime.dart';
+import 'package:srm_final/apikey/sumberapi.dart';
+import 'package:srm_final/widget/model_hive_profile/profile.dart';
 import 'package:stacked/stacked.dart';
 import 'api_service.dart';
 import 'hive_service.dart';
 import 'locator.dart';
 
-class HomeViewModel extends BaseViewModel {
+class HomeProfile extends BaseViewModel {
   final HiveService hiveService = locator<HiveService>();
   final APIService apiService = locator<APIService>();
 
   List<dynamic> _produkList = [];
   List<dynamic> get produkList => _produkList;
-  final String url = SumberApi.dataproduk;
+  final String url = SumberApi.profile;
 
   getData() async {
     print("Entered get Data()");
@@ -27,8 +26,8 @@ class HomeViewModel extends BaseViewModel {
       setBusy(true);
       var result = await apiService.fetchData(url: url);
       (result as List).map((terima) {
-        Produk produk = Produk(
-            id: int.parse(terima["id"]),
+        Profile profile = Profile(
+        id: int.parse(terima["id"]),
         kain: terima["kain"],
         seri: terima["seri"],
         harga: int.parse(terima["harga"]),
@@ -40,7 +39,7 @@ class HomeViewModel extends BaseViewModel {
         pembeli: int.parse(terima["pembeli"]),
         dilihat: int.parse(terima["dilihat"]),
         images: List<String>.from(terima["images"].map((x) => x)));
-        _produkList.add(produk);
+        _produkList.add(profile);
       }).toList();
       await hiveService.addBoxes(_produkList, "ProdukTabel");
       setBusy(false);
