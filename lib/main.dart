@@ -9,15 +9,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:srm_final/Body/HomePage/homepage.dart';
 import 'package:srm_final/Body/Profile/profile.dart';
 import 'package:srm_final/dashboard_custom/notched.dart';
-import 'file:///D:/develop/srm_final/lib/login_page/welcomePage.dart';
+import 'package:stacked/stacked.dart';
 import 'login_page/splashscreen.dart';
+import 'login_page/welcomePage.dart';
 import 'widget/model_hive/anime.dart';
 import 'widget/model_hive/locator.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:path_provider/path_provider.dart' as path_provider;
 
+import 'widget/model_hive_profile/view_model.dart';
+
 void main() async {
+  await Hive.initFlutter();
   WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb) {
     await Hive.initFlutter();
@@ -207,7 +211,22 @@ class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     var KontrolPage;
     if (menuList[currentIndex] == Icons.person) {
-      KontrolPage = Profile();
+      KontrolPage = ViewModelBuilder<HomeProfile>.reactive(
+          viewModelBuilder: () => HomeProfile(),
+          onModelReady: (model) => model.getData(),
+          builder: (context, model, child) => ProfilePage(
+            model.produkReadydata,
+            model.appNewsdata,
+            model.iddata,
+            model.namadata,
+            model.phonedata,
+            model.alamatdata,
+            model.emaildata,
+            model.passworddata,
+            model.tgldaftardata,
+            model.statusdata,
+            model.updatedata,
+          ));
     }
     else if (menuList[currentIndex] == Icons.king_bed_outlined) {
       KontrolPage = HomePage();

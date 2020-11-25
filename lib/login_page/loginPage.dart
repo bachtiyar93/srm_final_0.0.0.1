@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:srm_final/apikey/sumberapi.dart';
-import 'file:///D:/develop/srm_final/lib/login_page/loginPageMail.dart';
 import 'package:srm_final/main.dart';
 import 'Widget/bezierContainer.dart';
+import 'loginPageMail.dart';
 import 'signup.dart';
 
 class LoginPage extends StatefulWidget {
@@ -465,7 +465,6 @@ class _LoginPageState extends State<LoginPage> {
         body: {"phone": phone, "password": password, "token": token});
     //terima data
     final data = jsonDecode(response.body);
-
     int valueLogin =data['value'];
     String pesanApi =data['message'];
 

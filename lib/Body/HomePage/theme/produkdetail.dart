@@ -349,7 +349,6 @@ class _ProdukDetailState extends State<ProdukDetail> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-
           Text(
             title,
             style: TextStyle(

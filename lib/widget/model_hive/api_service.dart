@@ -4,7 +4,7 @@ import 'package:injectable/injectable.dart';
 
 @lazySingleton
 class APIService {
-  fetchData({String url}) async {
+  fetchData({String url, String value}) async {
     final fetchUrl = Uri.encodeFull(url);
     final headers = {"Accept": "application/json"};
     final response = await http.post(fetchUrl, headers: headers);

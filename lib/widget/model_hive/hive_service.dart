@@ -9,7 +9,7 @@ class HiveService {
     return length != 0;
   }
 
-  addBoxes<T>(List<T> items, String boxName) async {
+  addBoxesTypeList<T>(List<T> items, String boxName) async {
     print("adding boxes");
     final openBox = await Hive.openBox(boxName);
 
@@ -18,7 +18,7 @@ class HiveService {
     }
   }
 
-  getBoxes<T>(String boxName) async {
+  getBoxesTypeList<T>(String boxName) async {
     List<T> boxList = List<T>();
 
     final openBox = await Hive.openBox(boxName);
@@ -31,4 +31,5 @@ class HiveService {
 
     return boxList;
   }
+
 }

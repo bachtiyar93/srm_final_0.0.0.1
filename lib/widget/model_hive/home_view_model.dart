@@ -20,7 +20,7 @@ class HomeViewModel extends BaseViewModel {
     if (exists) {
       print("Getting data from Hive");
       setBusy(true);
-      _produkList = await hiveService.getBoxes("ProdukTabel");
+      _produkList = await hiveService.getBoxesTypeList("ProdukTabel");
       setBusy(false);
     } else {
       print("Getting data from Api");
@@ -42,7 +42,7 @@ class HomeViewModel extends BaseViewModel {
         images: List<String>.from(terima["images"].map((x) => x)));
         _produkList.add(produk);
       }).toList();
-      await hiveService.addBoxes(_produkList, "ProdukTabel");
+      await hiveService.addBoxesTypeList(_produkList, "ProdukTabel");
       setBusy(false);
     }
   }
