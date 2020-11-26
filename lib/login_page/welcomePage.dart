@@ -22,7 +22,7 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   var theme;
-  String fingerPrint, phoneText, sandi, tombolLogin, phoneInvalid, sandisalah, registrasi;
+  String fingerPrint='', phoneText='', sandi='', tombolLogin='', phoneInvalid='', sandisalah='', registrasi='';
   void changeBahasa() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var bahasa = preferences.getInt('bahasa');
@@ -49,7 +49,7 @@ class _WelcomePageState extends State<WelcomePage> {
     }
   }
 
-  Color gradientBawah, gradientAtas, loginButton, fontButton, shimer;
+  Color gradientBawah=Colors.white, gradientAtas=Colors.white, loginButton=Colors.white, fontButton=Colors.white, shimer=Colors.white;
   void changeTheme() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     theme = preferences.getInt('theme');

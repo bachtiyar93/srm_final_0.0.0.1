@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:custom_progress_dialog/custom_progress_dialog.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flushbar/flushbar_route.dart';
@@ -8,6 +10,7 @@ import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:srm_final/Body/HomePage/homepage.dart';
 import 'package:srm_final/Body/Profile/profile.dart';
+import 'package:srm_final/apikey/sumberapi.dart';
 import 'package:srm_final/dashboard_custom/notched.dart';
 import 'package:stacked/stacked.dart';
 import 'login_page/splashscreen.dart';
@@ -17,7 +20,7 @@ import 'widget/model_hive/locator.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:path_provider/path_provider.dart' as path_provider;
-
+import 'package:http/http.dart' as http;
 import 'widget/model_hive_profile/view_model.dart';
 
 void main() async {
@@ -50,6 +53,7 @@ class App extends StatelessWidget {
 
 class MyApp extends StatefulWidget {
 
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -65,10 +69,10 @@ class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
   AnimationController controller;
   Animation<double> animation;
   List menuList = [
-    Icons.home,
     Icons.store,
-    Icons.image,
-    Icons.king_bed_outlined,
+    Icons.shopping_bag_outlined,
+    Icons.shopping_cart,
+    Icons.library_books_outlined,
     Icons.person
   ];
 
@@ -171,6 +175,34 @@ class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
       }
     });
   }
+  ProgressDialog _progressDialog = ProgressDialog();
+  void signOut() async {
+    _progressDialog.showProgressDialog(context,
+        dismissAfter: Duration(seconds: 5),
+        textToBeDisplayed: 'System in Progress...',
+        onDismiss: () {});
+    var idadd = await  Hive.openBox('id');
+    var _iddata = idadd.get('id');
+    final response = await http.post(SumberApi.logout, body: {"id": _iddata});
+    final data = jsonDecode(response.body);
+    int valueApi = data['value'];
+    _progressDialog.dismissProgressDialog(context);
+    if (valueApi == 0) {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      setState(() {
+        preferences.setInt('valueLogin',valueApi);
+        _screenStatus = LoginStatus.onLogin;
+      });
+    } else {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: Text("Connection Error, Please try again!"),
+            );
+          });
+    }
+  }
 
   @override
   void initState() {
@@ -226,15 +258,16 @@ class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
             model.tgldaftardata,
             model.statusdata,
             model.updatedata,
+            signOut,
           ));
     }
-    else if (menuList[currentIndex] == Icons.king_bed_outlined) {
+    else if (menuList[currentIndex] == Icons.shopping_bag_outlined) {
       KontrolPage = HomePage();
     }
-    else if (menuList[currentIndex] == Icons.image) {
+    else if (menuList[currentIndex] == Icons.shopping_cart) {
       KontrolPage = HomePage();
     }
-    else if (menuList[currentIndex] == Icons.store) {
+    else if (menuList[currentIndex] == Icons.library_books) {
       KontrolPage = HomePage();
     }
     else {

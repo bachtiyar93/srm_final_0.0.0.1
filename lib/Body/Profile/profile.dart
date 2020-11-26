@@ -1,6 +1,6 @@
+
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
-import 'package:hive/hive.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage(
@@ -14,19 +14,20 @@ class ProfilePage extends StatefulWidget {
       this.passworddata,
       this.tgldaftardata,
       this.statusdata,
-      this.updatedata);
+      this.updatedata, this.signOut);
   final produkReadydata,appNewsdata, iddata,namadata,phonedata,alamatdata,emaildata,passworddata,tgldaftardata,statusdata,updatedata;
-
-
-
-
-
+  final VoidCallback signOut;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<ProfilePage> {
+  signOut() {
+    setState(() {
+      widget.signOut();
+    });
+  }
   PageController pageController;
   double viewportFraction = 0.8;
   double pageOffset = 0;
@@ -326,13 +327,16 @@ class _MyHomePageState extends State<ProfilePage> {
                                                 ],
                                               ),
                                               SizedBox(width: 10),
-                                              Row(
-                                                children: [
-                                                  Icon(Icons.exit_to_app),
-                                                  Text('Logout',
-                                                      style: TextStyle(
-                                                          fontSize: 20)),
-                                                ],
+                                              TextButton(
+                                                onPressed: signOut,
+                                                child: Row(
+                                                  children: [
+                                                    Icon(Icons.exit_to_app),
+                                                    Text('Logout',
+                                                        style: TextStyle(
+                                                            fontSize: 20)),
+                                                  ],
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -462,10 +466,5 @@ class _MyHomePageState extends State<ProfilePage> {
         profileView()
       ],
     );
-  }
-  @override
-  void dispose() {
-    Hive.close();
-    super.dispose();
   }
 }
