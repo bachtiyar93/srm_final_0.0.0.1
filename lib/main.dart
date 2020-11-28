@@ -157,7 +157,6 @@ class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var splash = preferences.getInt('splash');
     var valueLogin = preferences.getInt('valueLogin');
-    preferences.setString('token', token);
     setState(() {
       if (valueLogin == 1) {
         debugPrint('Splash : Done route to Login Page');
@@ -228,7 +227,9 @@ class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
         .listen((IosNotificationSettings settings) {
       debugPrint("Settings registered: $settings");
     });
-    _firebaseMessaging.getToken().then((String token) {
+    _firebaseMessaging.getToken().then((String token) async {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.setString('token', token);
       debugPrint('getToken: $token');
       setState(() {
         this.token = token;

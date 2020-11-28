@@ -30,6 +30,8 @@ dependencies:
   validators: ^2.0.1
   firebase_analytics: any
   firebase_core: ^0.5.2
+  #Network cached
+  cached_network_image: ^2.3.3
   #design dari adobe di
   adobe_xd: ^1.0.0+1
   # Hive

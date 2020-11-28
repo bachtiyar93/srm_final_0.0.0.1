@@ -1,4 +1,5 @@
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 
@@ -66,12 +67,13 @@ class _MyHomePageState extends State<ProfilePage> {
                     CircleAvatar(
                       radius: 70,
                       child: ClipOval(
-                        child: Image.network(
-                          'https://www.genpi.co/timthumb.php?src=http://fs.genpi.co/uploads/data/images/idaman(1).png&w=820&a=br&zc=1',
-                          height: 150,
-                          width: 150,
-                          fit: BoxFit.cover,
-                        ),
+                        child: CachedNetworkImage(
+                          imageUrl:
+                            'https://www.genpi.co/timthumb.php?src=http://fs.genpi.co/uploads/data/images/idaman(1).png&w=820&a=br&zc=1',
+                            height: 150,
+                            width: 150,
+                            fit: BoxFit.cover,
+                        )
                       ),
                     ),
                     Positioned(

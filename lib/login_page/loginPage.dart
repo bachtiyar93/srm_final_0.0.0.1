@@ -7,7 +7,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:srm_final/apikey/sumberapi.dart';
 import 'package:srm_final/main.dart';
-import 'package:srm_final/widget/model_hive_profile/view_model.dart';
 import 'Widget/bezierContainer.dart';
 import 'loginPageMail.dart';
 import 'signup.dart';
@@ -444,7 +443,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
     ));
       case LoginStatus.suksesSignIn:
-        return MyApp();
+        return App();
         break;
     }
   }
@@ -460,6 +459,7 @@ class _LoginPageState extends State<LoginPage> {
       login();
     }
   }
+
   void login() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var token = preferences.getString('token');
@@ -481,10 +481,8 @@ class _LoginPageState extends State<LoginPage> {
     String update= data["update"];
     String pesanApi =data['message'];
 
-
     if (valueLogin == 1) {
       debugPrint('value: '+valueLogin.toString());
-      debugPrint('Token dikirim: '+token);
       //hive Buka
       var produkReadyaddt =await  Hive.openBox('produkReady');
       var appNewsaddt = await  Hive.openBox('appNews');
@@ -498,7 +496,6 @@ class _LoginPageState extends State<LoginPage> {
       var statusaddt =await Hive.openBox('status');
       var updateaddt = await Hive.openBox('update');
 
-
       //hive isi
       produkReadyaddt.put('produkReady', produkReady);
       appNewsaddt.put('appNews', appNews);
@@ -511,11 +508,11 @@ class _LoginPageState extends State<LoginPage> {
       tgldaftaraddt.put('tgldaftar', tgldaftar);
       statusaddt.put('status', status);
       updateaddt.put('update', update);
+
       setState(() {
         _loginStatus = LoginStatus.suksesSignIn;
         saveInformasiLogin(valueLogin);
       });
-      HomeProfile();
       _progressDialog.dismissProgressDialog(context);
     } else {
       setState(() {

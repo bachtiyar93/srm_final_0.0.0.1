@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:custom_progress_dialog/custom_progress_dialog.dart';
 import 'package:flutter/material.dart';
@@ -308,7 +309,7 @@ class _LoginPageMailState extends State<LoginPageMail> {
     });
   }
   bool isPassword=true;
-  var email, password;
+  var _email, _password;
   RegExp regx = RegExp(r"^[a-z0-9.a-z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-z0-9]+\.[a-z]+",caseSensitive: false);
   Widget _emailPasswordWidget() {
     return Form(
@@ -335,7 +336,7 @@ class _LoginPageMailState extends State<LoginPageMail> {
                           return emailInvalid;
                         } return null;
                       },
-                      onSaved: (e) => email = e,
+                      onSaved: (e) => _email = e,
                       cursorColor: fontColor,
                       decoration: InputDecoration(
                           hintText: "email@mail.com",
@@ -366,7 +367,7 @@ class _LoginPageMailState extends State<LoginPageMail> {
                         } return null;
                       },
                       obscureText: isPassword,
-                      onSaved: (e) => password = e,
+                      onSaved: (e) => _password = e,
                       decoration: InputDecoration(
                           suffixIcon: IconButton(
                             onPressed: showHide,
@@ -455,26 +456,54 @@ class _LoginPageMailState extends State<LoginPageMail> {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var token = preferences.getString('token');
     final response = await http.post(SumberApi.login,
-        body: {"email": email, "password": password, "token": token});
+        body: {"email": _email, "password": _password, "token": token});
     //terima data
     final data = jsonDecode(response.body);
-
-    int _id = data['id'];
-    String _nama = data['nama'];
-    String _phone = data['phone'];
-    String _alamat = data['alamat'];
-    String _email = data ['email'];
-    String _password =data ['password'];
-    String _tgldaftar = data['tgldaftar'];
-    String _status =data['status'];
     int valueLogin =data['value'];
+    String produkReady = data["produk_ready"];
+    String appNews= data["app_news"];
+    String id= data["id"];
+    String nama= data["nama"];
+    String phone= data["phone"];
+    String alamat= data["alamat"];
+    String email= data["email"];
+    String password= data["password"];
+    String  tgldaftar= data["tgldaftar"];
+    String status= data["status"];
+    String update= data["update"];
     String pesanApi =data['message'];
 
-
     if (valueLogin == 1) {
+      debugPrint('value: '+valueLogin.toString());
+      //hive Buka
+      var produkReadyaddt =await  Hive.openBox('produkReady');
+      var appNewsaddt = await  Hive.openBox('appNews');
+      var idaddt = await  Hive.openBox('id');
+      var namaaddt =await  Hive.openBox('nama');
+      var phoneaddt = await Hive.openBox('phone');
+      var alamataddt = await Hive.openBox('alamat');
+      var emailaddt =await Hive.openBox('email');
+      var passwordaddt = await Hive.openBox('password');
+      var tgldaftaraddt = await Hive.openBox('tgldaftar');
+      var statusaddt =await Hive.openBox('status');
+      var updateaddt = await Hive.openBox('update');
+
+      //hive isi
+      produkReadyaddt.put('produkReady', produkReady);
+      appNewsaddt.put('appNews', appNews);
+      idaddt.put('id', id);
+      namaaddt.put('nama', nama);
+      phoneaddt.put('phone', phone);
+      alamataddt.put('alamat', alamat);
+      emailaddt.put('email', email);
+      passwordaddt.put('password', password);
+      tgldaftaraddt.put('tgldaftar', tgldaftar);
+      statusaddt.put('status', status);
+      updateaddt.put('update', update);
+
       setState(() {
         _loginStatus = valueLogin == 1 ? LoginStatus.suksesSignIn : LoginStatus.belumSignIn;
-        saveInformasiLogin(valueLogin, _id, _nama, _phone, _alamat, _email, _password, _tgldaftar,_status);
+        saveInformasiLogin(valueLogin);
       });
       _progressDialog.dismissProgressDialog(context);
     } else {
@@ -491,68 +520,11 @@ class _LoginPageMailState extends State<LoginPageMail> {
           });
     }
   }
-  void saveInformasiLogin(valueLogin, _id, _nama, _phone, _alamat, _email, _password, _tgldaftar,_status) async {
+  void saveInformasiLogin(valueLogin) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       preferences.setInt("valueLogin", valueLogin);
-      preferences.setString("_id", _id);
-      preferences.setString("_phone", _phone);
-      preferences.setString("_alamat", _alamat);
-      preferences.setString("_email", _email);
-      preferences.setString("_password", _password);
-      preferences.setString("_tgldaftar", _tgldaftar);
-      preferences.setString("_status", _status);
-      // ignore: deprecated_member_use
-      preferences.commit();
       _loginStatus = LoginStatus.suksesSignIn;
     });
   }
-
-  var getId;
-  int getValueLogin;
-  //digunakan untuk pengiriman data logout
-  void konfirmasiDariServer() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    setState(() {
-      getValueLogin = preferences.getInt("valueLogin");
-      getId = preferences.getString("_id");
-    });
-  }
-
-  void signOut() async {
-    _progressDialog.showProgressDialog(context,
-        dismissAfter: Duration(seconds: 5),
-        textToBeDisplayed: 'System in Progress...',
-        onDismiss: () {});
-    final response = await http.post(SumberApi.logout, body: {"id": getId});
-    final data = jsonDecode(response.body);
-    int valueApi = data['value'];
-    _progressDialog.dismissProgressDialog(context);
-    if (valueApi == 0) {
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              content: Text(logoutSukses),
-            );
-          });
-      setState(() {
-        preferences.remove('valueLogin');
-        // ignore: deprecated_member_use
-        preferences.commit();
-        _loginStatus = LoginStatus.belumSignIn;
-      });
-    } else {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              content: Text(logoutGagal),
-            );
-          });
-    }
-  }
-
-
 }

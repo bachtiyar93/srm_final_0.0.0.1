@@ -1,7 +1,11 @@
+import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive/hive.dart';
+import 'package:srm_final/apikey/sumberapi.dart';
+import 'package:srm_final/main.dart';
 import 'package:srm_final/widget/model_hive/home_view_model.dart';
 import 'package:srm_final/widget/produk_bar_slide/slide_produk.dart';
 import 'package:srm_final/widget/produkpopuler/produk_populer.dart';
@@ -10,6 +14,7 @@ import 'fungsi/dashboardchat.dart';
 import 'theme/daftarproduk.dart';
 import 'theme/showmenubar.dart';
 import 'theme/theme.dart';
+import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
 
@@ -35,10 +40,164 @@ class _HomePageState extends State<HomePage> {
           letterSpacing: 1.2),
     );
   }
+  void cekServer() async{
+    final response = await http.post(SumberApi.profile);
+    //terima data
+    final data = jsonDecode(response.body);
+    String produkReady = data["produk_ready"];
+    String appNews= data["app_news"];
 
+    var produkReadyOld =await  Hive.openBox('produkReady');
+    var appNewsOld = await  Hive.openBox('appNews');
+
+    var _produkReadydataOld = produkReadyOld.get('produkReady');
+    var _appNewsdataOld = appNewsOld.get('appNews');
+
+    var _produkReadydataNow = produkReady;
+    var _appNewsdataNow = appNews;
+    debugPrint('Data baru $_produkReadydataNow, $_appNewsdataNow, data lama $_produkReadydataOld,$_appNewsdataOld');
+    if ( _produkReadydataNow == _produkReadydataOld){
+      if(_appNewsdataNow == _appNewsdataOld){
+        debugPrint('Database up to date');
+      }else {
+        setState(() {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  actions: [
+                    FlatButton(
+                        color: Colors.red,
+                        onPressed: () async {
+                          var appNewsOld = await  Hive.openBox('appNews');
+                          appNewsOld.put('appNews', _appNewsdataNow);//download produk
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('Update Now'))
+                  ],
+                  content: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Text('Produk'),
+                          Text('Up to date')
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text('Umpan Baru tersedia'),
+                          FlatButton(
+                              onPressed: null,
+                              child: Text('Versi:$_appNewsdataNow'))
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              });
+        });
+      }
+    }else {
+      if(_appNewsdataNow == _appNewsdataOld){
+        setState(() {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  actions: [
+                    FlatButton(
+                        color: Colors.red,
+                        onPressed: () async {
+                          var box = Hive.box('ProdukTabel');
+                          box.deleteFromDisk();
+                          var produkReadyOld = await  Hive.openBox('produkReady');
+                          produkReadyOld.put('produkReady', _produkReadydataNow);
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => App()),
+                          );
+                        },
+                        child: Text('Update Now'))
+                  ],
+                  content: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Text('Produk Baru tersedia'),
+                          FlatButton(onPressed: null,
+                              child: Text('Versi:$_produkReadydataNow'))
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text('Umpan'),
+                          FlatButton(onPressed: null,
+                              child: Text('Up to date'))
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              });
+        });
+      }else {
+        setState(() {
+          Hive.deleteBoxFromDisk('ProdukTabel');
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  actions: [
+                    FlatButton(
+                      color: Colors.red,
+                        onPressed: () async {
+                          var box = Hive.box('ProdukTabel');
+                          box.deleteFromDisk();
+                          var produkReadyOld = await  Hive.openBox('produkReady');
+                          var appNewsOld = await  Hive.openBox('appNews');
+                          produkReadyOld.put('produkReady', _produkReadydataNow);
+                          appNewsOld.put('appNews', _appNewsdataNow);//download produk
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => App()),
+                          );
+                        },
+                        child: Text('Update Now'))
+                  ],
+                  content: Container(
+                    height: 130,
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Text('Produk Baru tersedia'),
+                            FlatButton(onPressed: null,
+                                child: Text('Versi:$_produkReadydataNow'))
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text('Umpan baru tersedia'),
+                            FlatButton(onPressed: null,
+                                child: Text('Versi:$_appNewsdataNow'))
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              });
+        });
+      }
+    }
+  }
+  @override
+  void initState() {
+    super.initState();
+    cekServer();
+  }
   @override
   Widget build(BuildContext context) {
-
     return ViewModelBuilder<HomeViewModel>.reactive(
     viewModelBuilder: () => HomeViewModel(),
     onModelReady: (model) => model.getData(),
@@ -632,6 +791,7 @@ class _HomePageState extends State<HomePage> {
     return true;
   }
 }
+
 
 class ProdukTitleBar extends StatelessWidget {
   @override
