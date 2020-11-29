@@ -6,10 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:srm_final/apikey/sumberapi.dart';
 import 'package:srm_final/main.dart';
-import 'package:srm_final/widget/model_hive/home_view_model.dart';
 import 'package:srm_final/widget/produk_bar_slide/slide_produk.dart';
 import 'package:srm_final/widget/produkpopuler/produk_populer.dart';
-import 'package:stacked/stacked.dart';
 import 'fungsi/dashboardchat.dart';
 import 'theme/daftarproduk.dart';
 import 'theme/showmenubar.dart';
@@ -17,6 +15,8 @@ import 'theme/theme.dart';
 import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
+  HomePage(List produkList): this.produkList=produkList ?? [];
+  final produkList;
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -75,23 +75,26 @@ class _HomePageState extends State<HomePage> {
                         },
                         child: Text('Update Now'))
                   ],
-                  content: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Text('Produk'),
-                          Text('Up to date')
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Text('Umpan Baru tersedia'),
-                          FlatButton(
-                              onPressed: null,
-                              child: Text('Versi:$_appNewsdataNow'))
-                        ],
-                      ),
-                    ],
+                  content: Container(
+                    height: 130,
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Text('Produk'),
+                            Text('Up to date')
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text('Umpan Baru tersedia'),
+                            FlatButton(
+                                onPressed: null,
+                                child: Text('Versi:$_appNewsdataNow'))
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 );
               });
@@ -119,23 +122,26 @@ class _HomePageState extends State<HomePage> {
                         },
                         child: Text('Update Now'))
                   ],
-                  content: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Text('Produk Baru tersedia'),
-                          FlatButton(onPressed: null,
-                              child: Text('Versi:$_produkReadydataNow'))
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Text('Umpan'),
-                          FlatButton(onPressed: null,
-                              child: Text('Up to date'))
-                        ],
-                      ),
-                    ],
+                  content: Container(
+                    height: 130,
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Text('Produk Baru tersedia'),
+                            FlatButton(onPressed: null,
+                                child: Text('Versi:$_produkReadydataNow'))
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text('Umpan'),
+                            FlatButton(onPressed: null,
+                                child: Text('Up to date'))
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 );
               });
@@ -198,10 +204,8 @@ class _HomePageState extends State<HomePage> {
   }
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<HomeViewModel>.reactive(
-    viewModelBuilder: () => HomeViewModel(),
-    onModelReady: (model) => model.getData(),
-    builder: (context, model, child) => Scaffold(
+    debugPrint('on HomePage');
+    return Scaffold(
       key: _scaffoldState,
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
@@ -225,11 +229,11 @@ class _HomePageState extends State<HomePage> {
                 children: <Widget>[
                   titleAndNotifBar(),
                   ProdukTitleBar(),
-                  topBar(model.produkList),
+                  topBar(widget.produkList),
                   kainKami(),
-                  terlaris(model.produkList),
+                  terlaris(widget.produkList),
                   produkReady(),
-                  produkKami(model.produkList),
+                  produkKami(widget.produkList),
                   tipsNews(),
                 ],
               ),
@@ -237,7 +241,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-    )
     );
   }
 

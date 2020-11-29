@@ -23,6 +23,7 @@ class _ProdukDetailState extends State<ProdukDetail> {
   }
 
   Widget buildIndicator(bool isActive){
+    debugPrint('on Produk Detail');
     return AnimatedContainer(
       duration: Duration(milliseconds: 100),
       margin: EdgeInsets.symmetric(horizontal: 6),

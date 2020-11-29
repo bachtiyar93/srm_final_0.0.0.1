@@ -10,12 +10,16 @@ import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:srm_final/Body/HomePage/homepage.dart';
 import 'package:srm_final/Body/Profile/profile.dart';
+import 'package:srm_final/Body/cart/cart.dart';
+import 'package:srm_final/Body/help/help.dart';
+import 'package:srm_final/Body/produk/produk_card.dart';
 import 'package:srm_final/apikey/sumberapi.dart';
 import 'package:srm_final/dashboard_custom/notched.dart';
 import 'package:stacked/stacked.dart';
 import 'login_page/splashscreen.dart';
 import 'login_page/welcomePage.dart';
 import 'widget/model_hive/anime.dart';
+import 'widget/model_hive/home_view_model.dart';
 import 'widget/model_hive/locator.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -242,43 +246,14 @@ class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    var KontrolPage;
-    if (menuList[currentIndex] == Icons.person) {
-      KontrolPage = ViewModelBuilder<HomeProfile>.reactive(
-          viewModelBuilder: () => HomeProfile(),
-          onModelReady: (model) => model.getData(),
-          builder: (context, model, child) => ProfilePage(
-            model.produkReadydata,
-            model.appNewsdata,
-            model.iddata,
-            model.namadata,
-            model.phonedata,
-            model.alamatdata,
-            model.emaildata,
-            model.passworddata,
-            model.tgldaftardata,
-            model.statusdata,
-            model.updatedata,
-            signOut,
-          ));
-    }
-    else if (menuList[currentIndex] == Icons.shopping_bag_outlined) {
-      KontrolPage = HomePage();
-    }
-    else if (menuList[currentIndex] == Icons.shopping_cart) {
-      KontrolPage = HomePage();
-    }
-    else if (menuList[currentIndex] == Icons.library_books) {
-      KontrolPage = HomePage();
-    }
-    else {
-      KontrolPage = HomePage();
-    }
     switch (_screenStatus) {
       case LoginStatus.onDashboard:
-        return Scaffold(
+        return ViewModelBuilder<HomeViewModel>.reactive(
+            viewModelBuilder: () => HomeViewModel(),
+            onModelReady: (model) => model.getData(),
+            builder: (context, model, child) => Scaffold(
           key: _scaffoldState,
-          body: KontrolPage,
+          body: KontrolPage(model.produkList),
           bottomNavigationBar: LayoutBuilder(
             builder: (context, constraints) {
               double width = constraints.maxWidth;
@@ -348,7 +323,8 @@ class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
                 ]),
               );
             },
-          ), // This trailing comma makes auto-formatting nicer for build methods.
+          ),
+            )// This trailing comma makes auto-formatting nicer for build methods.
         );
       case LoginStatus.onSplash:
         return SplashConfig();
@@ -385,4 +361,38 @@ class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
       controller.dispose();
       super.dispose();
     }
+
+  KontrolPage(List produkList) {
+    if (menuList[currentIndex] == Icons.person) {
+      return ViewModelBuilder<HomeProfile>.reactive(
+          viewModelBuilder: () => HomeProfile(),
+          onModelReady: (model) => model.getData(),
+          builder: (context, model, child) => ProfilePage(
+            model.produkReadydata,
+            model.appNewsdata,
+            model.iddata,
+            model.namadata,
+            model.phonedata,
+            model.alamatdata,
+            model.emaildata,
+            model.passworddata,
+            model.tgldaftardata,
+            model.statusdata,
+            model.updatedata,
+            signOut,
+          ));
+    }
+    else if (menuList[currentIndex] == Icons.shopping_bag_outlined) {
+      return ProdukPage(produkList);
+    }
+    else if (menuList[currentIndex] == Icons.shopping_cart) {
+       return CartPage();
+    }
+    else if (menuList[currentIndex] == Icons.library_books) {
+      return HelpPage();
+    }
+    else {
+      return HomePage(produkList);
+    }
+  }
 }

@@ -27,6 +27,7 @@ class _DaftarProdukState extends State<DaftarProduk> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('on DaftarProduk');
     //Ukuran
     var spesialsize;
     //specialSize

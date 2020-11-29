@@ -45,319 +45,325 @@ class _MyHomePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('on Profile');
     return Scaffold(body: stack()
         // This trailing comma makes auto-formatting nicer for build methods.
         );
   }
 
   Widget profileView() {
-          return Column(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.fromLTRB(30, 50, 30, 30),
-                child: Text(
-                  'Profile Detail',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 50),
-                child: Stack(
-                  children: <Widget>[
-                    CircleAvatar(
-                      radius: 70,
-                      child: ClipOval(
-                        child: CachedNetworkImage(
-                          imageUrl:
-                            'https://www.genpi.co/timthumb.php?src=http://fs.genpi.co/uploads/data/images/idaman(1).png&w=820&a=br&zc=1',
-                            height: 150,
-                            width: 150,
-                            fit: BoxFit.cover,
-                        )
+          return SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Container(
+                  height: 290,
+                  child: Column(children: [
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(30, 50, 30, 30),
+                      child: Text(
+                        'Profile Detail',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    Positioned(
-                        bottom: 1,
-                        right: 1,
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 50),
+                      child: Stack(
+                        children: <Widget>[
+                          CircleAvatar(
+                            radius: 70,
+                            child: ClipOval(
+                                child: CachedNetworkImage(
+                                  imageUrl:
+                                  'https://www.genpi.co/timthumb.php?src=http://fs.genpi.co/uploads/data/images/idaman(1).png&w=820&a=br&zc=1',
+                                  height: 150,
+                                  width: 150,
+                                  fit: BoxFit.cover,
+                                )
+                            ),
+                          ),
+                          Positioned(
+                              bottom: 1,
+                              right: 1,
+                              child: Container(
+                                height: 40,
+                                width: 40,
+                                child: Icon(
+                                  Icons.add_a_photo,
+                                  color: Colors.white,
+                                ),
+                                decoration: BoxDecoration(
+                                    color: Colors.deepOrange,
+                                    borderRadius: BorderRadius.all(Radius.circular(
+                                        20))),
+                              ))
+                        ],
+                      ),
+                    ),
+                  ],
+                  ),
+                ),
+                Container(
+                  height: 450,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                          topRight: Radius.circular(30)),
+                      gradient: LinearGradient(
+                          begin: Alignment.topRight,
+                          end: Alignment.bottomLeft,
+                          colors: [
+                            Color.fromRGBO(40, 10, 10, 0.8),
+                            Colors.red[900].withOpacity(0.8),
+                            Colors.redAccent.withOpacity(0.8)
+                          ])),
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(
+                            20, 25, 20, 4),
                         child: Container(
-                          height: 40,
-                          width: 40,
-                          child: Icon(
-                            Icons.add_a_photo,
-                            color: Colors.white,
+                          height: 60,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      'Name',
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          color: Colors.white70,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Text(widget.namadata,
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                            color: Colors.white70)),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                           decoration: BoxDecoration(
-                              color: Colors.deepOrange,
-                              borderRadius: BorderRadius.all(Radius.circular(
-                                  20))),
-                        ))
-                  ],
-                ),
-              ),
-              Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            topRight: Radius.circular(30)),
-                        gradient: LinearGradient(
-                            begin: Alignment.topRight,
-                            end: Alignment.bottomLeft,
-                            colors: [
-                              Color.fromRGBO(40, 10, 10, 0.8),
-                              Colors.red[900].withOpacity(0.8),
-                              Colors.redAccent.withOpacity(0.8)
-                            ])),
-                    child: ListView(
-                      children: [
-                        Container(
-                          height: 400,
-                          child: Column(
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                    20, 25, 20, 4),
-                                child: Container(
-                                  height: 60,
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              'Name',
-                                              textAlign: TextAlign.left,
-                                              style: TextStyle(
-                                                  color: Colors.white70,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Text(widget.namadata,
-                                                textAlign: TextAlign.right,
-                                                style: TextStyle(
-                                                    color: Colors.white70)),
-                                          ),
-                                        ],
-                                      ),
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(20)),
+                              border:
+                              Border.all(
+                                  width: 1.0, color: Colors.white70)),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(
+                            20, 5, 20, 4),
+                        child: Container(
+                          height: 60,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      'Phone',
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          color: Colors.white70,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(20)),
-                                      border:
-                                      Border.all(
-                                          width: 1.0, color: Colors.white70)),
-                                ),
+                                  Expanded(
+                                    child: Text(widget.phonedata,
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                            color: Colors.white70)),
+                                  ),
+                                ],
                               ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                    20, 5, 20, 4),
-                                child: Container(
-                                  height: 60,
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              'Phone',
-                                              textAlign: TextAlign.left,
-                                              style: TextStyle(
-                                                  color: Colors.white70,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Text(widget.phonedata,
-                                                textAlign: TextAlign.right,
-                                                style: TextStyle(
-                                                    color: Colors.white70)),
-                                          ),
-                                        ],
-                                      ),
+                            ),
+                          ),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(20)),
+                              border:
+                              Border.all(
+                                  width: 1.0, color: Colors.white70)),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(
+                            20, 5, 20, 4),
+                        child: Container(
+                          height: 60,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      'Email',
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          color: Colors.white70,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(20)),
-                                      border:
-                                      Border.all(
-                                          width: 1.0, color: Colors.white70)),
-                                ),
+                                  Expanded(
+                                    child: Text(widget.emaildata,
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                            color: Colors.white70)),
+                                  ),
+                                ],
                               ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                    20, 5, 20, 4),
-                                child: Container(
-                                  height: 60,
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              'Email',
-                                              textAlign: TextAlign.left,
-                                              style: TextStyle(
-                                                  color: Colors.white70,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Text(widget.emaildata,
-                                                textAlign: TextAlign.right,
-                                                style: TextStyle(
-                                                    color: Colors.white70)),
-                                          ),
-                                        ],
-                                      ),
+                            ),
+                          ),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(20)),
+                              border:
+                              Border.all(
+                                  width: 1.0, color: Colors.white70)),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(
+                            20, 5, 20, 4),
+                        child: Container(
+                          height: 60,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      'Status',
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          color: Colors.white70,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(20)),
-                                      border:
-                                      Border.all(
-                                          width: 1.0, color: Colors.white70)),
-                                ),
+                                  Expanded(
+                                    child: Text(widget.statusdata=="0" ? "reguler":(widget.statusdata=="1" ? "reseller":"diblokir"),
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                            color: Colors.white70)),
+                                  ),
+                                ],
                               ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                    20, 5, 20, 4),
-                                child: Container(
-                                  height: 60,
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              'Status',
-                                              textAlign: TextAlign.left,
-                                              style: TextStyle(
-                                                  color: Colors.white70,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Text(widget.statusdata=="0" ? "reguler":(widget.statusdata=="1" ? "reseller":"diblokir"),
-                                                textAlign: TextAlign.right,
-                                                style: TextStyle(
-                                                    color: Colors.white70)),
-                                          ),
-                                        ],
-                                      ),
+                            ),
+                          ),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(20)),
+                              border:
+                              Border.all(
+                                  width: 1.0, color: Colors.white70)),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(
+                            20, 5, 20, 4),
+                        child: Container(
+                          height: 60,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      'Alamat',
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          color: Colors.white70,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(20)),
-                                      border:
-                                      Border.all(
-                                          width: 1.0, color: Colors.white70)),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                    20, 5, 20, 4),
-                                child: Container(
-                                  height: 60,
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              'Alamat',
-                                              textAlign: TextAlign.left,
-                                              style: TextStyle(
-                                                  color: Colors.white70,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Text(
-                                                widget.alamatdata,
-                                                textAlign: TextAlign.right,
-                                                style: TextStyle(
-                                                    color: Colors.white70)),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                  Expanded(
+                                    child: Text(
+                                        widget.alamatdata,
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                            color: Colors.white70)),
                                   ),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(20)),
-                                      border:
-                                      Border.all(
-                                          width: 1.0, color: Colors.white70)),
-                                ),
+                                ],
                               ),
-                              Expanded(
-                                child: Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: Container(
-                                    width: 230,
-                                    height: 50,
-                                    child: Align(
-                                        child: Container(
-                                          margin: EdgeInsets.fromLTRB(
-                                              0, 0, 10, 10),
+                            ),
+                          ),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(20)),
+                              border:
+                              Border.all(
+                                  width: 1.0, color: Colors.white70)),
+                        ),
+                      ),
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: Container(
+                            width: 330,
+                            height: 50,
+                            child: Align(
+                                child: Container(
+                                  margin: EdgeInsets.fromLTRB(
+                                      0, 0, 10, 10),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment
+                                        .end,
+                                    children: [
+                                      Expanded(child: Icon(Icons.settings)),
+                                     Expanded(
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.edit),
+                                            Text('Edit Profile',
+                                                style: TextStyle(
+                                                    fontSize: 20)),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                      Expanded(
+                                        child: TextButton(
+                                          onPressed: signOut,
                                           child: Row(
-                                            mainAxisAlignment: MainAxisAlignment
-                                                .end,
                                             children: [
-                                              Icon(Icons.settings),
-                                              Row(
-                                                children: [
-                                                  Icon(Icons.edit),
-                                                  Text('Edit Profile',
-                                                      style: TextStyle(
-                                                          fontSize: 20)),
-                                                ],
-                                              ),
-                                              SizedBox(width: 10),
-                                              TextButton(
-                                                onPressed: signOut,
-                                                child: Row(
-                                                  children: [
-                                                    Icon(Icons.exit_to_app),
-                                                    Text('Logout',
-                                                        style: TextStyle(
-                                                            fontSize: 20)),
-                                                  ],
-                                                ),
-                                              ),
+                                              Icon(Icons.exit_to_app),
+                                              Text('Logout',
+                                                  style: TextStyle(
+                                                      fontSize: 20)),
                                             ],
                                           ),
-                                        )),
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(30),
-                                        )),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              )
-                            ],
+                                )),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(30),
+                                )),
                           ),
                         ),
-                      ],
-                    ),
-                  ))
-            ],
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
           );
         }
 

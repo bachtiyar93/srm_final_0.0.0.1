@@ -12,6 +12,7 @@ class ProdukKamiPage extends StatefulWidget {
 class _PopularFoodsWidgetState extends State<ProdukKamiPage> {
   @override
   Widget build(BuildContext context) {
+    debugPrint('on Produk Kami');
     return Container(
       height: 265,
       width: double.infinity,
@@ -73,6 +74,7 @@ class ProdukItems extends StatelessWidget {
   final List<dynamic> produkList;
   @override
   Widget build(BuildContext context) {
+    debugPrint('on Produk Item');
     return  ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: produkList.length,
