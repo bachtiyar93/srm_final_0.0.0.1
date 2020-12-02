@@ -1,12 +1,13 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'produkdetail.dart';
-import 'buildproduk.dart';
+import 'package:srm_final/widget/slidehorizon/produk_item.dart';
 import 'data.dart';
-import 'theme.dart';
 
 class DaftarProduk extends StatefulWidget {
+  DaftarProduk(List produkList, {Key key}): this.produkList=produkList ?? [];
+  final List<dynamic> produkList;
+
   @override
   _DaftarProdukState createState() => _DaftarProdukState();
 }
@@ -69,89 +70,40 @@ class _DaftarProdukState extends State<DaftarProduk> {
                   )
                 ),
               ),
-
-              FutureBuilder<List<Produk>>(
-                future: dataProduk(),
-                builder: (context, snapshot){
-                  if (snapshot.hasData){
-                    return Text("Ready "+snapshot.data.length.toString()+" lagi",
+              Text("Ready "+widget.produkList.length.toString()+" lagi",
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: spesialsize*0.04,
                         fontWeight: FontWeight.bold,
                       ),
-                    );
-                  }else {
-                    return Padding(
-                        padding: EdgeInsets.all(15.0),
-                        child: new LinearProgressIndicator(
-                          backgroundColor: Colors.grey,
-                          valueColor: new AlwaysStoppedAnimation<Color>(
-                              Colors.red),
-                        )
-                    );
-                  }
-                }
-                ),
+                    ),
 
               SizedBox(
                 height:spesialsize*0.01,
               ),
 
               Expanded(
-                child: FutureBuilder<List<Produk>>(
-                    future: dataProduk(),
-                    builder: (context, snapshot){
-                      if (snapshot.hasData) {return
-                        GridView.count(
-                          physics: BouncingScrollPhysics(),
-                          childAspectRatio: 1/1.55,
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 15,
-                          mainAxisSpacing: 15,
-                          children: snapshot.data.map((item) {
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => ProdukDetail(produk: item, context: context)),
-                                );
-                              },
-                              child: buildProduk(item, null, context)
-                            );
-                          }).toList(),
-                        );
-                      }else {
-                        return Center(
-                            child: CircularProgressIndicator(
-                              backgroundColor: Colors.grey,
-                              valueColor: new AlwaysStoppedAnimation<Color>(
-                                  Colors.red),
-                            )
-                        );
-                      }
-                    }
+                child:
+                GridView.builder(
+                  gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(
+                      childAspectRatio: 1/1.55,
+                      crossAxisCount: 2,
+                      crossAxisSpacing: MediaQuery.of(context).size.height*0.01,
+                      mainAxisSpacing:MediaQuery.of(context).size.height*0.01),
+                  physics: BouncingScrollPhysics(),
+                  itemCount: widget.produkList.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: EdgeInsets.all(2),
+                      child: AspectRatio(
+                        aspectRatio: 1/1.7,
+                        child: ProdukItem(
+                          produk: widget.produkList[index],
+                        ),
+                      ),
+                    );
+                  },
                 ),
-
-
-                // GridView.count(
-                //   physics: BouncingScrollPhysics(),
-                //   childAspectRatio: 1/1.55,
-                //   crossAxisCount: 2,
-                //   crossAxisSpacing: 15,
-                //   mainAxisSpacing: 15,
-                //   children: dataProduk().map((item) {
-                //     return GestureDetector(
-                //       onTap: () {
-                //         Navigator.push(
-                //           context,
-                //           MaterialPageRoute(builder: (context) => ProdukDetail(produk: item, context: context)),
-                //         );
-                //       },
-                //       child: buildProduk(item, null, context)
-                //     );
-                //   }).toList(),
-                // ),
               ),
             ],
           ),
@@ -180,7 +132,7 @@ class _DaftarProdukState extends State<DaftarProduk> {
       height: 50,
       margin: EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: LightColors.warnaJudul,
+        color: Colors.red[900],
         borderRadius: BorderRadius.all(
           Radius.circular(15),
         ),
@@ -215,7 +167,7 @@ class _DaftarProdukState extends State<DaftarProduk> {
         child: Text(
           filter.name,
           style: TextStyle(
-            color: selectedFilter == filter ? LightColors.warnaJudul : Colors.grey[300],
+            color: selectedFilter == filter ? Colors.red[900] : Colors.grey[300],
             fontSize: 16,
             fontWeight: selectedFilter == filter ? FontWeight.bold : FontWeight.normal,
           ),

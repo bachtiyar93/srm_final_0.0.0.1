@@ -69,7 +69,6 @@ class ProdukTitle extends StatelessWidget {
 }
 
 class ProdukItems extends StatelessWidget {
-  String query = '';
   ProdukItems(List produkList, {Key key}): this.produkList=produkList ?? [];
   final List<dynamic> produkList;
   @override

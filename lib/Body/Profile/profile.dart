@@ -2,6 +2,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage(
@@ -72,13 +73,21 @@ class _MyHomePageState extends State<ProfilePage> {
                           CircleAvatar(
                             radius: 70,
                             child: ClipOval(
-                                child: CachedNetworkImage(
-                                  imageUrl:
-                                  'https://www.genpi.co/timthumb.php?src=http://fs.genpi.co/uploads/data/images/idaman(1).png&w=820&a=br&zc=1',
-                                  height: 150,
-                                  width: 150,
-                                  fit: BoxFit.cover,
-                                )
+                              child: CachedNetworkImage(
+                                imageUrl:'https://pbs.twimg.com/profile_images/427423252877570048/51cnffwT.jpeg',
+                                  placeholder: (context, url) => Container(
+                                    alignment: Alignment.topCenter,
+                                    child: Shimmer.fromColors(
+                                        child: Image.asset('assets/ic_logo.png',
+                                          height: 150,
+                                          width: 150,
+                                          fit: BoxFit.cover,
+                                        ), baseColor: Colors.grey, highlightColor: Colors.white),
+                                  ),
+                                height: 150,
+                                width: 150,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                           Positioned(

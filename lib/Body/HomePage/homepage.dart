@@ -8,10 +8,9 @@ import 'package:srm_final/apikey/sumberapi.dart';
 import 'package:srm_final/main.dart';
 import 'package:srm_final/widget/produk_bar_slide/slide_produk.dart';
 import 'package:srm_final/widget/produkpopuler/produk_populer.dart';
-import 'fungsi/dashboardchat.dart';
+import '../Chat/dashboardchat.dart';
 import 'theme/daftarproduk.dart';
 import 'theme/showmenubar.dart';
-import 'theme/theme.dart';
 import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
@@ -34,7 +33,7 @@ class _HomePageState extends State<HomePage> {
     return Text(
       title,
       style: TextStyle(
-          color: LightColors.warnaSubhead,
+          color: Colors.black,
           fontSize: 20.0,
           fontWeight: FontWeight.w700,
           letterSpacing: 1.2),
@@ -212,7 +211,7 @@ class _HomePageState extends State<HomePage> {
         onPressed: (){
           Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardChat()),);},
         child: Icon(Icons.chat,),
-        backgroundColor: LightColors.warnaHead,
+        backgroundColor: Colors.grey,
       ),
       body: WillPopScope(
         onWillPop: onWillPop,
@@ -228,11 +227,11 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 children: <Widget>[
                   titleAndNotifBar(),
+                  kainKami(),
                   ProdukTitleBar(),
                   topBar(widget.produkList),
-                  kainKami(),
                   terlaris(widget.produkList),
-                  produkReady(),
+                  produkReady(widget.produkList),
                   produkKami(widget.produkList),
                   tipsNews(),
                 ],
@@ -255,7 +254,7 @@ class _HomePageState extends State<HomePage> {
     spesialsize=MediaQuery.of(context).size.height;
   }
   return  SliverAppBar(
-    backgroundColor: LightColors.warnaHead,
+    backgroundColor: Colors.grey[300],
     expandedHeight: heightCustom*0.4,
     floating: true,
     pinned: false,
@@ -263,7 +262,7 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         title: Text('Pusat Grosir Sprei & Gordyn Berkualitas',
           style: TextStyle(
-              fontSize: spesialsize*0.02
+              fontSize: spesialsize*0.03
           ),
         ),
         background: Container(
@@ -300,7 +299,7 @@ class _HomePageState extends State<HomePage> {
                 textAlign: TextAlign.start,
                 style: GoogleFonts.alexBrush(
                     fontSize: spesialsize*0.07,
-                    color: LightColors.warnaJudul
+                    color: Colors.red[900]
                 ),
               ),
             ),
@@ -309,14 +308,14 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Icon(Icons.notifications,
                   size: spesialsize*0.06,
-                  color: LightColors.warnaJudul,
+                  color: Colors.red[900],
                 ),
                 SizedBox(width: spesialsize*0.05),
                 GestureDetector(
                   onTap: () => ShowMenuBar(context),
                   child: Icon(Icons.menu,
                     size: spesialsize*0.06,
-                    color: LightColors.warnaJudul,
+                    color: Colors.red[900],
                   ),
                 ),
               ],
@@ -336,308 +335,58 @@ class _HomePageState extends State<HomePage> {
     spesialsize=MediaQuery.of(context).size.height;
   }
   return Container(
-    padding: EdgeInsets.symmetric(
-        horizontal: 20.0),
+    padding: EdgeInsets.symmetric(horizontal: 5.0),
     child: Column(
       children: <Widget>[
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text('Kain Kami',
+            Text('Produk Kami',
               style: TextStyle(
-                color: LightColors.warnaSubJudul,
-                fontSize: spesialsize*0.05,
+                color: Colors.red[300],
+                fontSize: spesialsize*0.06,
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.left,
             ),
-            Text('Lihat semua',
-              style: TextStyle(
-                  color: Colors.blue
-              ),
-              textAlign: TextAlign.right,)
           ],
         ),
         Container(
           height: heightCustom*0.001,
           width: widthCustom,
-          color: LightColors.warnaSubJudul,
+          color: Colors.grey,
         ),
         SizedBox(height: spesialsize*0.015),
         Container(
           height: MediaQuery.of(context).size.width*0.2,
           child: Row(
-            children: <Widget>[
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: LightColors.warnaBorderDalam.withOpacity(0.8),
-                        offset: Offset(-6.0, -6.0),
-                        blurRadius: 16.0,
-                      ),
-                      BoxShadow(
-                        color: LightColors.warnaShadow,
-                        offset: Offset(6.0, 6.0),
-                        blurRadius: 16.0,
-                      ),
-                    ],
-                    color: LightColors.warnaButton,
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  margin: EdgeInsets.fromLTRB(spesialsize*0.0025, 0, spesialsize*0.0025, 0),
-                  child: InkWell(
-                    onTap: () {
-                      //                                 Navigator.push(context,
-                      //                                     MaterialPageRoute( builder: (context) => MapGlobal()
-                      //                                     ));
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text("SR",
-                              style: TextStyle(
-                                  fontSize: spesialsize*0.03,
-                                  fontFamily: 'Diploma'
-                              ),
-                            )
-                          ],
-                        ),
-                        Text(
-                          'Katun Jepang',
-                          style: new TextStyle(color: Colors.black.withOpacity(0.9),
-                              fontWeight: FontWeight.bold,
-                              fontStyle: FontStyle.italic,
-                              fontSize: widthCustom*0.02),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),),
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: LightColors.warnaBorderDalam.withOpacity(0.8),
-                        offset: Offset(-6.0, -6.0),
-                        blurRadius: 16.0,
-                      ),
-                      BoxShadow(
-                        color: LightColors.warnaShadow,
-                        offset: Offset(6.0, 6.0),
-                        blurRadius: 16.0,
-                      ),
-                    ],
-                    color: LightColors.warnaButton,
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  margin: EdgeInsets.fromLTRB(spesialsize*0.0025, 0, spesialsize*0.0025, 0),
-                  child: InkWell(
-                    onTap: () {
-                      //                                 Navigator.push(context,
-                      //                                     MaterialPageRoute( builder: (context) => MapGlobal()
-                      //                                     ));
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text("CVC",
-                              style: TextStyle(
-                                  fontSize: spesialsize*0.03,
-                                  fontFamily: 'Diploma'
-                              ),
-                            )
-                          ],
-                        ),
-                        Text(
-                          'Katun CVC',
-                          style: new TextStyle(color: Colors.black.withOpacity(0.9),
-                              fontWeight: FontWeight.bold,
-                              fontStyle: FontStyle.italic,
-                              fontSize: widthCustom*0.02),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),),
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: LightColors.warnaBorderDalam.withOpacity(0.8),
-                        offset: Offset(-6.0, -6.0),
-                        blurRadius: 16.0,
-                      ),
-                      BoxShadow(
-                        color: LightColors.warnaShadow,
-                        offset: Offset(6.0, 6.0),
-                        blurRadius: 16.0,
-                      ),
-                    ],
-                    color: LightColors.warnaButton,
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  margin: EdgeInsets.fromLTRB(spesialsize*0.0025, 0, spesialsize*0.0025, 0),
-                  child: InkWell(
-                    onTap: () {
-                      //                                 Navigator.push(context,
-                      //                                     MaterialPageRoute( builder: (context) => MapGlobal()
-                      //                                     ));
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text("SS",
-                              style: TextStyle(
-                                  fontSize: spesialsize*0.03,
-                                  fontFamily: 'Diploma'
-                              ),
-                            )
-                          ],
-                        ),
-                        Text(
-                          'Sutra Silk',
-                          style: new TextStyle(color: Colors.black.withOpacity(0.9),
-                              fontWeight: FontWeight.bold,
-                              fontStyle: FontStyle.italic,
-                              fontSize: widthCustom*0.02),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),),
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: LightColors.warnaBorderDalam.withOpacity(0.8),
-                        offset: Offset(-6.0, -6.0),
-                        blurRadius: 16.0,),
-                      BoxShadow(
-                        color: LightColors.warnaShadow,
-                        offset: Offset(6.0, 6.0),
-                        blurRadius: 16.0,
-                      ),
-                    ],
-                    color: LightColors.warnaButton,
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  margin: EdgeInsets.fromLTRB(spesialsize*0.0025, 0, spesialsize*0.0025, 0),
-                  child: InkWell(
-                    onTap: () {
-                      //                                 Navigator.push(context,
-                      //                                     MaterialPageRoute( builder: (context) => MapGlobal()
-                      //                                     ));
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text("TC",
-                              style: TextStyle(
-                                  fontSize: spesialsize*0.03,
-                                  fontFamily: 'Diploma'
-                              ),
-                            )
-                          ],
-                        ),
-                        Text(
-                          'Sutra Organic',
-                          style: new TextStyle(color: Colors.black.withOpacity(0.9),
-                              fontWeight: FontWeight.bold,
-                              fontStyle: FontStyle.italic,
-                              fontSize: widthCustom*0.02),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),),
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: LightColors.warnaBorderDalam.withOpacity(0.8),
-                        offset: Offset(-6.0, -6.0),
-                        blurRadius: 16.0,
-                      ),
-                      BoxShadow(
-                        color: LightColors.warnaShadow,
-                        offset: Offset(6.0, 6.0),
-                        blurRadius: 16.0,
-                      ),
-                    ],
-                    color: LightColors.warnaButton,
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  margin: EdgeInsets.fromLTRB(spesialsize*0.0025, 0, spesialsize*0.0025, 0),
-                  child: InkWell(
-                    onTap: () {
-                      //                                 Navigator.push(context,
-                      //                                     MaterialPageRoute( builder: (context) => MapGlobal()
-                      //                                     ));
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text("KKS",
-                              style: TextStyle(
-                                  fontSize: spesialsize*0.03,
-                                  fontFamily: 'Diploma'
-                              ),
-                            )
-                          ],
-                        ),
-                        Text(
-                          'Serat Bambu',
-                          style: new TextStyle(color: Colors.black.withOpacity(0.9),
-                              fontWeight: FontWeight.bold,
-                              fontStyle: FontStyle.italic,
-                              fontSize: widthCustom*0.02),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),),
+            children: [
+              _buttonMenu('SR','Katun Jepang'),
+              _buttonMenu('SR','Katun Jepang'),
+              _buttonMenu('SR','Katun Jepang'),
+              _buttonMenu('SR','Katun Jepang'),
+              _buttonMenu('SR','Katun Jepang'),
             ],
-          ),
+          )
         )
       ],
     ),
   );
 }
-  Widget produkReady() {
+  Widget produkReady(List<dynamic> produkList) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => DaftarProduk()),
+          MaterialPageRoute(builder: (context) => DaftarProduk(produkList)),
         );
       },
       child: Padding(
         padding: EdgeInsets.only(top: 16, right: 16, left: 16),
         child: Container(
           decoration: BoxDecoration(
-            color: LightColors.warnaButton,
+            color: Colors.red,
             borderRadius: BorderRadius.all(
               Radius.circular(15),
             ),
@@ -683,7 +432,7 @@ class _HomePageState extends State<HomePage> {
                 child: Center(
                   child: Icon(
                     Icons.arrow_forward_ios,
-                    color: LightColors.warnaButton,
+                    color: Colors.red,
                   ),
                 ),
               ),
@@ -703,7 +452,7 @@ class _HomePageState extends State<HomePage> {
   }
   Widget topBar(List<dynamic> produkList) {
     return Container(
-        height: 340,
+        height: 300,
         child: SlideProduk(produkList));
   }
 
@@ -793,6 +542,68 @@ class _HomePageState extends State<HomePage> {
 
     return true;
   }
+
+ Widget  _buttonMenu(String s, String t) {
+   var spesialsize, widthCustom;
+   widthCustom = MediaQuery.of(context).size.width;
+   //specialSize
+   if (MediaQuery.of(context).size.height>MediaQuery.of(context).size.width){
+     spesialsize=MediaQuery.of(context).size.width;
+   }else{
+     spesialsize=MediaQuery.of(context).size.height;
+   }
+    return Expanded(
+      child: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.8),
+              offset: Offset(-6.0, -6.0),
+              blurRadius: 16.0,
+            ),
+            BoxShadow(
+              color: Colors.grey,
+              offset: Offset(6.0, 6.0),
+              blurRadius: 16.0,
+            ),
+          ],
+          color: Colors.grey,
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        margin: EdgeInsets.fromLTRB(spesialsize*0.0025, 0, spesialsize*0.0025, 0),
+        child: InkWell(
+          onTap: () {
+            //                                 Navigator.push(context,
+            //                                     MaterialPageRoute( builder: (context) => MapGlobal()
+            //                                     ));
+          },
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(s,
+                    style: TextStyle(
+                        fontSize: spesialsize*0.03,
+                        fontFamily: 'Diploma'
+                    ),
+                  )
+                ],
+              ),
+              Text(
+                t,
+                style: new TextStyle(color: Colors.black.withOpacity(0.9),
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic,
+                    fontSize: widthCustom*0.02),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+ }
 }
 
 
@@ -800,14 +611,14 @@ class ProdukTitleBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+      padding: EdgeInsets.only(left: 10, right: 10, top: 5,),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text('Populer',
             style: TextStyle(
               color: Colors.red[300],
-              fontSize: 20,
+              fontSize: 25,
               fontWeight: FontWeight.bold,
             ),
             textAlign: TextAlign.left,

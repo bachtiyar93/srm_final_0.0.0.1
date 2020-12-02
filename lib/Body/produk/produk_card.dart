@@ -21,7 +21,7 @@ class _ProdukPage extends State<ProdukPage>{
                 onTap: (){
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => DaftarProduk()),
+                    MaterialPageRoute(builder: (context) => DaftarProduk(widget.produkList)),
                   );
                 },
                 child: CardProduk('Semua Kain','Koleksi berbagai jenis kain')),
@@ -29,7 +29,7 @@ class _ProdukPage extends State<ProdukPage>{
             onTap: (){
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => DaftarProduk()),
+                MaterialPageRoute(builder: (context) => DaftarProduk(widget.produkList)),
               );
             },
             child:CardProduk('Produk Ready','Berbagai macam sprei, bantal & guling')),
@@ -37,7 +37,7 @@ class _ProdukPage extends State<ProdukPage>{
             onTap: (){
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => DaftarProduk()),
+                MaterialPageRoute(builder: (context) => DaftarProduk(widget.produkList)),
               );
             },
             child:CardProduk('Aksesoris & Perlengkapan Bed','Koleksi aksesoris bed, dacron, griper dll')),
@@ -45,7 +45,7 @@ class _ProdukPage extends State<ProdukPage>{
                 onTap: (){
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => DaftarProduk()),
+                    MaterialPageRoute(builder: (context) => DaftarProduk(widget.produkList)),
                   );
                 },
             child:CardProduk('Curtains','Koleksi gordyn, roller, shade & blind dll')),

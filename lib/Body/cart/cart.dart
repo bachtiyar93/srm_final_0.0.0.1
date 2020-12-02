@@ -9,7 +9,9 @@ class _CartPage extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
    return Scaffold(
-     body: null,
+     body: Center(
+       child: Text('Empty Cart!'),
+     ),
    );
   }
 }

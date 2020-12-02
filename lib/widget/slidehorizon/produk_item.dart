@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:srm_final/widget/model_hive/anime.dart';
@@ -16,7 +17,7 @@ class ProdukItem extends StatelessWidget {
           decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.white,
+                    color: Color.fromRGBO(220, 220, 220, 1),
                     offset: Offset(-6.0, -6.0),
                     blurRadius: 16.0,
                   ),
@@ -30,17 +31,17 @@ class ProdukItem extends StatelessWidget {
           child: Stack(children: <Widget>[
             ClipRRect(
               borderRadius: BorderRadius.only(topLeft: Radius.circular(8),topRight: Radius.circular(8) ),
-              child: Image.network(produk.images[0],
-                loadingBuilder:(BuildContext context, Widget child,ImageChunkEvent loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return Container(
-                    alignment: Alignment.topCenter,
-                    child: Shimmer.fromColors(
-                        child: Image.asset('assets/ic_logo.png',
-                          height: 110,
-                        ), baseColor: Colors.grey, highlightColor: Colors.white),
-                  );
-                },
+              child: CachedNetworkImage(
+                imageUrl:produk.images[0],
+                placeholder: (context, url) => Container(
+                  alignment: Alignment.topCenter,
+                  child: Shimmer.fromColors(
+                      child: Image.asset('assets/ic_logo.png',
+                        height: 110,
+                        fit: BoxFit.cover,
+                      ), baseColor: Colors.grey, highlightColor: Colors.white),
+                ),
+                fit: BoxFit.cover,
               ),
             ),
             Positioned(
@@ -88,11 +89,17 @@ class ProdukItem extends StatelessWidget {
                     })
                 )),
             Positioned(
-                bottom: 10,
+                top: 10,
                 right: 10,
-                child: Icon(
-                  Icons.shopping_cart,
-                  color: Colors.red,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(3)),
+                    color: Colors.grey[300]
+                  ),
+                  child: Icon(
+                    Icons.bookmark_border,
+                    color: Colors.grey,
+                  ),
                 )),
             Positioned(
                 bottom: 10,

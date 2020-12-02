@@ -1,5 +1,4 @@
-import 'package:srm_final/Body/HomePage/fungsi/sumberapi.dart';
-
+import 'package:srm_final/apikey/sumberapi.dart';
 import 'anime.dart';
 import 'package:stacked/stacked.dart';
 import 'api_service.dart';
@@ -29,17 +28,17 @@ class HomeViewModel extends BaseViewModel {
       (result as List).map((terima) {
         Produk produk = Produk(
             id: int.parse(terima["id"]),
-        kain: terima["kain"],
-        seri: terima["seri"],
-        harga: int.parse(terima["harga"]),
-        stok: int.parse(terima["stok"]),
-        tglMasuk: DateTime.parse(terima["tgl_masuk"]),
-        kondisi: int.parse(terima["kondisi"]),
-        bidang: int.parse(terima["bidang"]),
-        rate: int.parse(terima["rate"]),
-        pembeli: int.parse(terima["pembeli"]),
-        dilihat: int.parse(terima["dilihat"]),
-        images: List<String>.from(terima["images"].map((x) => x)));
+            kain: terima["kain"],
+            seri: terima["seri"],
+            harga: int.parse(terima["harga"]),
+            stok: int.parse(terima["stok"]),
+            tglMasuk: DateTime.parse(terima["tgl_masuk"]),
+            kondisi: int.parse(terima["kondisi"]),
+            bidang: int.parse(terima["bidang"]),
+            rate: int.parse(terima["rate"]),
+            pembeli: int.parse(terima["pembeli"]),
+            dilihat: int.parse(terima["dilihat"]),
+            images: List<String>.from(terima["images"].map((x) => x)));
         _produkList.add(produk);
       }).toList();
       await hiveService.addBoxesTypeList(_produkList, "ProdukTabel");

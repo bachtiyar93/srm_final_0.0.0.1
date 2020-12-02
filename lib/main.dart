@@ -8,13 +8,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:srm_final/Body/Chat/dashboardchat.dart';
 import 'package:srm_final/Body/HomePage/homepage.dart';
 import 'package:srm_final/Body/Profile/profile.dart';
 import 'package:srm_final/Body/cart/cart.dart';
-import 'package:srm_final/Body/help/help.dart';
+import 'package:srm_final/Body/help/Tips.dart';
 import 'package:srm_final/Body/produk/produk_card.dart';
 import 'package:srm_final/apikey/sumberapi.dart';
 import 'package:srm_final/dashboard_custom/notched.dart';
+import 'package:srm_final/widget/model_hive_tips/tips.dart';
 import 'package:stacked/stacked.dart';
 import 'login_page/splashscreen.dart';
 import 'login_page/welcomePage.dart';
@@ -37,6 +39,7 @@ void main() async {
     Hive.init(appDirectory.path);
   }
   Hive.registerAdapter(ProdukAdapter());
+  Hive.registerAdapter(TipsAdapter());
   setupLocator();
   runApp(App());
 }
@@ -80,15 +83,16 @@ class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
     Icons.person
   ];
 
-  static Future<dynamic> onBackgroundMessageHandler(
-      Map<String, dynamic> message) {
+  static Future<dynamic> onBackgroundMessageHandler(Map<String, dynamic> message) async {
     debugPrint('onBackgroundMessageHandler');
     if (message.containsKey('data')) {
       final dynamic data = message['data'];
-      String name = data['name'];
-      String age = data['age'];
+      String notif = data['notif'];
+      String kode = data['kode'];
       String page = data['page'];
-      debugPrint('name: $name & age: $age & page: $page');
+      String snacktitle = data['snacktitle'];
+      String snackbody = data['snackbody'];
+      debugPrint('notif: $notif & kode: $kode & page: $page');
     }
 
     /*if (message.containsKey('notification')) {
@@ -122,27 +126,32 @@ class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
         snackbody = data['snackbody'];
       }
       debugPrint('notif: $notif & kode: $kode & page: $page $snacktitle $snackbody');
-      showFlushbar(context: context,
-          flushbar: Flushbar(
-            title: snacktitle,
-            message: snackbody,
-            backgroundColor: Colors.red[900].withOpacity(0.3),
-            flushbarPosition: FlushbarPosition.TOP,
-            icon: Icon(
-              Icons.info_outline,
-              size: 28.0,
-              color: Colors.green,
-            ),
-            flushbarStyle: FlushbarStyle.FLOATING,
-            duration: Duration(seconds: 3),
-            boxShadows: [BoxShadow(color: Colors.red[900].withOpacity(0.3), offset: Offset(0.0, 2.0), blurRadius: 3.0,)],
-          )..show(context)
-      );
       switch (type) {
+        case 'onMessage':
+          {
+            showFlushbar(context: context,
+                flushbar: Flushbar(
+                  title: snacktitle,
+                  message: snackbody,
+                  backgroundColor: Colors.red[900].withOpacity(0.3),
+                  flushbarPosition: FlushbarPosition.TOP,
+                  icon: Icon(
+                    Icons.info_outline,
+                    size: 28.0,
+                    color: Colors.green,
+                  ),
+                  flushbarStyle: FlushbarStyle.FLOATING,
+                  duration: Duration(seconds: 3),
+                  boxShadows: [BoxShadow(color: Colors.red[900].withOpacity(0.3), offset: Offset(0.0, 2.0), blurRadius: 3.0,)],
+                )..show(context)
+            );
+          }
+          break;
         case 'onResume':
         case 'onLaunch':
           {
             if (page == "1") {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> DashboardChat()));
             }
             break;
           }
@@ -388,7 +397,7 @@ class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
     else if (menuList[currentIndex] == Icons.shopping_cart) {
        return CartPage();
     }
-    else if (menuList[currentIndex] == Icons.library_books) {
+    else if (menuList[currentIndex] == Icons.library_books_outlined) {
       return HelpPage();
     }
     else {

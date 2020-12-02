@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:srm_final/widget/model_hive/anime.dart';
+import 'package:srm_final/widget/produk_detail/details_row_widget.dart';
 import 'package:validators/validators.dart';
-import 'data.dart';
-import 'theme.dart';
 
 
 class ProdukDetail extends StatefulWidget {
   final Produk produk;
   ProdukDetail({@required this.produk, BuildContext context});
+
   @override
   _ProdukDetailState createState() => _ProdukDetailState();
 }
@@ -27,7 +29,7 @@ class _ProdukDetailState extends State<ProdukDetail> {
     return AnimatedContainer(
       duration: Duration(milliseconds: 100),
       margin: EdgeInsets.symmetric(horizontal: 6),
-      height: 8,
+      height: 15,
       width: isActive ? 20 : 8,
       decoration: BoxDecoration(
         color: isActive ? Colors.black : Colors.grey[400],
@@ -95,7 +97,7 @@ class _ProdukDetailState extends State<ProdukDetail> {
                                   width: spesialsize*0.12,
                                   height: spesialsize*0.12,
                                   decoration: BoxDecoration(
-                                    color: LightColors.warnaJudul,
+                                    color: Colors.red[900],
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(15),
                                     ),
@@ -257,25 +259,7 @@ class _ProdukDetailState extends State<ProdukDetail> {
                         ),
                       ),
                     ),
-
-                    Container(
-                      height: 75,
-                      padding: EdgeInsets.only(top: 8, left: 16,),
-                      margin: EdgeInsets.only(bottom: 16),
-                      child: ListView(
-                        physics: BouncingScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          buildSpecificationCar("Nama", "SR 32"),
-                          buildSpecificationCar("Warna", "Biru"),
-                          buildSpecificationCar("Bahan", "KJ"),
-                          buildSpecificationCar("Ukuran", "6K"),
-                          buildSpecificationCar("Model", "Karet"),
-                          buildSpecificationCar("Kelengkapan", "1S 2B 2G"),
-                        ],
-                      ),
-                    ),
-
+                    _buildSpec(),
                   ],
                 ),
               ),
@@ -290,10 +274,10 @@ class _ProdukDetailState extends State<ProdukDetail> {
   Widget buildPricePerPeriod(String months, String price, bool selected){
     return Expanded(
       child: Container(
-        height: 75,
+        height: 80,
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: selected ? LightColors.warnaJudul : Colors.white,
+          color: selected ? Colors.red[900] : Colors.white,
           borderRadius: BorderRadius.all(
             Radius.circular(15),
           ),
@@ -327,8 +311,7 @@ class _ProdukDetailState extends State<ProdukDetail> {
       ),
     );
   }
-
-  Widget buildSpecificationCar(String title, String data){
+  Widget _buildSpec() {
     var spesialsize;
     //specialSize
     if (MediaQuery.of(context).size.height>MediaQuery.of(context).size.width){
@@ -337,43 +320,190 @@ class _ProdukDetailState extends State<ProdukDetail> {
       spesialsize=MediaQuery.of(context).size.height;
     }
     return Container(
-      width: spesialsize*0.5,
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(
-          Radius.circular(15),
-        ),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20)),
+          gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [
+                Color.fromRGBO(40, 10, 10, 0.95),
+                Colors.red[900].withOpacity(0.95),
+                Colors.redAccent.withOpacity(0.95)
+              ])
       ),
-      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16,),
-      margin: EdgeInsets.only(right: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              color: Colors.grey,
-              fontSize: 14,
-            ),
-          ),
+      padding: EdgeInsets.all(10),
+      height: MediaQuery.of(context).size.height,
+      child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                alignment: Alignment.topCenter,
+                child: Container(
+                  height: 3,
+                  width: 30,
+                  color: Colors.black,
+                ),
+              ),
+              Center(child: Text('Sweet Room Medan', style: GoogleFonts.alexBrush(
+                  fontSize: 35,
+                  color: Color.fromRGBO(225, 80, 80, 1)
+              ),),),
+              Row(
+                children: <Widget>[
+                  Image.network(widget.produk.images[0],
+                    height: 80,
+                    width: 80,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          widget.produk.kain,
+                          maxLines: 1,
+                          overflow: TextOverflow.fade,
+                          softWrap: false,
+                          style: GoogleFonts.lobster(
+                              fontSize: 25,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.white),
+                        ),
+                        Text(
+                          widget.produk.seri,
+                          style: GoogleFonts.lato(
+                              fontSize: 18,
+                              color: Colors.white.withOpacity(0.6)),
+                        )
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child:Row(
+                      children: [
+                        Container(
+                            width: spesialsize*0.12,
+                            height: spesialsize*0.12,
+                            decoration: BoxDecoration(
+                              color: Colors.red[900],
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(15),
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.bookmark_border,
+                              color: Colors.white,
+                              size: spesialsize*0.07,
+                            )
+                        ),
 
-          SizedBox(
-            height: 0.001,
-          ),
+                        SizedBox(
+                          width:  spesialsize*0.001,
+                        ),
 
-          Text(
-            data,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
+                        Container(
+                            width: spesialsize*0.12,
+                            height: spesialsize*0.12,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(15),
+                              ),
+                              border: Border.all(
+                                color: Colors.grey[300],
+                                width: 1,
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.share,
+                              color: Colors.black,
+                              size: spesialsize*0.07,
+                            )
+                        ),
+
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text("Details:",
+                  style: GoogleFonts.quicksand(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20)),
+              DetailsRow(
+                  heading: "Jenis Kain",
+                  details: widget.produk.kain),
+              DetailsRow(heading: "Seri/Motif", details: widget.produk.seri),
+              DetailsRow(heading: "Bidang Kain (cm)", details: widget.produk.bidang.toString()),
+              DetailsRow(
+                  heading: "Stok (m)", details: widget.produk.stok.toString()),
+              DetailsRow(
+                  heading: "Rate (1-5)", details: widget.produk.rate.toString()),
+              DetailsRow(
+                  heading: "Harga/m",
+                  details: U.format(widget.produk.harga).toString()),
+              DetailsRow(
+                  heading: "Pembeli", details: widget.produk.pembeli.toString()),
+            ],
+          )),
     );
   }
+
+  // Widget buildSpecificationCar(String title, String data){
+  //   var spesialsize;
+  //   //specialSize
+  //   if (MediaQuery.of(context).size.height>MediaQuery.of(context).size.width){
+  //     spesialsize=MediaQuery.of(context).size.width;
+  //   }else{
+  //     spesialsize=MediaQuery.of(context).size.height;
+  //   }
+  //   return Container(
+  //     width: spesialsize*0.5,
+  //     decoration: BoxDecoration(
+  //       color: Colors.white,
+  //       borderRadius: BorderRadius.all(
+  //         Radius.circular(15),
+  //       ),
+  //     ),
+  //     padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16,),
+  //     margin: EdgeInsets.only(right: 16),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       children: [
+  //         Text(
+  //           title,
+  //           style: TextStyle(
+  //             color: Colors.grey,
+  //             fontSize: 14,
+  //           ),
+  //         ),
+  //
+  //         SizedBox(
+  //           height: 0.001,
+  //         ),
+  //
+  //         Text(
+  //           data,
+  //           style: TextStyle(
+  //             color: Colors.black,
+  //             fontSize: 18,
+  //             fontWeight: FontWeight.bold,
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
  Widget  _bangunBeli({ProdukDetail widget, BuildContext context}) {
     return Container(
@@ -429,7 +559,7 @@ class _ProdukDetailState extends State<ProdukDetail> {
           Container(
             height: 40,
             decoration: BoxDecoration(
-              color: LightColors.warnaJudul,
+              color: Colors.red[900],
               borderRadius: BorderRadius.all(
                 Radius.circular(15),
               ),
@@ -457,22 +587,25 @@ class _ProdukDetailState extends State<ProdukDetail> {
     if (isURL(path)) {
       return Hero(
         tag: widget.produk.seri,
-        child: Image.network(
-          path,
-          fit: BoxFit.scaleDown,
-          loadingBuilder:(BuildContext context, Widget child,ImageChunkEvent loadingProgress) {
-            if (loadingProgress == null) return child;
-            return Center(
-              child: CircularProgressIndicator(
-                value: loadingProgress.expectedTotalBytes != null ?
-                loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
-                    : null,
-                backgroundColor: Colors.grey,
-                valueColor: new AlwaysStoppedAnimation<Color>(
-                    Colors.red),
-              ),
-            );
-          },
+        child: GestureDetector(
+          onTap: () => showSimpleDialog(context, path),
+          child: Image.network(
+            path,
+            fit: BoxFit.scaleDown,
+            loadingBuilder:(BuildContext context, Widget child,ImageChunkEvent loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Center(
+                child: CircularProgressIndicator(
+                  value: loadingProgress.expectedTotalBytes != null ?
+                  loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
+                      : null,
+                  backgroundColor: Colors.grey,
+                  valueColor: new AlwaysStoppedAnimation<Color>(
+                      Colors.red),
+                ),
+              );
+            },
+          ),
         ),
       );
     }else{
@@ -484,5 +617,18 @@ class _ProdukDetailState extends State<ProdukDetail> {
         ),
       );
   }
+  }
+  void showSimpleDialog(BuildContext context, String path) {
+    showDialog<Null>(
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          contentPadding: EdgeInsets.all(2),
+          children: <Widget>[
+            Image.network(path)
+          ],
+        );
+      },
+    );
   }
 }

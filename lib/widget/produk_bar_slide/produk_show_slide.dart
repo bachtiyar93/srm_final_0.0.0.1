@@ -46,6 +46,19 @@ class ProdukShowSlide extends StatelessWidget {
                   ),
                 ),
                 Positioned(
+                    top: 10,
+                    right: 10,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(3)),
+                          color: Colors.grey[300]
+                      ),
+                      child: Icon(
+                        Icons.bookmark_border,
+                        color: Colors.grey,
+                      ),
+                    )),
+                Positioned(
                   bottom: 0,
                   left: 0,
                   right: 0,
