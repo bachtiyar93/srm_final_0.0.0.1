@@ -38,6 +38,7 @@ class HomeViewModel extends BaseViewModel {
             rate: int.parse(terima["rate"]),
             pembeli: int.parse(terima["pembeli"]),
             dilihat: int.parse(terima["dilihat"]),
+            whistlist: 0,
             images: List<String>.from(terima["images"].map((x) => x)));
         _produkList.add(produk);
       }).toList();

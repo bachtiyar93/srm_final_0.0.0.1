@@ -15,6 +15,7 @@ class ProdukShowSlide extends StatelessWidget {
           onTap: () => Navigator.push(context,
               MaterialPageRoute(builder: (context) => ProdukDetails(produk: produk))),
           child: Container(
+            height: 170,
               decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
@@ -40,6 +41,7 @@ class ProdukShowSlide extends StatelessWidget {
                         alignment: Alignment.topCenter,
                         child: Shimmer.fromColors(
                             child: Image.asset('assets/ic_logo.png',
+                              height: 170,
                             ), baseColor: Colors.grey, highlightColor: Colors.white),
                       );
                     },

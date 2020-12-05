@@ -1,22 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'anime.dart';
+part of 'cart.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class ProdukAdapter extends TypeAdapter<Produk> {
+class CartAdapter extends TypeAdapter<Cart> {
   @override
-  final int typeId = 0;
+  final int typeId = 2;
 
   @override
-  Produk read(BinaryReader reader) {
+  Cart read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Produk(
+    return Cart(
       id: fields[0] as int,
       kain: fields[1] as String,
       seri: fields[2] as String,
@@ -34,7 +34,7 @@ class ProdukAdapter extends TypeAdapter<Produk> {
   }
 
   @override
-  void write(BinaryWriter writer, Produk obj) {
+  void write(BinaryWriter writer, Cart obj) {
     writer
       ..writeByte(13)
       ..writeByte(0)
@@ -71,7 +71,7 @@ class ProdukAdapter extends TypeAdapter<Produk> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ProdukAdapter &&
+      other is CartAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

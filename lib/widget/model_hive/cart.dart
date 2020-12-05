@@ -1,8 +1,8 @@
 import 'package:hive/hive.dart';
-part 'anime.g.dart';
+part 'cart.g.dart';
 
-@HiveType(typeId: 0)
-class Produk extends HiveObject{
+@HiveType(typeId: 2)
+class Cart extends HiveObject{
   @HiveField(0)
   final int id;
   @HiveField(1)
@@ -30,7 +30,7 @@ class Produk extends HiveObject{
   @HiveField(12)
   final List<String> images;
 
-  Produk({
+  Cart({
     this.id,
     this.kain,
     this.seri,

@@ -7,6 +7,7 @@ class SlideProduk extends StatefulWidget {
   SlideProduk(List produkList, {Key key}): this.produkList=produkList ?? [];
   final List<dynamic> produkList;
 
+
   @override
   _SlideProdukState createState() => _SlideProdukState();
 }

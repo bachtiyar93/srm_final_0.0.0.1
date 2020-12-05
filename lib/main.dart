@@ -16,6 +16,7 @@ import 'package:srm_final/Body/help/Tips.dart';
 import 'package:srm_final/Body/produk/produk_card.dart';
 import 'package:srm_final/apikey/sumberapi.dart';
 import 'package:srm_final/dashboard_custom/notched.dart';
+import 'package:srm_final/widget/model_hive/cart.dart';
 import 'package:srm_final/widget/model_hive_tips/tips.dart';
 import 'package:stacked/stacked.dart';
 import 'login_page/splashscreen.dart';
@@ -39,6 +40,7 @@ void main() async {
     Hive.init(appDirectory.path);
   }
   Hive.registerAdapter(ProdukAdapter());
+  Hive.registerAdapter(CartAdapter());
   Hive.registerAdapter(TipsAdapter());
   setupLocator();
   runApp(App());
@@ -93,6 +95,7 @@ class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
       String snacktitle = data['snacktitle'];
       String snackbody = data['snackbody'];
       debugPrint('notif: $notif & kode: $kode & page: $page');
+
     }
 
     /*if (message.containsKey('notification')) {
@@ -395,7 +398,7 @@ class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
       return ProdukPage(produkList);
     }
     else if (menuList[currentIndex] == Icons.shopping_cart) {
-       return CartPage();
+       return DaftarCart();
     }
     else if (menuList[currentIndex] == Icons.library_books_outlined) {
       return HelpPage();

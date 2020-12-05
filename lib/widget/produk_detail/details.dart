@@ -7,6 +7,9 @@ import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:srm_final/apikey/sumberapi.dart';
 import 'package:srm_final/widget/model_hive/anime.dart';
+import 'package:srm_final/widget/model_hive/cart.dart';
+import 'package:srm_final/widget/model_hive/hive_service.dart';
+import 'package:srm_final/widget/model_hive/locator.dart';
 import 'package:validators/validators.dart';
 import 'details_row_widget.dart';
 import 'package:http/http.dart' as http;
@@ -22,6 +25,10 @@ class ProdukDetails extends StatefulWidget {
 }
 
 class _ProdukDetailsState extends State<ProdukDetails> {
+  final HiveService hiveService = locator<HiveService>();
+  List<dynamic> _cartList = [];
+  List<dynamic> get cartList => _cartList;
+
   int _currentImage = 0;
   var U = new NumberFormat("'Rp. '###,###.00#", "id_ID");
   List<Widget> buildPageIndicator(){
@@ -45,9 +52,13 @@ class _ProdukDetailsState extends State<ProdukDetails> {
       ),
     );
   }
+  void dilihatMethod () async {
+    await http.post(SumberApi.dilihat, body: {"id": widget.produk.id.toString()});
+    debugPrint('update value show');
+  }
   @override
   void initState() {
-     http.post(SumberApi.dilihat, body: {"id": widget.produk.id});
+    dilihatMethod();
     super.initState();
   }
   @override
@@ -338,17 +349,18 @@ class _ProdukDetailsState extends State<ProdukDetails> {
                         DetailsRow(
                       heading: "Pembeli", details: widget.produk.pembeli.toString()),
                         Container(
-                    height: 116,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: BorderRadius.all(Radius.circular(20))
-                    ),
+                          padding: EdgeInsets.only( left: 16, right: 16, bottom: 5),
+                          height: 140,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                              color: Colors.grey[100],
+                              borderRadius: BorderRadius.all(Radius.circular(20))
+                          ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(top: 0, left: 16, right: 16),
+                          padding: EdgeInsets.only(top: 10, left: 16, right: 16, bottom: 5),
                           child: Text(
                             "Options",
                             style: TextStyle(
@@ -360,8 +372,25 @@ class _ProdukDetailsState extends State<ProdukDetails> {
                         ),
                         Row(
                           children: [
-                            Expanded(child:_buildSpec('Kain Saja', 'Pembelian Bahan')),
+                            Expanded(child:InkWell(
+                              splashColor: Colors.red,
+                                onTap: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text("Jumlah"),
+                                          content: Text("Connection Error, Please try again!"),
+                                          actions: [
+                                            Text("Ok mas bro"),
+                                          ],
+                                        );
+                                      });
+                                },
+                                child: _buildSpec('Kain Saja', 'Pembelian Bahan'))),
+                            SizedBox(width: 5,),
                             Expanded(child:_buildSpec('Sprei', 'Sprei, Sarung Bantal & Guling')),
+                            SizedBox(width: 5,),
                             Expanded(child:_buildSpec('Bedcover', 'Bedcover/Selimut')),
                           ],
                         )
@@ -404,8 +433,8 @@ class _ProdukDetailsState extends State<ProdukDetails> {
     }else{
       return Hero(
         tag: widget.produk.seri,
-        child: Image.network(
-          "https://www.houseofwellness.com.au/wp-content/uploads/2018/06/smile-GettyImages-882495390-crop.jpg",
+        child: Image.asset(
+          'assets/ic_logo.png',
           fit: BoxFit.scaleDown,
         ),
       );
@@ -444,7 +473,7 @@ class _ProdukDetailsState extends State<ProdukDetails> {
               children: [
 
                 Text(
-                  "Total bayar",
+                  "Harga Barang",
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
@@ -467,28 +496,49 @@ class _ProdukDetailsState extends State<ProdukDetails> {
             ),
           ),
           Expanded(
-            child: Container(
-              height: 60,
-              decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(15),
+            child: GestureDetector(
+              onTap: () async{
+                Cart cart = Cart(
+                    id: widget.produk.id,
+                    kain: widget.produk.kain,
+                    seri: widget.produk.seri,
+                    harga: widget.produk.harga,
+                    stok: widget.produk.stok,
+                    tglMasuk: widget.produk.tglMasuk,
+                    kondisi: widget.produk.kondisi,
+                    bidang: widget.produk.bidang,
+                    rate:widget.produk.rate,
+                    pembeli: widget.produk.pembeli,
+                    dilihat: widget.produk.dilihat,
+                    whistlist:widget.produk.whistlist,
+                    images: widget.produk.images);
+                _cartList.add(cart);
+                debugPrint('add to Cart');
+                await hiveService.addBoxesTypeList(_cartList, "CartTabel");
+              },
+              child: Container(
+                height: 60,
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(15),
+                  ),
                 ),
-              ),
-              child: Center(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Container(
-                    margin: EdgeInsets.all(10),
-                    child: Column(
-                      children: [
-                        Text('Add to Cart', style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),),
-                        Icon(Icons.shopping_cart,
-                        color: Colors.white,
-                        ),
-                      ],
-                    ),
-                  )
+                child: Center(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Container(
+                      margin: EdgeInsets.all(10),
+                      child: Column(
+                        children: [
+                          Text('Add to Cart', style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),),
+                          Icon(Icons.shopping_cart,
+                          color: Colors.white,
+                          ),
+                        ],
+                      ),
+                    )
+                  ),
                 ),
               ),
             ),
@@ -506,7 +556,7 @@ Widget _buildSpec(String title, String data){
         Radius.circular(15),
       ),
     ),
-    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16,),
+    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,

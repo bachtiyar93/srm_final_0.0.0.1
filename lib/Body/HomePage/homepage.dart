@@ -6,8 +6,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:srm_final/apikey/sumberapi.dart';
 import 'package:srm_final/main.dart';
+import 'package:srm_final/widget/help/TipsItem.dart';
+import 'package:srm_final/widget/loading.dart';
+import 'package:srm_final/widget/model_hive_tips/home_view_tips.dart';
 import 'package:srm_final/widget/produk_bar_slide/slide_produk.dart';
 import 'package:srm_final/widget/produkpopuler/produk_populer.dart';
+import 'package:stacked/stacked.dart';
 import '../Chat/dashboardchat.dart';
 import 'theme/daftarproduk.dart';
 import 'theme/showmenubar.dart';
@@ -359,14 +363,15 @@ class _HomePageState extends State<HomePage> {
         ),
         SizedBox(height: spesialsize*0.015),
         Container(
+          margin: EdgeInsets.only(top: 15),
           height: MediaQuery.of(context).size.width*0.2,
           child: Row(
             children: [
-              _buttonMenu('SR','Katun Jepang'),
-              _buttonMenu('SR','Katun Jepang'),
-              _buttonMenu('SR','Katun Jepang'),
-              _buttonMenu('SR','Katun Jepang'),
-              _buttonMenu('SR','Katun Jepang'),
+              _buttonMenu('assets/ic_roll.png','Kain'),
+              _buttonMenu('assets/ic_bed.png','Sprei'),
+              _buttonMenu('assets/ic_curtains.png','Tirai'),
+              _buttonMenu('assets/ic_send.png','Wallpaper'),
+              _buttonMenu('assets/ic_rod.png','Aksesoris'),
             ],
           )
         )
@@ -458,73 +463,37 @@ class _HomePageState extends State<HomePage> {
 
 
   Widget tipsNews() {
-    return Container(
-      color: Colors.transparent,
-      padding: EdgeInsets.symmetric(
-          horizontal: 20.0, vertical: 10.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          subheading('Tips & News'),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                child: Text('Bagaimana cara mencuci sprei?',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold
+    double cWidth = 0.0;
+    double screenWidth;
+    screenWidth = MediaQuery.of(context).size.width - 40;
+    return ViewModelBuilder<TipsView>.reactive(
+        viewModelBuilder: () => TipsView(),
+        onModelReady: (model) => model.getData(),
+        builder: (context, model, child) => Container(
+          child:  model.tipsList.length != 0
+              ? NotificationListener(onNotification: (ScrollNotification scrollNotification) {
+                double progress = scrollNotification.metrics.pixels / scrollNotification.metrics.maxScrollExtent;
+              cWidth = screenWidth * progress;
+              setState(() {});
+              return false;
+            },
+            child: Column(
+              children: [
+                Center(child: Text('Tips & News'),),
+                Container(
+                  height: MediaQuery.of(context).size.height*0.725,
+                  child:    ListView.builder(
+                    itemCount: model.tipsList.length,
+                    itemBuilder: (context, index) {
+                      return TipsItem(tips: model.tipsList[index]);
+                    },
                   ),
                 ),
-              ),
-              Container(
-                child: Text('Bagaimana cara mencuci gordyn?',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold
-                  ),
-                ),
-              ),
-              Container(
-                child: Text('Mengapa kain saya luntur?',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold
-                  ),
-                ),
-              ),
-              Container(
-                child: Text('Bagaimana cara order?',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold
-                  ),
-                ),
-              ),
-              Container(
-                child: Text('Buah apa yang warnya kuning, kalo dibuka dalamnya pisang?',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold
-                  ),
-                ),
-              ),
-              Container(
-                child: Text('Nikmat apa yang engkau dustai?',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold
-                  ),
-                ),
-              ),
-              Container(
-                child: Text('Kenapa udang di balik batu?',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Center(
-            child: Text("© Copyright 2020 Mr.TNB - All Rights Reserved"),
+              ],
+            ),
           )
-        ],
-      ),
+              : LoadingScreen(text: model.text,),
+        )
     );
   }
   //method close snackbar
@@ -557,7 +526,7 @@ class _HomePageState extends State<HomePage> {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.8),
+              color: Colors.white.withOpacity(0.8),
               offset: Offset(-6.0, -6.0),
               blurRadius: 16.0,
             ),
@@ -567,7 +536,7 @@ class _HomePageState extends State<HomePage> {
               blurRadius: 16.0,
             ),
           ],
-          color: Colors.grey,
+          color: Colors.white,
           borderRadius: BorderRadius.circular(12.0),
         ),
         margin: EdgeInsets.fromLTRB(spesialsize*0.0025, 0, spesialsize*0.0025, 0),
@@ -583,12 +552,10 @@ class _HomePageState extends State<HomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text(s,
-                    style: TextStyle(
-                        fontSize: spesialsize*0.03,
-                        fontFamily: 'Diploma'
-                    ),
-                  )
+                  Image.asset(s,
+                  height: 25,
+                    width: 25,
+                  ),
                 ],
               ),
               Text(
@@ -596,7 +563,7 @@ class _HomePageState extends State<HomePage> {
                 style: new TextStyle(color: Colors.black.withOpacity(0.9),
                     fontWeight: FontWeight.bold,
                     fontStyle: FontStyle.italic,
-                    fontSize: widthCustom*0.02),
+                    fontSize: widthCustom*0.05),
               ),
             ],
           ),
