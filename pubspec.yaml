@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   progress_indicators: ^0.1.5
-  provider: ^4.3.2+2
+  provider: ^4.3.2+3
   webview_flutter: ^1.0.7
   intl: ^0.16.1
   image_picker: ^0.6.7+14
@@ -27,8 +27,9 @@ dependencies:
   http: ^0.12.2
   crypto: ^2.1.5
   validators: ^2.0.1
-  firebase_analytics: any
-  firebase_core: ^0.5.2+1
+  firebase_core: ^0.5.3
+  #local
+  flutter_local_notifications: ^3.0.2
   #Network cached
   cached_network_image: ^2.4.1
   #design dari adobe di
@@ -39,6 +40,7 @@ dependencies:
   # state management
   stacked: ^1.7.6
   carousel_pro: ^1.0.0
+  workmanager: ^0.2.3
   # third party usable services
   stacked_services: ^0.6.0+1
   get_it:

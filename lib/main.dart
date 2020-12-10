@@ -6,6 +6,7 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flushbar/flushbar_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:srm_final/Body/Chat/dashboardchat.dart';
@@ -29,10 +30,11 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:http/http.dart' as http;
 import 'widget/model_hive_profile/view_model.dart';
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =  FlutterLocalNotificationsPlugin();
 
 void main() async {
-  await Hive.initFlutter();
   WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
   if (kIsWeb) {
     await Hive.initFlutter();
   } else {
@@ -45,6 +47,7 @@ void main() async {
   setupLocator();
   runApp(App());
 }
+
 
 class App extends StatelessWidget {
   @override
@@ -84,27 +87,36 @@ class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
     Icons.library_books_outlined,
     Icons.person
   ];
-
   static Future<dynamic> onBackgroundMessageHandler(Map<String, dynamic> message) async {
     debugPrint('onBackgroundMessageHandler');
     if (message.containsKey('data')) {
       final dynamic data = message['data'];
-      String notif = data['notif'];
-      String kode = data['kode'];
-      String page = data['page'];
-      String snacktitle = data['snacktitle'];
-      String snackbody = data['snackbody'];
+      final notif = data['notif'];
+      final kode = data['kode'];
+      final page = data['page'];
+      final snacktitle = data['snacktitle'];
+      final snackbody = data['snackbody'];
       debugPrint('notif: $notif & kode: $kode & page: $page');
-
+     await _demoNotification(snacktitle, snackbody);
     }
-
-    /*if (message.containsKey('notification')) {
-    // Handle notification message
-    final dynamic notification = message['notification'];
-  }*/
-
-    // Or do other work.
-    return Future.value(true);
+    if (message.containsKey('notification')) {
+      final dynamic notification = message['notification'];
+      await _demoNotification(notification['title'], notification['body']);
+    }
+// Or do other work.
+    return Future<void>.value(true);
+  }
+  static Future<void> _demoNotification(String title, String body) async {
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'channel_ID', 'channel name', 'channel description',
+        importance: Importance.max,
+        playSound: true,
+        showProgress: true,
+        priority: Priority.high,
+        ticker: 'test ticker');
+    var iOSChannelSpecifics = IOSNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics, iOS: iOSChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(0, title, body, platformChannelSpecifics, payload: 'Default_Sound');
   }
 
   void _getDataFcm(Map<String, dynamic> message, String type) {
@@ -219,6 +231,7 @@ class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
     }
   }
 
+
   @override
   void initState() {
     _firebaseMessaging.configure(
@@ -236,13 +249,6 @@ class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
         _getDataFcm(message, 'onLaunch');
       },
     );
-    _firebaseMessaging.requestNotificationPermissions(
-        const IosNotificationSettings(
-            sound: true, badge: true, alert: true, provisional: true));
-    _firebaseMessaging.onIosSettingsRegistered
-        .listen((IosNotificationSettings settings) {
-      debugPrint("Settings registered: $settings");
-    });
     _firebaseMessaging.getToken().then((String token) async {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       preferences.setString('token', token);
