@@ -25,8 +25,8 @@ class ProdukDetails extends StatefulWidget {
 }
 
 class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateMixin{
+  final _keyConfirm = new GlobalKey<FormState>();
   AnimationController _animationController;
-
   double _containerPaddingLeft = 20.0;
   double _animationValue;
   double _translateX = 0;
@@ -36,13 +36,16 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
   bool tapAllow = true;
   bool show;
   bool sent = false;
-  Color _color = Colors.red;
+  Color _color = Colors.red, onPressColor1=Colors.white,onPressColor2=Colors.white,onPressColor3=Colors.white;
   final HiveService hiveService = locator<HiveService>();
   List<dynamic> _cartList = [];
   List<dynamic> get cartList => _cartList;
 
-  int _currentImage = 0;
+  int _currentImage = 0, _jumlahMeter=1;
+
+
   var U = new NumberFormat("'Rp. '###,###.00#", "id_ID");
+
   List<Widget> buildPageIndicator(){
     List<Widget> list = [];
     for (var i = 0; i < widget.produk.images.length; i++) {
@@ -50,6 +53,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
     }
     return list;
   }
+
   Widget buildIndicator(bool isActive){
     return AnimatedContainer(
       duration: Duration(milliseconds: 100),
@@ -416,18 +420,33 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                                       builder: (BuildContext context) {
                                         return AlertDialog(
                                           title: Text("Jumlah"),
-                                          content: Text("Connection Error, Please try again!"),
+                                          content: Form(
+                                            key: _keyConfirm,
+                                            child: TextFormField(
+                                              keyboardType: TextInputType.number,
+                                                onSaved: (e) => _jumlahMeter =int.parse(e),
+                                                cursorColor: Colors.red,
+                                                decoration: InputDecoration(
+                                                    hintText: "Masukan jumlah pembelian",
+                                                    focusColor: Colors.black,
+                                                    border: InputBorder.none,
+                                                    fillColor: Color(0xfff3f3f4),
+                                                    filled: true))
+                                        ),
                                           actions: [
-                                            Text("Ok mas bro"),
+                                           TextButton(
+                                             child: Text('0k'),
+                                           onPressed: save,
+                                           ),
                                           ],
                                         );
                                       });
                                 },
-                                child: _buildSpec('Kain Saja', 'Pembelian Bahan'))),
+                                child: _buildSpec('Kain Saja', 'Pembelian Bahan',onPressColor1))),
                             SizedBox(width: 5,),
-                            Expanded(child:_buildSpec('Sprei', 'Sprei, Sarung Bantal & Guling')),
+                            Expanded(child:_buildSpec('Sprei', 'Sprei, Sarung Bantal & Guling',onPressColor2)),
                             SizedBox(width: 5,),
-                            Expanded(child:_buildSpec('Bedcover', 'Bedcover/Selimut')),
+                            Expanded(child:_buildSpec('Bedcover', 'Bedcover/Selimut',onPressColor3)),
                           ],
                         )
                       ],
@@ -520,7 +539,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                 Row(
                   children: [
                     Text(
-                      U.format(widget.produk.harga).toString(),
+                      U.format(widget.produk.harga*_jumlahMeter).toString(),
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -541,7 +560,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                       id: widget.produk.id,
                       kain: widget.produk.kain,
                       seri: widget.produk.seri,
-                      harga: widget.produk.harga,
+                      harga: _jumlahMeter * widget.produk.harga,
                       stok: widget.produk.stok,
                       tglMasuk: widget.produk.tglMasuk,
                       kondisi: widget.produk.kondisi,
@@ -634,11 +653,11 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
       ),
     );
   }
-Widget _buildSpec(String title, String data){
+Widget _buildSpec(String title, String data, Color onPressColor){
   return Container(
     height: 100,
     decoration: BoxDecoration(
-      color: Colors.white,
+      color: onPressColor,
       borderRadius: BorderRadius.all(
         Radius.circular(15),
       ),
@@ -671,5 +690,18 @@ Widget _buildSpec(String title, String data){
     ),
   );
 }
+  void save() async {
+    final form = _keyConfirm.currentState;
+    if (form.validate()) {
+      form.save();
+      setState(() {
+        _jumlahMeter;
+        onPressColor1=Colors.red[700];
+        onPressColor2=Colors.red[300];
+        onPressColor3=Colors.red[300];
+      });
+      Navigator.pop(context);
+    }
+  }
 }
 
