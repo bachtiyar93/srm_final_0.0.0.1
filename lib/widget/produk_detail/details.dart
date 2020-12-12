@@ -24,7 +24,19 @@ class ProdukDetails extends StatefulWidget {
   _ProdukDetailsState createState() => _ProdukDetailsState();
 }
 
-class _ProdukDetailsState extends State<ProdukDetails> {
+class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateMixin{
+  AnimationController _animationController;
+
+  double _containerPaddingLeft = 20.0;
+  double _animationValue;
+  double _translateX = 0;
+  double _translateY = 0;
+  double _rotate = 0;
+  double _scale = 1;
+  bool tapAllow = true;
+  bool show;
+  bool sent = false;
+  Color _color = Colors.red;
   final HiveService hiveService = locator<HiveService>();
   List<dynamic> _cartList = [];
   List<dynamic> get cartList => _cartList;
@@ -56,10 +68,34 @@ class _ProdukDetailsState extends State<ProdukDetails> {
     await http.post(SumberApi.dilihat, body: {"id": widget.produk.id.toString()});
     debugPrint('update value show');
   }
+  void kontrolAnimasi() {
+    _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 1300));
+    show = true;
+    _animationController.addListener(() {
+      setState(() {
+        show = false;
+        _animationValue = _animationController.value;
+        if (_animationValue >= 0.2 && _animationValue < 0.4) {
+          _containerPaddingLeft = 100.0;
+          _color = Colors.grey[300];
+        } else if (_animationValue >= 0.4 && _animationValue <= 0.5) {
+          _translateX = 80.0;
+          _rotate = -20.0;
+          _scale = 0.1;
+        } else if (_animationValue >= 0.5 && _animationValue <= 0.8) {
+          _translateY = -20.0;
+        } else if (_animationValue >= 0.81) {
+          _containerPaddingLeft = 20.0;
+          sent = true;
+        }
+      });
+    });
+  }
   @override
   void initState() {
     dilihatMethod();
     super.initState();
+    kontrolAnimasi();
   }
   @override
   Widget build(BuildContext context) {
@@ -454,6 +490,7 @@ class _ProdukDetailsState extends State<ProdukDetails> {
       },
     );
   }
+  
   Widget  _bangunBeli({ProdukDetails widget, BuildContext context}) {
     return Container(
       height: 80,
@@ -497,50 +534,100 @@ class _ProdukDetailsState extends State<ProdukDetails> {
           ),
           Expanded(
             child: GestureDetector(
-              onTap: () async{
-                Cart cart = Cart(
-                    id: widget.produk.id,
-                    kain: widget.produk.kain,
-                    seri: widget.produk.seri,
-                    harga: widget.produk.harga,
-                    stok: widget.produk.stok,
-                    tglMasuk: widget.produk.tglMasuk,
-                    kondisi: widget.produk.kondisi,
-                    bidang: widget.produk.bidang,
-                    rate:widget.produk.rate,
-                    pembeli: widget.produk.pembeli,
-                    dilihat: widget.produk.dilihat,
-                    whistlist:widget.produk.whistlist,
-                    images: widget.produk.images);
-                _cartList.add(cart);
-                debugPrint('add to Cart');
-                await hiveService.addBoxesTypeList(_cartList, "CartTabel");
+              onTap: () {
+                if (tapAllow==true) {
+                  _animationController.forward();
+                  Cart cart = Cart(
+                      id: widget.produk.id,
+                      kain: widget.produk.kain,
+                      seri: widget.produk.seri,
+                      harga: widget.produk.harga,
+                      stok: widget.produk.stok,
+                      tglMasuk: widget.produk.tglMasuk,
+                      kondisi: widget.produk.kondisi,
+                      bidang: widget.produk.bidang,
+                      rate:widget.produk.rate,
+                      pembeli: widget.produk.pembeli,
+                      dilihat: widget.produk.dilihat,
+                      whistlist:widget.produk.whistlist,
+                      images: widget.produk.images);
+                  _cartList.add(cart);
+                  debugPrint('add to Cart');
+                  hiveService.addBoxesTypeList(_cartList, "CartTabel");
+                  setState(() {
+                    tapAllow=false;
+                  });
+                }else{
+                  Navigator.pop(context);
+                };
               },
-              child: Container(
-                height: 60,
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(15),
-                  ),
-                ),
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Container(
-                      margin: EdgeInsets.all(10),
-                      child: Column(
-                        children: [
-                          Text('Add to Cart', style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),),
-                          Icon(Icons.shopping_cart,
-                          color: Colors.white,
+              child:  Center(
+                child: AnimatedContainer(
+                    decoration: BoxDecoration(
+                      color: _color,
+                      borderRadius: BorderRadius.circular(100.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: _color,
+                          blurRadius: 21,
+                          spreadRadius: -15,
+                          offset: Offset(
+                            0.0,
+                            20.0,
                           ),
-                        ],
-                      ),
-                    )
-                  ),
-                ),
-              ),
+                        )
+                      ],
+                    ),
+                    padding: EdgeInsets.only(
+                        left: _containerPaddingLeft,
+                        right: 20.0,
+                        top: 10.0,
+                        bottom: 10.0),
+                    duration: Duration(milliseconds: 400),
+                    curve: Curves.easeOutCubic,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        (!sent)
+                            ? AnimatedContainer(
+                          duration: Duration(milliseconds: 400),
+                          child: Icon(Icons.shopping_cart),
+                          curve: Curves.fastOutSlowIn,
+                          transform: Matrix4.translationValues(
+                              _translateX, _translateY, 0)
+                            ..rotateZ(_rotate)
+                            ..scale(_scale),
+                        )
+                            : Container(),
+                        AnimatedSize(
+                          vsync: this,
+                          duration: Duration(milliseconds: 600),
+                          child: show ? SizedBox(width: 10.0) : Container(),
+                        ),
+                        AnimatedSize(
+                          vsync: this,
+                          duration: Duration(milliseconds: 200),
+                          child: show ? Text("Add to Cart") : Container(),
+                        ),
+                        AnimatedSize(
+                          vsync: this,
+                          duration: Duration(milliseconds: 200),
+                          child: sent ? Icon(Icons.done) : Container(),
+                        ),
+                        AnimatedSize(
+                          vsync: this,
+                          alignment: Alignment.topLeft,
+                          duration: Duration(milliseconds: 600),
+                          child: sent ? SizedBox(width: 10.0) : Container(),
+                        ),
+                        AnimatedSize(
+                          vsync: this,
+                          duration: Duration(milliseconds: 200),
+                          child: sent ? Text("Lihat") : Container(),
+                        ),
+                      ],
+                    )),
+              )
             ),
           ),
         ],

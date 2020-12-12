@@ -15,8 +15,6 @@ dependencies:
   webview_flutter: ^1.0.7
   intl: ^0.16.1
   image_picker: ^0.6.7+14
-  mime: ^0.9.7
-  toast: ^0.1.5
   flushbar: ^1.10.4
   firebase_messaging: ^7.0.3
   shimmer: ^1.1.2
@@ -25,7 +23,6 @@ dependencies:
   custom_progress_dialog: ^1.0.5
   percent_indicator: ^2.1.8
   http: ^0.12.2
-  crypto: ^2.1.5
   validators: ^2.0.1
   firebase_core: ^0.5.3
   #local
@@ -39,8 +36,8 @@ dependencies:
   hive_flutter: ^0.3.1
   # state management
   stacked: ^1.7.6
-  carousel_pro: ^1.0.0
-  workmanager: ^0.2.3
+  #picker
+  flutter_picker: ^1.1.5
   # third party usable services
   stacked_services: ^0.6.0+1
   get_it:
@@ -108,3 +105,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+flutter_intl:
+  enabled: true

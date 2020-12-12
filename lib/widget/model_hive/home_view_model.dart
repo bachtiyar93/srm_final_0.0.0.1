@@ -13,6 +13,7 @@ class HomeViewModel extends BaseViewModel {
   List<dynamic> get produkList => _produkList;
   final String url = SumberApi.dataproduk;
 
+
   getData() async {
     print("Entered get Data()");
     bool exists = await hiveService.isExists(boxName: "ProdukTabel");

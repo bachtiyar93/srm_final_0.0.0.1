@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:custom_progress_dialog/custom_progress_dialog.dart';
@@ -18,6 +19,7 @@ import 'package:srm_final/Body/produk/produk_card.dart';
 import 'package:srm_final/apikey/sumberapi.dart';
 import 'package:srm_final/dashboard_custom/notched.dart';
 import 'package:srm_final/widget/model_hive/cart.dart';
+import 'package:srm_final/widget/model_hive/hive_service.dart';
 import 'package:srm_final/widget/model_hive_tips/tips.dart';
 import 'package:stacked/stacked.dart';
 import 'login_page/splashscreen.dart';
@@ -72,6 +74,7 @@ class MyApp extends StatefulWidget {
 enum LoginStatus { onSplash, onLogin, onDashboard}
 class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
   LoginStatus _screenStatus = LoginStatus.onDashboard;
+  final HiveService hiveService = locator<HiveService>();
   final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   String token = '';
@@ -147,8 +150,9 @@ class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
             showFlushbar(context: context,
                 flushbar: Flushbar(
                   title: snacktitle,
+                  routeColor: Colors.red,
                   message: snackbody,
-                  backgroundColor: Colors.red[900].withOpacity(0.3),
+                  backgroundColor: Colors.grey.withOpacity(0.3),
                   flushbarPosition: FlushbarPosition.TOP,
                   icon: Icon(
                     Icons.info_outline,
@@ -157,7 +161,7 @@ class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
                   ),
                   flushbarStyle: FlushbarStyle.FLOATING,
                   duration: Duration(seconds: 3),
-                  boxShadows: [BoxShadow(color: Colors.red[900].withOpacity(0.3), offset: Offset(0.0, 2.0), blurRadius: 3.0,)],
+                  boxShadows: [BoxShadow(color: Colors.white.withOpacity(0.3), offset: Offset(0.0, 2.0), blurRadius: 3.0,)],
                 )..show(context)
             );
           }
@@ -231,7 +235,7 @@ class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
     }
   }
 
-
+  var keranjang='0';
   @override
   void initState() {
     _firebaseMessaging.configure(
@@ -257,10 +261,30 @@ class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
         this.token = token;
       });
     });
-    controller = AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    controller =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     super.initState();
     _getLoginSplash();
+    Timer.periodic(Duration(seconds: 3), (t) {
+      // kode ini akan dieksekusi setiap 3 detik.
+      Stream<String> stream = new Stream.fromFuture(getData());
+      print("Created the stream");
+      stream.listen((data) {
+        print("DataReceived: " + data);
+        keranjang = data;
+      }, onDone: () {
+        print("Task Done");
+      }, onError: (error) {
+        print("Some Error");
+      });
+    });
   }
+
+Future<String> getData() async {
+  List<dynamic> _total = await hiveService.getBoxesTypeList("CartTabel");
+  var total = _total.length.toString();
+return total;
+}
 
   @override
   Widget build(BuildContext context) {
@@ -303,7 +327,6 @@ class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
                               ),
                             ),
                           ),
-
                           CustomPaint(
                             child: SizedBox(
                               height: height,
@@ -317,7 +340,31 @@ class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
                                   return GestureDetector(
                                     child: Opacity(
                                       opacity: currentIndex == value ? 0 : 1,
-                                      child: CircleAvatar(
+                                      child: menuList[value]==Icons.shopping_cart? Stack(
+                                        children: [
+                                          CircleAvatar(
+                                            backgroundColor: Colors.white,
+                                            child: Icon(menuList[value],
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          keranjang != '0'?Positioned(
+                                            top: -0.5,
+                                            right: 0,
+                                            child: Container(
+                                              width: 20,
+                                              alignment: Alignment.center,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.blue,
+                                                  borderRadius: BorderRadius.circular(20)
+                                              ),
+                                              child: Text(keranjang,
+                                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                              ),
+                                            ),
+                                          ):Text(''),
+                                        ],
+                                      ):CircleAvatar(
                                         backgroundColor: Colors.white,
                                         child: Icon(menuList[value],
                                           color: Colors.black,

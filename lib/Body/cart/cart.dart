@@ -3,15 +3,44 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:srm_final/Body/cart/cart_item.dart';
 import 'package:srm_final/widget/model_hive/cart_view_model.dart';
+import 'package:srm_final/widget/model_hive/hive_service.dart';
+import 'package:srm_final/widget/model_hive/locator.dart';
 import 'package:stacked/stacked.dart';
 
+
+
 class DaftarCart extends StatefulWidget {
+
   @override
   _DaftarCartState createState() => _DaftarCartState();
 }
 
 class _DaftarCartState extends State<DaftarCart> {
+  //_totalBelanja = model.cartList.map<int>((m) => m.harga).reduce((a,b )=>a+b);
+  int _total =0;
+  int _oldTotal=0;
+  bool cek = false;
+   hitungBayar(bool) async {
+    final HiveService hiveService = locator<HiveService>();
+    var acartList = await hiveService.getBoxesTypeList("CartTabel");
+    acartList.forEach((item){
+      _total += item.harga;
+    });
+    if (cek==true){
+         _total = _total-_oldTotal;
+         cek=false;
+       _oldTotal= _total;
+    }else {
+        _oldTotal = _total;
+    }
+  }
 
+
+  @override
+  void initState() {
+    super.initState();
+      hitungBayar(cek);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,36 +67,25 @@ class _DaftarCartState extends State<DaftarCart> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                        width: spesialsize*0.12,
-                        height: spesialsize*0.12,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15),
-                          ),
-                          border: Border.all(
-                            color: Colors.grey[300],
-                            width: 1,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text('Keranjang Belanja',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: spesialsize*0.08,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        child: Icon(
-                          Icons.keyboard_arrow_left,
-                          color: Colors.black,
-                          size: spesialsize*0.07,
-                        )
-                    ),
-                  ),
-                  Text('Keranjang Belanja',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: spesialsize*0.08,
-                      fontWeight: FontWeight.bold,
-                    ),
+                      ),
+                      Container(
+                        alignment: Alignment.centerRight,
+                          child: MaterialButton(
+                              onPressed: () {  },
+                              child: InkWell(
+                                  child: Icon(Icons.delete)))
+                      )
+                    ],
                   ),
 
                   SizedBox(
@@ -111,6 +129,7 @@ class _DaftarCartState extends State<DaftarCart> {
                                                         child: Text('hapus'),
                                                         onPressed: () {
                                                           setState(() {
+                                                            hitungBayar(cek=true);
                                                             model.cartList.removeAt(index);
                                                             //_totalBelanja = model.cartList.map<int>((m) => m.harga).reduce((a,b )=>a+b);
                                                           });
@@ -120,7 +139,7 @@ class _DaftarCartState extends State<DaftarCart> {
                                           var box = Hive.box('CartTabel');
                                           box.deleteAt(index);
                                         });
-                                        },
+                                      },
                                       child: Icon(Icons.delete)),
                                 ],
                               ),
@@ -168,7 +187,7 @@ class _DaftarCartState extends State<DaftarCart> {
                         color: Colors.grey[300]
                     ),
                     padding: EdgeInsets.all(2),
-                    child: Text('Total Belanja',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
+                    child: Text(_oldTotal==0?'Ayo Belanja!':_oldTotal.toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
                   )
               )
             ],
