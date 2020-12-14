@@ -33,7 +33,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
   double _translateY = 0;
   double _rotate = 0;
   double _scale = 1;
-  bool tapAllow = true;
+  bool tapAllow = false;
   bool show;
   bool sent = false;
   Color _color = Colors.red, onPressColor1=Colors.white,onPressColor2=Colors.white,onPressColor3=Colors.white;
@@ -41,7 +41,8 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
   List<dynamic> _cartList = [];
   List<dynamic> get cartList => _cartList;
 
-  int _currentImage = 0, _jumlahMeter=1;
+  int _currentImage = 0;
+  double _jumlahMeter=0;
 
 
   var U = new NumberFormat("'Rp. '###,###.00#", "id_ID");
@@ -412,41 +413,212 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                         ),
                         Row(
                           children: [
-                            Expanded(child:InkWell(
-                              splashColor: Colors.red,
-                                onTap: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: Text("Jumlah"),
-                                          content: Form(
-                                            key: _keyConfirm,
-                                            child: TextFormField(
-                                              keyboardType: TextInputType.number,
-                                                onSaved: (e) => _jumlahMeter =int.parse(e),
-                                                cursorColor: Colors.red,
-                                                decoration: InputDecoration(
-                                                    hintText: "Masukan jumlah pembelian",
-                                                    focusColor: Colors.black,
-                                                    border: InputBorder.none,
-                                                    fillColor: Color(0xfff3f3f4),
-                                                    filled: true))
-                                        ),
-                                          actions: [
-                                           TextButton(
-                                             child: Text('0k'),
-                                           onPressed: save,
-                                           ),
-                                          ],
-                                        );
-                                      });
-                                },
-                                child: _buildSpec('Kain Saja', 'Pembelian Bahan',onPressColor1))),
+                            Expanded(
+                                child:Material(
+                                  shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(22.0) ),
+                                  elevation: 18.0,
+                                  color:onPressColor1,
+                                  clipBehavior: Clip.antiAlias,
+                                  child: MaterialButton(
+                                    height:100,
+                                    minWidth: MediaQuery.of(context).size.width,
+                                  onPressed: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text("Jumlah Quantity (Meter)"),
+                                            content: Container(
+                                              height: 100,
+                                              child: Column(
+                                                children: [
+                                                  Form(
+                                                      key: _keyConfirm,
+                                                      child: TextFormField(
+                                                          onSaved: (e) => _jumlahMeter =double.parse(e),
+                                                          cursorColor: Colors.red,
+                                                          decoration: InputDecoration(
+                                                              hintText: "Masukan Jumlah / Meter",
+                                                              focusColor: Colors.black,
+                                                              border: InputBorder.none,
+                                                              fillColor: Color(0xfff3f3f4),
+                                                              filled: true))
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Icon(Icons.help_outline, color: Colors.yellow,),
+                                                      Text('Gunakan dot/titik  "." mengganti koma ","!', style: TextStyle(fontSize: 12),)
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            actions: [
+                                              Material(
+                                                shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(22.0) ),
+                                                elevation: 18.0,
+                                                color:Colors.grey,
+                                                clipBehavior: Clip.antiAlias,
+                                                child: MaterialButton(
+                                                    child: Text('Batal'),
+                                                    onPressed:(){
+                                                      Navigator.pop(context);
+                                                    }
+                                                ),
+                                              ),
+                                              Material(
+                                                shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(22.0) ),
+                                                elevation: 18.0,
+                                                clipBehavior: Clip.antiAlias,
+                                                child: MaterialButton(
+                                                  child: Text('0k'),
+                                                  onPressed:()async{_jumlahMeter==null? null:
+                                                    await save();
+                                                    setState(() {
+                                                      _jumlahMeter;
+                                                      onPressColor1=Colors.red[700];
+                                                      tapAllow=true;
+                                                    });
+                                                  Navigator.pop(context);
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  },
+                                  child: _buildSpec('Kain Saja', 'Pembelian Bahan')),
+                                )),
                             SizedBox(width: 5,),
-                            Expanded(child:_buildSpec('Sprei', 'Sprei, Sarung Bantal & Guling',onPressColor2)),
+                            Expanded(
+                                child:Material(
+                                  shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(22.0) ),
+                                  elevation: 18.0,
+                                  color:onPressColor2,
+                                  clipBehavior: Clip.antiAlias,
+                                  child: MaterialButton(
+                                      height:100,
+                                      minWidth: MediaQuery.of(context).size.width,
+                                      onPressed: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text("Jumlah"),
+                                                content: Form(
+                                                    key: _keyConfirm,
+                                                    child: TextFormField(
+                                                        keyboardType: TextInputType.number,
+                                                        onSaved: (e) => _jumlahMeter =double.parse(e),
+                                                        cursorColor: Colors.red,
+                                                        decoration: InputDecoration(
+                                                            hintText: "Masukan Jumlah / Meter",
+                                                            focusColor: Colors.black,
+                                                            border: InputBorder.none,
+                                                            fillColor: Color(0xfff3f3f4),
+                                                            filled: true))
+                                                ),
+                                                actions: [
+                                                  Material(
+                                                    shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(22.0) ),
+                                                    elevation: 18.0,
+                                                    color:Colors.grey,
+                                                    clipBehavior: Clip.antiAlias,
+                                                    child: MaterialButton(
+                                                        child: Text('Batal'),
+                                                        onPressed:(){
+                                                          Navigator.pop(context);
+                                                        }
+                                                    ),
+                                                  ),
+                                                  Material(
+                                                    shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(22.0) ),
+                                                    elevation: 18.0,
+                                                    clipBehavior: Clip.antiAlias,
+                                                    child: MaterialButton(
+                                                      child: Text('0k'),
+                                                      onPressed:()async{_jumlahMeter==null? null:
+                                                      await save();
+                                                      setState(() {
+                                                        _jumlahMeter;
+                                                        onPressColor2=Colors.red[700];
+                                                        tapAllow=true;
+                                                      });
+                                                      Navigator.pop(context);
+                                                      },
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            });
+                                      },
+                                      child: _buildSpec('Sprei', 'Sprei, Sarung Bantal & Guling')),
+                                )),
                             SizedBox(width: 5,),
-                            Expanded(child:_buildSpec('Bedcover', 'Bedcover/Selimut',onPressColor3)),
+                            Expanded(
+                                child:Material(
+                                  shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(22.0) ),
+                                  elevation: 18.0,
+                                  color:onPressColor3,
+                                  clipBehavior: Clip.antiAlias,
+                                  child: MaterialButton(
+                                      height:100,
+                                      minWidth: MediaQuery.of(context).size.width,
+                                      onPressed: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text("Jumlah"),
+                                                content: Form(
+                                                    key: _keyConfirm,
+                                                    child: TextFormField(
+                                                        keyboardType: TextInputType.number,
+                                                        onSaved: (e) => _jumlahMeter =double.parse(e),
+                                                        cursorColor: Colors.red,
+                                                        decoration: InputDecoration(
+                                                            hintText: "Masukan Jumlah / Meter",
+                                                            focusColor: Colors.black,
+                                                            border: InputBorder.none,
+                                                            fillColor: Color(0xfff3f3f4),
+                                                            filled: true))
+                                                ),
+                                                actions: [
+                                                  Material(
+                                                    shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(22.0) ),
+                                                    elevation: 18.0,
+                                                    color:Colors.grey,
+                                                    clipBehavior: Clip.antiAlias,
+                                                    child: MaterialButton(
+                                                        child: Text('Batal'),
+                                                        onPressed:(){
+                                                          Navigator.pop(context);
+                                                        }
+                                                    ),
+                                                  ),
+                                                  Material(
+                                                    shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(22.0) ),
+                                                    elevation: 18.0,
+                                                    clipBehavior: Clip.antiAlias,
+                                                    child: MaterialButton(
+                                                      child: Text('0k'),
+                                                      onPressed:()async{_jumlahMeter==null? null:
+                                                      await save();
+                                                      setState(() {
+                                                        _jumlahMeter;
+                                                        onPressColor3=Colors.red[700];
+                                                        tapAllow=true;
+                                                      });
+                                                      Navigator.pop(context);
+                                                      },
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            });
+                                      },
+                                      child: _buildSpec('Selimut', 'Bedcover & Quilt')),
+                                )),
                           ],
                         )
                       ],
@@ -529,7 +701,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
               children: [
 
                 Text(
-                  "Harga Barang",
+                  "Harga Perkiraan",
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
@@ -539,7 +711,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                 Row(
                   children: [
                     Text(
-                      U.format(widget.produk.harga*_jumlahMeter).toString(),
+                      _jumlahMeter==0? 'Yuk pilih produk kamu':U.format(widget.produk.harga*_jumlahMeter).toString(),
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -576,8 +748,6 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                   setState(() {
                     tapAllow=false;
                   });
-                }else{
-                  Navigator.pop(context);
                 };
               },
               child:  Center(
@@ -642,7 +812,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                         AnimatedSize(
                           vsync: this,
                           duration: Duration(milliseconds: 200),
-                          child: sent ? Text("Lihat") : Container(),
+                          child: sent ? Text("Selesai") : Container(),
                         ),
                       ],
                     )),
@@ -653,54 +823,37 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
       ),
     );
   }
-Widget _buildSpec(String title, String data, Color onPressColor){
-  return Container(
-    height: 100,
-    decoration: BoxDecoration(
-      color: onPressColor,
-      borderRadius: BorderRadius.all(
-        Radius.circular(15),
+Widget _buildSpec(String title, String data){
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Text(
+        title,
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
       ),
-    ),
-    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+      SizedBox(
+        height: 1,
+      ),
+      Text(
+        data,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: Colors.grey,
+          fontSize: 14,
         ),
-        SizedBox(
-          height: 1,
-        ),
-        Text(
-          data,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.grey,
-            fontSize: 14,
-          ),
-        ),
-      ],
-    ),
+      ),
+    ],
   );
 }
   void save() async {
     final form = _keyConfirm.currentState;
     if (form.validate()) {
       form.save();
-      setState(() {
-        _jumlahMeter;
-        onPressColor1=Colors.red[700];
-        onPressColor2=Colors.red[300];
-        onPressColor3=Colors.red[300];
-      });
-      Navigator.pop(context);
     }
   }
 }

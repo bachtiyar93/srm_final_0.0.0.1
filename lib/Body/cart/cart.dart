@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 import 'package:srm_final/Body/cart/cart_item.dart';
+import 'package:srm_final/Body/payment.dart';
 import 'package:srm_final/widget/model_hive/cart_view_model.dart';
 import 'package:srm_final/widget/model_hive/hive_service.dart';
 import 'package:srm_final/widget/model_hive/locator.dart';
@@ -17,13 +19,13 @@ class DaftarCart extends StatefulWidget {
 
 class _DaftarCartState extends State<DaftarCart> {
   //_totalBelanja = model.cartList.map<int>((m) => m.harga).reduce((a,b )=>a+b);
-  int _total =0;
-  int _oldTotal=0;
+  double _total =0;
+  double _oldTotal=0;
   bool cek = false;
-   hitungBayar(bool) async {
+   Future<String> hitungBayar() async {
     final HiveService hiveService = locator<HiveService>();
     var acartList = await hiveService.getBoxesTypeList("CartTabel");
-    acartList.forEach((item){
+    await acartList.forEach((item){
       _total += item.harga;
     });
     if (cek==true){
@@ -34,12 +36,12 @@ class _DaftarCartState extends State<DaftarCart> {
         _oldTotal = _total;
     }
   }
-
+  var U = new NumberFormat("'Rp. '###,###.00#", "id_ID");
 
   @override
   void initState() {
     super.initState();
-      hitungBayar(cek);
+      hitungBayar();
   }
 
   @override
@@ -129,7 +131,8 @@ class _DaftarCartState extends State<DaftarCart> {
                                                         child: Text('hapus'),
                                                         onPressed: () {
                                                           setState(() {
-                                                            hitungBayar(cek=true);
+                                                            cek=true;
+                                                            hitungBayar();
                                                             model.cartList.removeAt(index);
                                                             //_totalBelanja = model.cartList.map<int>((m) => m.harga).reduce((a,b )=>a+b);
                                                           });
@@ -179,15 +182,20 @@ class _DaftarCartState extends State<DaftarCart> {
                   onPressed: null,
                   child: Icon(Icons.edit)),
               Expanded(
-                  child:  Container(
-                    alignment: Alignment.center,
-                    height: 45,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.grey[300]
+                  child:  GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> PaymentPage()));
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: 45,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.grey[300]
+                      ),
+                      padding: EdgeInsets.all(2),
+                      child: Text(_oldTotal==0?'Ayo Belanja!':U.format(_oldTotal).toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
                     ),
-                    padding: EdgeInsets.all(2),
-                    child: Text(_oldTotal==0?'Ayo Belanja!':_oldTotal.toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
                   )
               )
             ],

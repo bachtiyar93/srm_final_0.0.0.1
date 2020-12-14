@@ -105,7 +105,6 @@ class _HomePageState extends State<HomePage> {
       }
     }else {
       if(_appNewsdataNow == _appNewsdataOld){
-        setState(() {
           showDialog(
               context: context,
               builder: (BuildContext context) {
@@ -148,10 +147,8 @@ class _HomePageState extends State<HomePage> {
                   ),
                 );
               });
-        });
       }else {
-        setState(() {
-          Hive.deleteBoxFromDisk('ProdukTabel');
+        Hive.deleteBoxFromDisk('ProdukTabel');
           showDialog(
               context: context,
               builder: (BuildContext context) {
@@ -196,7 +193,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                 );
               });
-        });
       }
     }
   }
@@ -461,9 +457,8 @@ class _HomePageState extends State<HomePage> {
         child: SlideProduk(produkList));
   }
 
-
+  double cWidth = 0.0;
   Widget tipsNews() {
-    double cWidth = 0.0;
     double screenWidth;
     screenWidth = MediaQuery.of(context).size.width - 40;
     return ViewModelBuilder<TipsView>.reactive(

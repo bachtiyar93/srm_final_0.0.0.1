@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:srm_final/widget/model_hive/cart.dart';
 
@@ -15,6 +16,7 @@ class CartItem extends StatefulWidget {
 }
 
 class _CartItemState extends State<CartItem> {
+  var U = new NumberFormat("'Rp. '###,###.00#", "id_ID");
   @override
   Widget build(BuildContext context) {
     return _modelCart(context);
@@ -72,7 +74,7 @@ Widget  _modelCart(BuildContext context) {
               bottom: 35,
               left: 10,
             child: Text(
-              'Harga(IDR) :' + widget.cart.harga.toString(),
+              'Harga :' + U.format(widget.cart.harga).toString(),
               style: TextStyle(fontSize: 18, color: Colors.black),
             ),
           ),

@@ -10,7 +10,7 @@ class Cart extends HiveObject{
   @HiveField(2)
   final String seri;
   @HiveField(3)
-  final int harga;
+  final double harga;
   @HiveField(4)
   final int stok;
   @HiveField(5)

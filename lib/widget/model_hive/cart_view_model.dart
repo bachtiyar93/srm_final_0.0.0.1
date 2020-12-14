@@ -9,8 +9,8 @@ class CartViewModel extends BaseViewModel {
 
   List<dynamic> _cartList = [];
   List<dynamic> get cartList => _cartList;
-  int _total =0;
-  int get total =>_total;
+  double _total =0;
+  double get total =>_total;
 
 
   getData() async {

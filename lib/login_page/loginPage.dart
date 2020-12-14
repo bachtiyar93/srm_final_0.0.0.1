@@ -514,6 +514,13 @@ class _LoginPageState extends State<LoginPage> {
         saveInformasiLogin(valueLogin);
       });
       _progressDialog.dismissProgressDialog(context);
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: Text('Disarankan menutup aplikasi setelah login, dan membukanya kembali'),
+            );
+          });
     } else {
       setState(() {
         _loginStatus = LoginStatus.belumSignIn;

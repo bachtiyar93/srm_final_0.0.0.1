@@ -265,15 +265,15 @@ class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     super.initState();
     _getLoginSplash();
-    Timer.periodic(Duration(seconds: 3), (t) {
+    Timer.periodic(Duration(seconds: 1), (t) {
       // kode ini akan dieksekusi setiap 3 detik.
       Stream<String> stream = new Stream.fromFuture(getData());
-      print("Created the stream");
+      //print("Created the stream");
       stream.listen((data) {
-        print("DataReceived: " + data);
+        //print("DataReceived: " + data);
         keranjang = data;
       }, onDone: () {
-        print("Task Done");
+        //print("Task Done");
       }, onError: (error) {
         print("Some Error");
       });
