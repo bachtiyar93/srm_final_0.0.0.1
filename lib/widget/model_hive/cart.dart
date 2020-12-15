@@ -12,7 +12,7 @@ class Cart extends HiveObject{
   @HiveField(3)
   final double harga;
   @HiveField(4)
-  final int stok;
+  final double stok;
   @HiveField(5)
   final DateTime tglMasuk;
   @HiveField(6)

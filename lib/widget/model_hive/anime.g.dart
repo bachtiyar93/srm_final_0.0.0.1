@@ -18,10 +18,10 @@ class ProdukAdapter extends TypeAdapter<Produk> {
     };
     return Produk(
       id: fields[0] as int,
-      kain: fields[1] as String,
+      produk: fields[1] as String,
       seri: fields[2] as String,
-      harga: fields[3] as int,
-      stok: fields[4] as int,
+      harga: fields[3] as double,
+      stok: fields[4] as double,
       tglMasuk: fields[5] as DateTime,
       kondisi: fields[6] as int,
       bidang: fields[7] as int,
@@ -40,7 +40,7 @@ class ProdukAdapter extends TypeAdapter<Produk> {
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.kain)
+      ..write(obj.produk)
       ..writeByte(2)
       ..write(obj.seri)
       ..writeByte(3)

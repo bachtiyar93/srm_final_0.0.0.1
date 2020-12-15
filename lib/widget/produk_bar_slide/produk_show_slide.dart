@@ -4,16 +4,16 @@ import 'package:srm_final/widget/model_hive/anime.dart';
 import 'package:srm_final/widget/produk_detail/details.dart';
 
 class ProdukShowSlide extends StatelessWidget {
-  final Produk produk;
+  final Produk produkList;
   final int star;
-  const ProdukShowSlide({Key key, this.produk, this.star=0}) :assert (star !=null),super(key: key);
+  const ProdukShowSlide({Key key, this.produkList, this.star=0}) :assert (star !=null),super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         GestureDetector(
           onTap: () => Navigator.push(context,
-              MaterialPageRoute(builder: (context) => ProdukDetails(produk: produk))),
+              MaterialPageRoute(builder: (context) => ProdukDetails(produkList: produkList))),
           child: Container(
             height: 170,
               decoration: BoxDecoration(
@@ -33,7 +33,7 @@ class ProdukShowSlide extends StatelessWidget {
               child: Stack(children: <Widget>[
                 ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(8)),
-                  child: Image.network(produk.images[0],
+                  child: Image.network(produkList.images[0],
                     height: 170,
                     loadingBuilder:(BuildContext context, Widget child,ImageChunkEvent loadingProgress) {
                       if (loadingProgress == null) return child;
@@ -72,13 +72,13 @@ class ProdukShowSlide extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          produk.kain,
+                          produkList.produk,
                           textAlign: TextAlign.right,
                           style: TextStyle(fontSize: 18, color: Colors.white),
                         ),
                         SizedBox(width: 40,),
                         Text(
-                          produk.harga.toString(),
+                          produkList.harga.toString(),
                           textAlign: TextAlign.left,
                           style: TextStyle(fontSize: 18, color: Colors.white,),
                         ),

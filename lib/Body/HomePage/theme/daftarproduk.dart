@@ -98,7 +98,7 @@ class _DaftarProdukState extends State<DaftarProduk> {
                       child: AspectRatio(
                         aspectRatio: 1/1.7,
                         child: ProdukItem(
-                          produk: widget.produkList[index],
+                          produkList: widget.produkList[index],
                         ),
                       ),
                     );

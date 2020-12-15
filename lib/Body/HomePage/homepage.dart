@@ -6,16 +6,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:srm_final/apikey/sumberapi.dart';
 import 'package:srm_final/main.dart';
-import 'package:srm_final/widget/help/TipsItem.dart';
-import 'package:srm_final/widget/loading.dart';
-import 'package:srm_final/widget/model_hive_tips/home_view_tips.dart';
 import 'package:srm_final/widget/produk_bar_slide/slide_produk.dart';
 import 'package:srm_final/widget/produkpopuler/produk_populer.dart';
-import 'package:stacked/stacked.dart';
 import '../Chat/dashboardchat.dart';
 import 'theme/daftarproduk.dart';
 import 'theme/showmenubar.dart';
 import 'package:http/http.dart' as http;
+import 'package:adobe_xd/adobe_xd.dart';
 
 class HomePage extends StatefulWidget {
   HomePage(List produkList): this.produkList=produkList ?? [];
@@ -223,19 +220,127 @@ class _HomePageState extends State<HomePage> {
                 _appBarWidget(),
               ];
               },
-            body: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  titleAndNotifBar(),
-                  kainKami(),
-                  ProdukTitleBar(),
-                  topBar(widget.produkList),
-                  terlaris(widget.produkList),
-                  produkReady(widget.produkList),
-                  produkKami(widget.produkList),
-                  tipsNews(),
-                ],
-              ),
+            body: Stack(
+              children: [
+                Pinned.fromSize(
+                  bounds: Rect.fromLTWH(27.0, -109.0, 375.0, 812.0),
+                  size: Size(523.0, 837.0),
+                  pinLeft: true,
+                  pinTop: true,
+                  pinBottom: true,
+                  fixedWidth: true,
+                  child: Container(
+                    decoration: BoxDecoration(),
+                  ),
+                ),
+                Pinned.fromSize(
+                  bounds: Rect.fromLTWH(144.0, -150.0, 379.0, 383.0),
+                  size: Size(523.0, 937.0),
+                  pinRight: true,
+                  pinTop: true,
+                  fixedWidth: true,
+                  fixedHeight: true,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
+                      gradient: LinearGradient(
+                        begin: Alignment(0.0, -1.0),
+                        end: Alignment(0.0, 1.0),
+                        colors: [
+                          const Color(0xffff0707),
+                          const Color(0xffec0707),
+                          const Color(0xff800404)
+                        ],
+                        stops: [0.0, 0.222, 1.0],
+                      ),
+                    ),
+                  ),
+                ),
+                Pinned.fromSize(
+                  bounds: Rect.fromLTWH(-50.0, 383.0, 186.0, 189.0),
+                  size: Size(523.0, 937.0),
+                  pinLeft: true,
+                  fixedWidth: true,
+                  fixedHeight: true,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
+                      gradient: LinearGradient(
+                        begin: Alignment(0.0, -1.0),
+                        end: Alignment(0.0, 1.0),
+                        colors: [
+                          const Color(0xffff0707),
+                          const Color(0xffea0606),
+                          const Color(0xff800404)
+                        ],
+                        stops: [0.0, 0.167, 1.0],
+                      ),
+                    ),
+                  ),
+                ),
+                Pinned.fromSize(
+                  bounds: Rect.fromLTWH(444.0, 665.0, 274.0, 272.0),
+                  size: Size(523.0, 837.0),
+                  pinBottom: true,
+                  fixedWidth: true,
+                  fixedHeight: true,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
+                      gradient: LinearGradient(
+                        begin: Alignment(0.0, -1.0),
+                        end: Alignment(0.0, 1.0),
+                        colors: [
+                          const Color(0xffff0707),
+                          const Color(0xffe80606),
+                          const Color(0xff800404)
+                        ],
+                        stops: [0.0, 0.184, 1.0],
+                      ),
+                    ),
+                  ),
+                ),
+                Pinned.fromSize(
+                  bounds: Rect.fromLTWH(468.0, 460.0, 59.0, 55.0),
+                  size: Size(523.0, 937.0),
+                  fixedWidth: true,
+                  fixedHeight: true,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),
+                      gradient: LinearGradient(
+                        begin: Alignment(0.0, -1.0),
+                        end: Alignment(0.0, 1.0),
+                        colors: [
+                          const Color(0xffff0000),
+                          const Color(0xffec0000),
+                          const Color(0xffe70000),
+                          const Color(0xffde0000),
+                          const Color(0xff800000)
+                        ],
+                        stops: [0.0, 0.151, 0.192, 0.259, 1.0],
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  color: Colors.white.withOpacity(0.9),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: <Widget>[
+                        titleAndNotifBar(),
+                        kainKami(),
+                        ProdukTitleBar(),
+                        topBar(widget.produkList),
+                        terlaris(widget.produkList),
+                        produkReady(widget.produkList),
+                        produkKami(widget.produkList),
+                        //tipsNews(),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -303,22 +408,40 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Icon(Icons.notifications,
-                  size: spesialsize*0.06,
-                  color: Colors.red[900],
+            GestureDetector(
+              onTap: () => ShowMenuBar(context),
+              child: Container(
+                width: 40,
+                child: Stack(
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(Icons.notification_important,
+                          size: spesialsize*0.09,
+                          color: Colors.red[900],
+                        ),
+                      ],
+                    ),
+                    Positioned(
+                      top: -0,
+                      left: 20,
+                      child: Container(
+                        width: 20,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            color: Colors.blue[900],
+                            borderRadius: BorderRadius.circular(20)
+                        ),
+                        child: Text('3',
+                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: spesialsize*0.06),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                SizedBox(width: spesialsize*0.05),
-                GestureDetector(
-                  onTap: () => ShowMenuBar(context),
-                  child: Icon(Icons.menu,
-                    size: spesialsize*0.06,
-                    color: Colors.red[900],
-                  ),
-                ),
-              ],
+              ),
             ),
           ]
       ),
@@ -458,39 +581,39 @@ class _HomePageState extends State<HomePage> {
   }
 
   double cWidth = 0.0;
-  Widget tipsNews() {
-    double screenWidth;
-    screenWidth = MediaQuery.of(context).size.width - 40;
-    return ViewModelBuilder<TipsView>.reactive(
-        viewModelBuilder: () => TipsView(),
-        onModelReady: (model) => model.getData(),
-        builder: (context, model, child) => Container(
-          child:  model.tipsList.length != 0
-              ? NotificationListener(onNotification: (ScrollNotification scrollNotification) {
-                double progress = scrollNotification.metrics.pixels / scrollNotification.metrics.maxScrollExtent;
-              cWidth = screenWidth * progress;
-              setState(() {});
-              return false;
-            },
-            child: Column(
-              children: [
-                Center(child: Text('Tips & News'),),
-                Container(
-                  height: MediaQuery.of(context).size.height*0.725,
-                  child:    ListView.builder(
-                    itemCount: model.tipsList.length,
-                    itemBuilder: (context, index) {
-                      return TipsItem(tips: model.tipsList[index]);
-                    },
-                  ),
-                ),
-              ],
-            ),
-          )
-              : LoadingScreen(text: model.text,),
-        )
-    );
-  }
+  // Widget tipsNews() {
+  //   double screenWidth;
+  //   screenWidth = MediaQuery.of(context).size.width - 40;
+  //   return ViewModelBuilder<TipsView>.reactive(
+  //       viewModelBuilder: () => TipsView(),
+  //       onModelReady: (model) => model.getData(),
+  //       builder: (context, model, child) => Container(
+  //         child:  model.tipsList.length != 0
+  //             ? NotificationListener(onNotification: (ScrollNotification scrollNotification) {
+  //               double progress = scrollNotification.metrics.pixels / scrollNotification.metrics.maxScrollExtent;
+  //             cWidth = screenWidth * progress;
+  //             setState(() {});
+  //             return false;
+  //           },
+  //           child: Column(
+  //             children: [
+  //               Center(child: Text('Tips & News'),),
+  //               Container(
+  //                 height: MediaQuery.of(context).size.height*0.725,
+  //                 child:    ListView.builder(
+  //                   itemCount: model.tipsList.length,
+  //                   itemBuilder: (context, index) {
+  //                     return TipsItem(tips: model.tipsList[index]);
+  //                   },
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         )
+  //             : LoadingScreen(text: model.text,),
+  //       )
+  //   );
+  // }
   //method close snackbar
   Future<bool> onWillPop() async {
     DateTime currentTime = DateTime.now();

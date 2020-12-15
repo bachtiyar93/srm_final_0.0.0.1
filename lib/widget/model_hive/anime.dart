@@ -6,13 +6,13 @@ class Produk extends HiveObject{
   @HiveField(0)
   final int id;
   @HiveField(1)
-  final String kain;
+  final String produk;
   @HiveField(2)
   final String seri;
   @HiveField(3)
-  final int harga;
+  final double harga;
   @HiveField(4)
-  final int stok;
+  final double stok;
   @HiveField(5)
   final DateTime tglMasuk;
   @HiveField(6)
@@ -32,7 +32,7 @@ class Produk extends HiveObject{
 
   Produk({
     this.id,
-    this.kain,
+    this.produk,
     this.seri,
     this.harga,
     this.stok,

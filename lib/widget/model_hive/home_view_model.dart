@@ -29,10 +29,10 @@ class HomeViewModel extends BaseViewModel {
       (result as List).map((terima) {
         Produk produk = Produk(
             id: int.parse(terima["id"]),
-            kain: terima["kain"],
+            produk: terima["produk"],
             seri: terima["seri"],
-            harga: int.parse(terima["harga"]),
-            stok: int.parse(terima["stok"]),
+            harga: double.parse(terima["harga"]),
+            stok: double.parse(terima["stok"]),
             tglMasuk: DateTime.parse(terima["tgl_masuk"]),
             kondisi: int.parse(terima["kondisi"]),
             bidang: int.parse(terima["bidang"]),

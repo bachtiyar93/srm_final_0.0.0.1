@@ -21,7 +21,7 @@ class CartAdapter extends TypeAdapter<Cart> {
       kain: fields[1] as String,
       seri: fields[2] as String,
       harga: fields[3] as double,
-      stok: fields[4] as int,
+      stok: fields[4] as double,
       tglMasuk: fields[5] as DateTime,
       kondisi: fields[6] as int,
       bidang: fields[7] as int,

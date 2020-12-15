@@ -153,23 +153,18 @@ class _PaymentPageState extends State<PaymentPage>{
                       children:[
                         GestureDetector(
                             onTap: (){
-
                             },
                             child: PaymentCard('BANK BRI','Transfer to Bank Rakyat Indonesia','https://cdn3.iconfinder.com/data/icons/banks-in-indonesia-logo-badge/100/BRI-512.png')),
                         GestureDetector(
                             onTap: (){
-
                             },
                             child:PaymentCard('BANK BCA','Transfer to Bank Central Asia','https://cdn3.iconfinder.com/data/icons/banks-in-indonesia-logo-badge/100/BCA-512.png')),
                         GestureDetector(
                             onTap: (){
-
-
                             },
                             child:PaymentCard('MANDIRI','Transfer to Bank Mandiri','https://cdn3.iconfinder.com/data/icons/banks-in-indonesia-logo-badge/100/Mandiri-512.png')),
                         GestureDetector(
                             onTap: (){
-
                             },
                             child:PaymentCard('GOPAY','Pay with Go-pay (Gojek)','https://img.tek.id/img/library/library-1/images/tek/goapy.jpg')),
                       ]

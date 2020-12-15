@@ -5,14 +5,14 @@ import 'package:srm_final/widget/model_hive/anime.dart';
 import 'package:srm_final/widget/produk_detail/details.dart';
 
 class ProdukItem extends StatelessWidget {
-  final Produk produk;
+  final Produk produkList;
   final int star;
-  const ProdukItem({Key key, this.produk, this.star=0}) :assert (star !=null),super(key: key);
+  const ProdukItem({Key key, this.produkList, this.star=0}) :assert (star !=null),super(key: key);
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => Navigator.push(context,
-          MaterialPageRoute(builder: (context) => ProdukDetails(produk: produk))),
+          MaterialPageRoute(builder: (context) => ProdukDetails(produkList: produkList))),
       child: Container(
           decoration: BoxDecoration(
                 boxShadow: [
@@ -32,7 +32,7 @@ class ProdukItem extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.only(topLeft: Radius.circular(8),topRight: Radius.circular(8) ),
               child: CachedNetworkImage(
-                imageUrl:produk.images[0],
+                imageUrl:produkList.images[0],
                 placeholder: (context, url) => Container(
                   alignment: Alignment.topCenter,
                   child: Shimmer.fromColors(
@@ -48,7 +48,7 @@ class ProdukItem extends StatelessWidget {
               bottom: 120,
               left: 10,
               child: Text(
-                produk.kain,
+                produkList.produk,
                 style: TextStyle(fontSize: 18, color: Colors.black),
               ),
             ),
@@ -56,7 +56,7 @@ class ProdukItem extends StatelessWidget {
               bottom: 100,
               left: 10,
               child: Text(
-                'Bidang(cm) : '+produk.bidang.toString(),
+                'Bidang(cm) : '+produkList.bidang.toString(),
                 style: TextStyle(fontSize: 18, color: Colors.black),
               ),
             ),
@@ -64,7 +64,7 @@ class ProdukItem extends StatelessWidget {
               bottom: 80,
               left: 10,
               child: Text(
-                'Harga(IDR) :' + produk.harga.toString(),
+                'Harga(IDR) :' + produkList.harga.toString(),
                 style: TextStyle(fontSize: 18, color: Colors.black),
               ),
             ),
@@ -72,7 +72,7 @@ class ProdukItem extends StatelessWidget {
               bottom: 60,
               left: 10,
               child: Text(
-                'Status : '+(produk.kondisi==0? 'Ready': (produk.kondisi==1? 'New Arrival':'Habis')),
+                'Status : '+(produkList.kondisi==0? 'Ready': (produkList.kondisi==1? 'New Arrival':'Habis')),
                 style: TextStyle(fontSize: 18, color: Colors.black),
               ),
             ),
@@ -83,7 +83,7 @@ class ProdukItem extends StatelessWidget {
                   children:
                     List.generate(5, (index) {
                       return Icon(
-                        index < produk.rate ? Icons.star : Icons.star_border,
+                        index < produkList.rate ? Icons.star : Icons.star_border,
                         color: Colors.yellow[900],
                       );
                     })
@@ -106,7 +106,7 @@ class ProdukItem extends StatelessWidget {
                 left: 10,
                 // ignore: unrelated_type_equality_checks
                 child: Text(
-                        'Motif: '+produk.seri,
+                        'Motif: '+produkList.seri,
                         style: TextStyle(fontSize: 18),
                       )
             )

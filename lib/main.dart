@@ -85,7 +85,7 @@ class _MyAppState extends State<MyApp>with SingleTickerProviderStateMixin {
   Animation<double> animation;
   List menuList = [
     Icons.store,
-    Icons.shopping_bag_outlined,
+    Icons.search,
     Icons.shopping_cart,
     Icons.library_books_outlined,
     Icons.person
@@ -294,101 +294,101 @@ return total;
             viewModelBuilder: () => HomeViewModel(),
             onModelReady: (model) => model.getData(),
             builder: (context, model, child) => Scaffold(
-          key: _scaffoldState,
-          body: KontrolPage(model.produkList),
-          bottomNavigationBar: LayoutBuilder(
-            builder: (context, constraints) {
-              double width = constraints.maxWidth;
-              double itemWidth = width / menuList.length;
-              double floatingIconRadius = itemWidth * 0.2;
-              return Container(
-                color: Colors.white,
-                child: Stack(children: [
-                  Positioned(
-                    child: Container(
-                      width: width,
-                      child: Stack(
-                        overflow: Overflow.visible,
-                        children: <Widget>[
-                          // floating icon
-                          Positioned(
-                            top: controller.value <= 0.5
-                                ? (controller.value * height - height * 0.2)
-                                : (1 - controller.value) * height -
-                                height * 0.2,
-                            left: moveProgress * itemWidth + itemWidth / 2 -
-                                floatingIconRadius,
-                            child: CircleAvatar(
-                              radius: floatingIconRadius,
-                              backgroundColor: Colors.red,
-                              child: Icon(
-                                menuList[currentIndex],
-                                color: Colors.white,
+              key: _scaffoldState,
+              body: KontrolPage(model.produkList),
+              bottomNavigationBar: LayoutBuilder(
+                builder: (context, constraints) {
+                  double width = constraints.maxWidth;
+                  double itemWidth = width / menuList.length;
+                  double floatingIconRadius = itemWidth * 0.2;
+                  return Container(
+                    color: Colors.white,
+                    child: Stack(children: [
+                      Positioned(
+                        child: Container(
+                          width: width,
+                          child: Stack(
+                            overflow: Overflow.visible,
+                            children: <Widget>[
+                              // floating icon
+                              Positioned(
+                                top: controller.value <= 0.5
+                                    ? (controller.value * height - height * 0.2)
+                                    : (1 - controller.value) * height -
+                                    height * 0.2,
+                                left: moveProgress * itemWidth + itemWidth / 2 -
+                                    floatingIconRadius,
+                                child: CircleAvatar(
+                                  radius: floatingIconRadius,
+                                  backgroundColor: Colors.red,
+                                  child: Icon(
+                                    menuList[currentIndex],
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                          CustomPaint(
-                            child: SizedBox(
-                              height: height,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .spaceAround,
-                                children: menuList
-                                    .asMap()
-                                    .keys
-                                    .map((value) {
-                                  return GestureDetector(
-                                    child: Opacity(
-                                      opacity: currentIndex == value ? 0 : 1,
-                                      child: menuList[value]==Icons.shopping_cart? Stack(
-                                        children: [
-                                          CircleAvatar(
+                              CustomPaint(
+                                child: SizedBox(
+                                  height: height,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment
+                                        .spaceAround,
+                                    children: menuList
+                                        .asMap()
+                                        .keys
+                                        .map((value) {
+                                      return GestureDetector(
+                                        child: Opacity(
+                                          opacity: currentIndex == value ? 0 : 1,
+                                          child: menuList[value]==Icons.shopping_cart? Stack(
+                                            children: [
+                                              CircleAvatar(
+                                                backgroundColor: Colors.white,
+                                                child: Icon(menuList[value],
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                              keranjang != '0'?Positioned(
+                                                top: -0.5,
+                                                right: 0,
+                                                child: Container(
+                                                  width: 20,
+                                                  alignment: Alignment.center,
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.blue,
+                                                      borderRadius: BorderRadius.circular(20)
+                                                  ),
+                                                  child: Text(keranjang,
+                                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                                  ),
+                                                ),
+                                              ):Text(''),
+                                            ],
+                                          ):CircleAvatar(
                                             backgroundColor: Colors.white,
                                             child: Icon(menuList[value],
                                               color: Colors.black,
                                             ),
                                           ),
-                                          keranjang != '0'?Positioned(
-                                            top: -0.5,
-                                            right: 0,
-                                            child: Container(
-                                              width: 20,
-                                              alignment: Alignment.center,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.blue,
-                                                  borderRadius: BorderRadius.circular(20)
-                                              ),
-                                              child: Text(keranjang,
-                                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                              ),
-                                            ),
-                                          ):Text(''),
-                                        ],
-                                      ):CircleAvatar(
-                                        backgroundColor: Colors.white,
-                                        child: Icon(menuList[value],
-                                          color: Colors.black,
                                         ),
-                                      ),
-                                    ),
-                                    onTap: () {
-                                      changeIndex(value);
-                                    },
-                                  );
-                                }).toList(),
+                                        onTap: () {
+                                          changeIndex(value);
+                                        },
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                                painter: NotchedPainter(itemCount: menuList.length,
+                                    progress: moveProgress),
                               ),
-                            ),
-                            painter: NotchedPainter(itemCount: menuList.length,
-                                progress: moveProgress),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                  )
-                ]),
-              );
-            },
-          ),
+                        ),
+                      )
+                    ]),
+                  );
+                },
+              ),
             )// This trailing comma makes auto-formatting nicer for build methods.
         );
       case LoginStatus.onSplash:
@@ -447,7 +447,7 @@ return total;
             signOut,
           ));
     }
-    else if (menuList[currentIndex] == Icons.shopping_bag_outlined) {
+    else if (menuList[currentIndex] == Icons.search) {
       return ProdukPage(produkList);
     }
     else if (menuList[currentIndex] == Icons.shopping_cart) {

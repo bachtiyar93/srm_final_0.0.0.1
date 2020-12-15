@@ -83,7 +83,7 @@ class ProdukItems extends StatelessWidget {
             child: AspectRatio(
               aspectRatio: 1/1.7,
               child: ProdukItem(
-                produk: produkList[index],
+                produkList: produkList[index],
               ),
             ),
           );

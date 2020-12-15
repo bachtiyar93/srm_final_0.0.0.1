@@ -47,7 +47,7 @@ class _SlideProdukState extends State<SlideProduk> {
                   ..rotateY(angle),
                 alignment: Alignment.center,
                 child: ProdukShowSlide(
-                produk: widget.produkList[index],
+                produkList: widget.produkList[index],
               ),
             ),
             );

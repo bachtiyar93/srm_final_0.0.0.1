@@ -17,8 +17,8 @@ import 'package:http/http.dart' as http;
 
 
 class ProdukDetails extends StatefulWidget {
-  final Produk produk;
-  const ProdukDetails({Key key, this.produk}) : super(key: key);
+  final Produk produkList;
+  const ProdukDetails({Key key, this.produkList}) : super(key: key);
 
   @override
   _ProdukDetailsState createState() => _ProdukDetailsState();
@@ -49,7 +49,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
 
   List<Widget> buildPageIndicator(){
     List<Widget> list = [];
-    for (var i = 0; i < widget.produk.images.length; i++) {
+    for (var i = 0; i < widget.produkList.images.length; i++) {
       list.add(buildIndicator(i == _currentImage));
     }
     return list;
@@ -70,7 +70,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
     );
   }
   void dilihatMethod () async {
-    await http.post(SumberApi.dilihat, body: {"id": widget.produk.id.toString()});
+    await http.post(SumberApi.dilihat, body: {"id": widget.produkList.id.toString()});
     debugPrint('update value show');
   }
   void kontrolAnimasi() {
@@ -225,7 +225,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                 expandedHeight: MediaQuery.of(context).size.height*0.55,
                 flexibleSpace: FlexibleSpaceBar(
                   centerTitle: true,
-                  title: widget.produk.images.length > 1
+                  title: widget.produkList.images.length > 1
                       ? Container(
                     margin: EdgeInsets.symmetric(vertical: 0.01),
                     child: Row(
@@ -242,7 +242,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                             _currentImage = page;
                           });
                         },
-                        children: widget.produk.images.map((String path) {
+                        children: widget.produkList.images.map((String path) {
                           return Container(
                             child: _bangunGambarDetail(path),
                             height: MediaQuery.of(context).size.height*0.5,
@@ -291,7 +291,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                         ),),),
                         Row(
                           children: <Widget>[
-                            Image.network(widget.produk.images[0],
+                            Image.network(widget.produkList.images[0],
                         height: 80,
                         width: 80,
                       ),
@@ -303,7 +303,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              widget.produk.kain,
+                              widget.produkList.produk,
                               maxLines: 1,
                               overflow: TextOverflow.fade,
                               softWrap: false,
@@ -313,7 +313,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                                   color: Colors.white),
                             ),
                             Text(
-                              widget.produk.seri,
+                              widget.produkList.seri,
                               style: GoogleFonts.lato(
                                 fontSize: 18,
                                   color: Colors.white.withOpacity(0.6)),
@@ -377,18 +377,18 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                           fontSize: 20)),
                         DetailsRow(
                       heading: "Jenis Kain",
-                      details: widget.produk.kain),
-                        DetailsRow(heading: "Seri/Motif", details: widget.produk.seri),
-                        DetailsRow(heading: "Bidang Kain (cm)", details: widget.produk.bidang.toString()),
+                      details: widget.produkList.produk),
+                        DetailsRow(heading: "Seri/Motif", details: widget.produkList.seri),
+                        DetailsRow(heading: "Bidang Kain (cm)", details: widget.produkList.bidang.toString()),
                         DetailsRow(
-                      heading: "Stok (m)", details: widget.produk.stok.toString()),
+                      heading: "Stok (m)", details: widget.produkList.stok.toString()),
                         DetailsRow(
-                      heading: "Rate (1-5)", details: widget.produk.rate.toString()),
+                      heading: "Rate (1-5)", details: widget.produkList.rate.toString()),
                         DetailsRow(
                       heading: "Harga/m",
-                      details: U.format(widget.produk.harga).toString()),
+                      details: U.format(widget.produkList.harga).toString()),
                         DetailsRow(
-                      heading: "Pembeli", details: widget.produk.pembeli.toString()),
+                      heading: "Pembeli", details: widget.produkList.pembeli.toString()),
                         Container(
                           padding: EdgeInsets.only( left: 16, right: 16, bottom: 5),
                           height: 140,
@@ -641,7 +641,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
   _bangunGambarDetail(String path) {
     if (isURL(path)) {
       return Hero(
-        tag: widget.produk.seri,
+        tag: widget.produkList.seri,
         child: GestureDetector(
           onTap: () => showSimpleDialog(context, path),
           child: CachedNetworkImage(
@@ -659,7 +659,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
       );
     }else{
       return Hero(
-        tag: widget.produk.seri,
+        tag: widget.produkList.seri,
         child: Image.asset(
           'assets/ic_logo.png',
           fit: BoxFit.scaleDown,
@@ -711,7 +711,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                 Row(
                   children: [
                     Text(
-                      _jumlahMeter==0? 'Yuk pilih produk kamu':U.format(widget.produk.harga*_jumlahMeter).toString(),
+                      _jumlahMeter==0? 'Yuk pilih produk kamu':U.format(widget.produkList.harga*_jumlahMeter).toString(),
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -729,19 +729,19 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                 if (tapAllow==true) {
                   _animationController.forward();
                   Cart cart = Cart(
-                      id: widget.produk.id,
-                      kain: widget.produk.kain,
-                      seri: widget.produk.seri,
-                      harga: _jumlahMeter * widget.produk.harga,
-                      stok: widget.produk.stok,
-                      tglMasuk: widget.produk.tglMasuk,
-                      kondisi: widget.produk.kondisi,
-                      bidang: widget.produk.bidang,
-                      rate:widget.produk.rate,
-                      pembeli: widget.produk.pembeli,
-                      dilihat: widget.produk.dilihat,
-                      whistlist:widget.produk.whistlist,
-                      images: widget.produk.images);
+                      id: widget.produkList.id,
+                      kain: widget.produkList.produk,
+                      seri: widget.produkList.seri,
+                      harga: _jumlahMeter * widget.produkList.harga,
+                      stok: widget.produkList.stok,
+                      tglMasuk: widget.produkList.tglMasuk,
+                      kondisi: widget.produkList.kondisi,
+                      bidang: widget.produkList.bidang,
+                      rate:widget.produkList.rate,
+                      pembeli: widget.produkList.pembeli,
+                      dilihat: widget.produkList.dilihat,
+                      whistlist:widget.produkList.whistlist,
+                      images: widget.produkList.images);
                   _cartList.add(cart);
                   debugPrint('add to Cart');
                   hiveService.addBoxesTypeList(_cartList, "CartTabel");

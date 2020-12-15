@@ -162,7 +162,7 @@ class _ProdukDetailState extends State<ProdukDetail> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 16),
                         child: Text(
-                          widget.produk.kain,
+                          widget.produk.produk,
                           style: TextStyle(
                             color: Colors.grey,
                             fontSize: 14,
@@ -366,7 +366,7 @@ class _ProdukDetailState extends State<ProdukDetail> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          widget.produk.kain,
+                          widget.produk.produk,
                           maxLines: 1,
                           overflow: TextOverflow.fade,
                           softWrap: false,
@@ -441,7 +441,7 @@ class _ProdukDetailState extends State<ProdukDetail> {
                       fontSize: 20)),
               DetailsRow(
                   heading: "Jenis Kain",
-                  details: widget.produk.kain),
+                  details: widget.produk.produk),
               DetailsRow(heading: "Seri/Motif", details: widget.produk.seri),
               DetailsRow(heading: "Bidang Kain (cm)", details: widget.produk.bidang.toString()),
               DetailsRow(
