@@ -78,7 +78,8 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
    Future<bool> cekWhis() async{
      var box = await Hive.openBox(widget.produkList.seri);
      var cek = box.get('whistlist');
-       if (cek==0) {
+       if (cek==0||null) {
+         box.put('whistlist', 0);
          setState(() {whis=false;});
        }else {
          setState(() {whis=true;});

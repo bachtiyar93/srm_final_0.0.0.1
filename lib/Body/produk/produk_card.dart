@@ -199,7 +199,7 @@ Widget CardProduk(String nama_produk, String text_penjelasan) {
     padding: EdgeInsets.only(top: 16, right: 16, left: 16),
     child: Container(
       decoration: BoxDecoration(
-        color: Colors.grey,
+        color: Colors.grey[300],
         borderRadius: BorderRadius.all(
           Radius.circular(15),
         ),

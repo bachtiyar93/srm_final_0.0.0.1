@@ -58,7 +58,7 @@ Widget  _modelCart(BuildContext context) {
             bottom: 80,
             left: 10,
             child: Text(
-              'INV.2020/21/SRM/APP',
+              'SR'+DateTime.now().year.toString()+DateTime.now().month.toString()+DateTime.now().day.toString()+DateTime.now().microsecond.toString(),
               style: TextStyle(fontSize: 18, color: Colors.black),
             ),
           ),
@@ -73,19 +73,19 @@ Widget  _modelCart(BuildContext context) {
           Positioned(
               bottom: 35,
               left: 10,
-            child: Text(
-              'Harga :' + U.format(widget.cart.qty*widget.cart.harga).toString(),
-              style: TextStyle(fontSize: 18, color: Colors.black),
-            ),
+              child: Text(
+              'Motif: '+widget.cart.seri,
+                style: TextStyle(fontSize: 18),
+              )
           ),
           Positioned(
               bottom: 10,
               left: 10,
-              // ignore: unrelated_type_equality_checks
-              child: Text(
-                'Motif: '+widget.cart.seri,
-                style: TextStyle(fontSize: 18),
-              )
+            child: Text(
+              'Jumlah : ' + U.format(widget.cart.qty*widget.cart.harga).toString(),
+              style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold
+              ),
+            )
           )
         ]));
   }
