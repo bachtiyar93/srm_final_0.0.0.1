@@ -13,12 +13,15 @@ import 'package:srm_final/widget/model_hive/locator.dart';
 import 'package:validators/validators.dart';
 import 'details_row_widget.dart';
 import 'package:http/http.dart' as http;
+import 'package:hive/hive.dart';
 
 
 
 class ProdukDetails extends StatefulWidget {
   final Produk produkList;
-  const ProdukDetails({Key key, this.produkList}) : super(key: key);
+  final index;
+  const ProdukDetails({Key key, this.produkList, this.index}) : super(key: key);
+
 
   @override
   _ProdukDetailsState createState() => _ProdukDetailsState();
@@ -42,10 +45,12 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
   List<dynamic> get cartList => _cartList;
 
   int _currentImage = 0;
-  double _jumlahMeter=0;
+  double _jumlahPesanan=0;
 
-
-  var U = new NumberFormat("'Rp. '###,###.00#", "id_ID");
+  var U = new NumberFormat("'Rp. '###,###.00#", "id_ID"),
+      _size,
+      _ket,
+      _status=0;
 
   List<Widget> buildPageIndicator(){
     List<Widget> list = [];
@@ -69,10 +74,21 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
       ),
     );
   }
+  bool whis=false;
+   Future<bool> cekWhis() async{
+     var box = await Hive.openBox(widget.produkList.seri);
+     var cek = box.get('whistlist');
+       if (cek==0) {
+         setState(() {whis=false;});
+       }else {
+         setState(() {whis=true;});
+       }
+   }
+
   void dilihatMethod () async {
     await http.post(SumberApi.dilihat, body: {"id": widget.produkList.id.toString()});
-    debugPrint('update value show');
   }
+
   void kontrolAnimasi() {
     _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 1300));
     show = true;
@@ -98,6 +114,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
   }
   @override
   void initState() {
+     cekWhis();
     dilihatMethod();
     super.initState();
     kontrolAnimasi();
@@ -324,20 +341,71 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                       Expanded(
                           child:Row(
                             children: [
-                              Container(
-                                  width: spesialsize*0.12,
-                                  height: spesialsize*0.12,
-                                  decoration: BoxDecoration(
-                                    color: Colors.red[900],
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
+                              GestureDetector(
+                                onTap: () async {
+                                  if (whis==false) {
+                                    var box = await Hive.openBox(widget.produkList.seri);
+                                    box.put('whistlist',1);
+                                    Hive.box('ProdukTabel').putAt(widget.index, Produk(
+                                      id:widget.produkList.id,
+                                      produk: widget.produkList.produk,
+                                      seri: widget.produkList.seri,
+                                      harga: widget.produkList.harga,
+                                      stok: widget.produkList.stok,
+                                      tglMasuk: widget.produkList.tglMasuk,
+                                      kondisi: widget.produkList.kondisi,
+                                      bidang: widget.produkList.bidang,
+                                      rate: widget.produkList.rate,
+                                      pembeli: widget.produkList.pembeli,
+                                      dilihat: widget.produkList.dilihat,
+                                      whistlist: 1,
+                                      images: widget.produkList.images,
+                                    ));
+                                    setState(() {
+                                    whis=true;
+                                    });
+                                  }else {
+                                    var box = await Hive.openBox(widget.produkList.seri);
+                                    box.put('whistlist',0);
+                                    Hive.box('ProdukTabel').putAt(widget.index, Produk(
+                                      id:widget.produkList.id,
+                                      produk: widget.produkList.produk,
+                                      seri: widget.produkList.seri,
+                                      harga: widget.produkList.harga,
+                                      stok: widget.produkList.stok,
+                                      tglMasuk: widget.produkList.tglMasuk,
+                                      kondisi: widget.produkList.kondisi,
+                                      bidang: widget.produkList.bidang,
+                                      rate: widget.produkList.rate,
+                                      pembeli: widget.produkList.pembeli,
+                                      dilihat: widget.produkList.dilihat,
+                                      whistlist: 0,
+                                      images: widget.produkList.images,
+                                    ));
+                                    setState(() {
+                                      whis=false;
+                                    });
+                                  }
+                                },
+                                child: Container(
+                                    width: spesialsize*0.12,
+                                    height: spesialsize*0.12,
+                                    decoration: BoxDecoration(
+                                      color: whis==true?Colors.red[600]:Colors.transparent,
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(15),
+                                      ),
+                                      border: Border.all(
+                                        color:whis==true?Colors.transparent:Colors.white,
+                                        width: 1,
+                                      ),
                                     ),
-                                  ),
-                                  child: Icon(
-                                    Icons.bookmark_border,
-                                    color: Colors.white,
-                                    size: spesialsize*0.07,
-                                  )
+                                    child: Icon(
+                                      Icons.bookmark_border,
+                                      color: whis==true?Colors.white:Colors.grey,
+                                      size: spesialsize*0.07,
+                                    )
+                                ),
                               ),
 
                               SizedBox(
@@ -352,7 +420,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                                       Radius.circular(15),
                                     ),
                                     border: Border.all(
-                                      color: Colors.grey[300],
+                                      color: Colors.white,
                                       width: 1,
                                     ),
                                   ),
@@ -435,7 +503,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                                                   Form(
                                                       key: _keyConfirm,
                                                       child: TextFormField(
-                                                          onSaved: (e) => _jumlahMeter =double.parse(e),
+                                                          onSaved: (e) => _jumlahPesanan =double.parse(e),
                                                           cursorColor: Colors.red,
                                                           decoration: InputDecoration(
                                                               hintText: "Masukan Jumlah / Meter",
@@ -472,10 +540,10 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                                                 clipBehavior: Clip.antiAlias,
                                                 child: MaterialButton(
                                                   child: Text('0k'),
-                                                  onPressed:()async{_jumlahMeter==null? null:
+                                                  onPressed:()async{_jumlahPesanan==null? null:
                                                     await save();
                                                     setState(() {
-                                                      _jumlahMeter;
+                                                      _jumlahPesanan;
                                                       onPressColor1=Colors.red[700];
                                                       tapAllow=true;
                                                     });
@@ -509,7 +577,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                                                     key: _keyConfirm,
                                                     child: TextFormField(
                                                         keyboardType: TextInputType.number,
-                                                        onSaved: (e) => _jumlahMeter =double.parse(e),
+                                                        onSaved: (e) => _jumlahPesanan =double.parse(e),
                                                         cursorColor: Colors.red,
                                                         decoration: InputDecoration(
                                                             hintText: "Masukan Jumlah / Meter",
@@ -537,10 +605,10 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                                                     clipBehavior: Clip.antiAlias,
                                                     child: MaterialButton(
                                                       child: Text('0k'),
-                                                      onPressed:()async{_jumlahMeter==null? null:
+                                                      onPressed:()async{_jumlahPesanan==null? null:
                                                       await save();
                                                       setState(() {
-                                                        _jumlahMeter;
+                                                        _jumlahPesanan;
                                                         onPressColor2=Colors.red[700];
                                                         tapAllow=true;
                                                       });
@@ -574,7 +642,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                                                     key: _keyConfirm,
                                                     child: TextFormField(
                                                         keyboardType: TextInputType.number,
-                                                        onSaved: (e) => _jumlahMeter =double.parse(e),
+                                                        onSaved: (e) => _jumlahPesanan =double.parse(e),
                                                         cursorColor: Colors.red,
                                                         decoration: InputDecoration(
                                                             hintText: "Masukan Jumlah / Meter",
@@ -602,10 +670,10 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                                                     clipBehavior: Clip.antiAlias,
                                                     child: MaterialButton(
                                                       child: Text('0k'),
-                                                      onPressed:()async{_jumlahMeter==null? null:
+                                                      onPressed:()async{_jumlahPesanan==null? null:
                                                       await save();
                                                       setState(() {
-                                                        _jumlahMeter;
+                                                        _jumlahPesanan;
                                                         onPressColor3=Colors.red[700];
                                                         tapAllow=true;
                                                       });
@@ -711,7 +779,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                 Row(
                   children: [
                     Text(
-                      _jumlahMeter==0? 'Yuk pilih produk kamu':U.format(widget.produkList.harga*_jumlahMeter).toString(),
+                      _jumlahPesanan==0? 'Yuk pilih produk kamu':U.format(widget.produkList.harga*_jumlahPesanan).toString(),
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -730,17 +798,15 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                   _animationController.forward();
                   Cart cart = Cart(
                       id: widget.produkList.id,
-                      kain: widget.produkList.produk,
+                      produk: widget.produkList.produk,
                       seri: widget.produkList.seri,
-                      harga: _jumlahMeter * widget.produkList.harga,
-                      stok: widget.produkList.stok,
-                      tglMasuk: widget.produkList.tglMasuk,
-                      kondisi: widget.produkList.kondisi,
-                      bidang: widget.produkList.bidang,
-                      rate:widget.produkList.rate,
-                      pembeli: widget.produkList.pembeli,
-                      dilihat: widget.produkList.dilihat,
-                      whistlist:widget.produkList.whistlist,
+                      harga: widget.produkList.harga,
+                      qty: _jumlahPesanan,
+                      tglTransaksi: widget.produkList.tglMasuk,
+                      size: _size =='kain'?'kain':'Size Lainnya',
+                      ket: _ket==null?'Tidak ada catatan':_ket,
+                      //status 0 = ready atau jumlah hari
+                      status:_status,
                       images: widget.produkList.images);
                   _cartList.add(cart);
                   debugPrint('add to Cart');
@@ -748,7 +814,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                   setState(() {
                     tapAllow=false;
                   });
-                };
+                }
               },
               child:  Center(
                 child: AnimatedContainer(

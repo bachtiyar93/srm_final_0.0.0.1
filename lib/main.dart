@@ -32,6 +32,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:http/http.dart' as http;
 import 'widget/model_hive_profile/view_model.dart';
+
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =  FlutterLocalNotificationsPlugin();
 
 void main() async {
@@ -287,6 +288,7 @@ return total;
 }
 
   @override
+  // ignore: missing_return
   Widget build(BuildContext context) {
     switch (_screenStatus) {
       case LoginStatus.onDashboard:
@@ -295,7 +297,7 @@ return total;
             onModelReady: (model) => model.getData(),
             builder: (context, model, child) => Scaffold(
               key: _scaffoldState,
-              body: KontrolPage(model.produkList),
+              body: controlPage(model.produkList),
               bottomNavigationBar: LayoutBuilder(
                 builder: (context, constraints) {
                   double width = constraints.maxWidth;
@@ -427,7 +429,7 @@ return total;
       super.dispose();
     }
 
-  KontrolPage(List produkList) {
+  controlPage(List produkList) {
     if (menuList[currentIndex] == Icons.person) {
       return ViewModelBuilder<HomeProfile>.reactive(
           viewModelBuilder: () => HomeProfile(),

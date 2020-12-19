@@ -24,7 +24,7 @@ class _CartItemState extends State<CartItem> {
 
 Widget  _modelCart(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width*0.74,
+      width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
@@ -66,7 +66,7 @@ Widget  _modelCart(BuildContext context) {
             bottom: 60,
             left: 10,
             child: Text(
-              widget.cart.kain,
+              widget.cart.produk,
               style: TextStyle(fontSize: 18, color: Colors.black),
             ),
           ),
@@ -74,23 +74,10 @@ Widget  _modelCart(BuildContext context) {
               bottom: 35,
               left: 10,
             child: Text(
-              'Harga :' + U.format(widget.cart.harga).toString(),
+              'Harga :' + U.format(widget.cart.qty*widget.cart.harga).toString(),
               style: TextStyle(fontSize: 18, color: Colors.black),
             ),
           ),
-          Positioned(
-              top: 10,
-              right: 10,
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(3)),
-                    color: Colors.grey[300]
-                ),
-                child: Icon(
-                  Icons.bookmark_border,
-                  color: Colors.grey,
-                ),
-              )),
           Positioned(
               bottom: 10,
               left: 10,

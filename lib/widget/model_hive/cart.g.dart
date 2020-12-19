@@ -18,50 +18,41 @@ class CartAdapter extends TypeAdapter<Cart> {
     };
     return Cart(
       id: fields[0] as int,
-      kain: fields[1] as String,
+      produk: fields[1] as String,
       seri: fields[2] as String,
       harga: fields[3] as double,
-      stok: fields[4] as double,
-      tglMasuk: fields[5] as DateTime,
-      kondisi: fields[6] as int,
-      bidang: fields[7] as int,
-      rate: fields[8] as int,
-      pembeli: fields[9] as int,
-      dilihat: fields[10] as int,
-      whistlist: fields[11] as int,
-      images: (fields[12] as List)?.cast<String>(),
+      qty: fields[4] as double,
+      tglTransaksi: fields[5] as DateTime,
+      size: fields[6] as String,
+      ket: fields[7] as String,
+      status: fields[8] as int,
+      images: (fields[9] as List)?.cast<String>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, Cart obj) {
     writer
-      ..writeByte(13)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.kain)
+      ..write(obj.produk)
       ..writeByte(2)
       ..write(obj.seri)
       ..writeByte(3)
       ..write(obj.harga)
       ..writeByte(4)
-      ..write(obj.stok)
+      ..write(obj.qty)
       ..writeByte(5)
-      ..write(obj.tglMasuk)
+      ..write(obj.tglTransaksi)
       ..writeByte(6)
-      ..write(obj.kondisi)
+      ..write(obj.size)
       ..writeByte(7)
-      ..write(obj.bidang)
+      ..write(obj.ket)
       ..writeByte(8)
-      ..write(obj.rate)
+      ..write(obj.status)
       ..writeByte(9)
-      ..write(obj.pembeli)
-      ..writeByte(10)
-      ..write(obj.dilihat)
-      ..writeByte(11)
-      ..write(obj.whistlist)
-      ..writeByte(12)
       ..write(obj.images);
   }
 

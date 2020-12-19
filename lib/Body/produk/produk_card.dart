@@ -177,6 +177,14 @@ class _ProdukPage extends State<ProdukPage>{
                       );
                     },
                 child:CardProduk('Curtains','Koleksi gordyn, roller, shade & blind dll')),
+                GestureDetector(
+                    onTap: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => DaftarProduk(widget.produkList.where((i) => i.whistlist==1).toList())),
+                      );
+                    },
+                    child:CardProduk('Whistlist Saya','Produk ditandai')),
             ]
             ),
           ),

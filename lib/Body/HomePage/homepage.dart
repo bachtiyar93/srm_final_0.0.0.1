@@ -568,11 +568,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
   Widget terlaris(List<dynamic> produkList) {
-    return ProdukKamiPage(produkList);
+    return ProdukPopulerPage(produkList);
   }
 
   Widget produkKami(List<dynamic> produkList) {
-    return ProdukKamiPage(produkList);
+    return ProdukPopulerPage(produkList);
   }
   Widget topBar(List<dynamic> produkList) {
     return Container(

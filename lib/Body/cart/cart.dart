@@ -8,6 +8,7 @@ import 'package:srm_final/Body/payment.dart';
 import 'package:srm_final/widget/model_hive/cart_view_model.dart';
 import 'package:srm_final/widget/model_hive/hive_service.dart';
 import 'package:srm_final/widget/model_hive/locator.dart';
+import 'package:srm_final/widget/produk_detail/cart_details.dart';
 import 'package:stacked/stacked.dart';
 
 
@@ -27,7 +28,7 @@ class _DaftarCartState extends State<DaftarCart> {
     final HiveService hiveService = locator<HiveService>();
     var acartList = await hiveService.getBoxesTypeList("CartTabel");
     await acartList.forEach((item){
-      _total += item.harga;
+      _total += item.harga*item.qty;
     });
     if (cek==true){
          _total = _total-_oldTotal;
@@ -102,51 +103,62 @@ class _DaftarCartState extends State<DaftarCart> {
                       physics: BouncingScrollPhysics(),
                       itemCount: model.cartList.length,
                       itemBuilder: (context, index) {
-                        return Container(
-                          margin: EdgeInsets.all(2),
-                          child: AspectRatio(
-                            aspectRatio: 1/0.3,
-                            child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              child: Row(
-                                children: [
-                                  CartItem(
-                                    index: index,
-                                    cart: model.cartList[index],
-                                  ),
-                                  FlatButton(
-                                      minWidth: 5,
-                                      onPressed: (){
-                                        setState(() {
-                                          showDialog(
-                                              context: context,
-                                              builder: (con) => AlertDialog(
-                                                  title: Text('Keranjang'),
-                                                  content: Text('Produk ini akan dikeluarkan dari keranjang anda?'),
-                                                  actions: [
-                                                    MaterialButton(
-                                                        child: Text('batal'),
-                                                        onPressed: () {
-                                                          Navigator.of(context).pop();
-                                                        }),
-                                                    MaterialButton(
-                                                        child: Text('hapus'),
-                                                        onPressed: () {
-                                                          setState(() {
-                                                            cek=true;
-                                                            hitungBayar();
-                                                            model.cartList.removeAt(index);
-                                                            //_totalBelanja = model.cartList.map<int>((m) => m.harga).reduce((a,b )=>a+b);
-                                                          });
-                                                          Navigator.of(context).pop();
-                                                        })
-                                                  ]));
-                                          var box = Hive.box('CartTabel');
-                                          box.deleteAt(index);
-                                        });
-                                      },
-                                      child: Icon(Icons.delete)),
-                                ],
+                        return GestureDetector(
+                          onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context) => CartDetails(
+                            cartList: model.cartList[index],
+                            )));},
+                          child: Container(
+                            margin: EdgeInsets.all(2),
+                            child: AspectRatio(
+                              aspectRatio: 1/0.3,
+                              child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                child: Stack(
+                                  children: [
+                                    CartItem(
+                                      index: index,
+                                      cart: model.cartList[index],
+                                    ),
+                                    Positioned(
+                                      right: -10,
+                                      top: -5,
+                                      child: FlatButton(
+                                          minWidth: 0.8,
+                                          onPressed: (){
+                                            setState(() {
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (con) => AlertDialog(
+                                                      title: Text('Keranjang'),
+                                                      content: Text('Produk ini akan dikeluarkan dari keranjang anda?'),
+                                                      actions: [
+                                                        MaterialButton(
+                                                            child: Text('batal'),
+                                                            onPressed: () {
+                                                              Navigator.of(context).pop();
+                                                            }),
+                                                        MaterialButton(
+                                                            child: Text('hapus'),
+                                                            onPressed: () {
+                                                              setState(() {
+                                                                cek=true;
+                                                                hitungBayar();
+                                                                model.cartList.removeAt(index);
+                                                                //_totalBelanja = model.cartList.map<int>((m) => m.harga).reduce((a,b )=>a+b);
+                                                              });
+                                                              Navigator.of(context).pop();
+                                                            })
+                                                      ]));
+                                              var box = Hive.box('CartTabel');
+                                              box.deleteAt(index);
+                                            });
+                                          },
+                                          child: Container(
+                                              color: Colors.grey,
+                                              child: Icon(Icons.delete,))),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),

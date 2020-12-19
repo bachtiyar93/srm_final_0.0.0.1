@@ -6,43 +6,34 @@ class Cart extends HiveObject{
   @HiveField(0)
   final int id;
   @HiveField(1)
-  final String kain;
+  final String produk;
   @HiveField(2)
   final String seri;
   @HiveField(3)
   final double harga;
   @HiveField(4)
-  final double stok;
+  final double qty;
   @HiveField(5)
-  final DateTime tglMasuk;
+  final DateTime tglTransaksi;
   @HiveField(6)
-  final int kondisi;
+  final String size;
   @HiveField(7)
-  final int bidang;
+  final String ket;
   @HiveField(8)
-  final int rate;
+  final int status;
   @HiveField(9)
-  final int pembeli;
-  @HiveField(10)
-  final int dilihat;
-  @HiveField(11)
-  final int whistlist;
-  @HiveField(12)
   final List<String> images;
 
   Cart({
     this.id,
-    this.kain,
+    this.produk,
     this.seri,
     this.harga,
-    this.stok,
-    this.tglMasuk,
-    this.kondisi,
-    this.bidang,
-    this.rate,
-    this.pembeli,
-    this.dilihat,
-    this.whistlist,
+    this.qty,
+    this.tglTransaksi,
+    this.size,
+    this.ket,
+    this.status,
     this.images,
   });
 }

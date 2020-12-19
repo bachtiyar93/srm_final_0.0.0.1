@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:srm_final/widget/slidehorizon/produk_item.dart';
 
-class ProdukKamiPage extends StatefulWidget {
-  ProdukKamiPage(List produkList, {Key key}): this.produkList=produkList ?? [];
-  final List<dynamic> produkList;
+class ProdukPopulerPage extends StatefulWidget {
+  ProdukPopulerPage(this.produkList, {Key key});
+  final produkList;
 
   @override
   _PopularFoodsWidgetState createState() => _PopularFoodsWidgetState();
 }
 
-class _PopularFoodsWidgetState extends State<ProdukKamiPage> {
+class _PopularFoodsWidgetState extends State<ProdukPopulerPage> {
   @override
   Widget build(BuildContext context) {
     debugPrint('on Produk Kami');
@@ -69,8 +69,8 @@ class ProdukTitle extends StatelessWidget {
 }
 
 class ProdukItems extends StatelessWidget {
-  ProdukItems(List produkList, {Key key}): this.produkList=produkList ?? [];
-  final List<dynamic> produkList;
+  ProdukItems(this.produkList, {Key key});
+  final produkList;
   @override
   Widget build(BuildContext context) {
     debugPrint('on Produk Item');
@@ -83,6 +83,7 @@ class ProdukItems extends StatelessWidget {
             child: AspectRatio(
               aspectRatio: 1/1.7,
               child: ProdukItem(
+                index: index,
                 produkList: produkList[index],
               ),
             ),
