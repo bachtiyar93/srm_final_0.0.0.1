@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:srm_final/Body/payment.dart';
@@ -32,6 +33,8 @@ class _ProdukDetailsState extends State<CartDetails> with TickerProviderStateMix
 
   int _currentImage = 0;
   var U = new NumberFormat("'Rp. '###,###.00#", "id_ID");
+  var QTY = new NumberFormat("###,###' Unit'", "id_ID");
+
 
   List<Widget> buildPageIndicator(){
     List<Widget> list = [];
@@ -55,7 +58,18 @@ class _ProdukDetailsState extends State<CartDetails> with TickerProviderStateMix
       ),
     );
   }
-
+  var alamatdata='';
+  bacaAlamat() async{
+    var alamatadd = await Hive.openBox('alamat');
+    setState(() {
+      alamatdata = alamatadd.get('alamat');
+    });
+  }
+  @override
+void initState() {
+  bacaAlamat();
+  super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -215,126 +229,116 @@ class _ProdukDetailsState extends State<CartDetails> with TickerProviderStateMix
                       Colors.redAccent.withOpacity(0.95)
                     ])
               ),
-              padding: EdgeInsets.all(10),
-              height: MediaQuery.of(context).size.height,
+              padding: EdgeInsets.only(right: 10, left: 10, top: 10),
               child: SingleChildScrollView(
-                  child: Container(
-                    height: 650,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          alignment: Alignment.topCenter,
-                          child: Container(
-                            height: 3,
-                            width: 30,
-                            color: Colors.black,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        alignment: Alignment.topCenter,
+                        child: Container(
+                          height: 3,
+                          width: 30,
+                          color: Colors.black,
+                        ),
+                      ),
+                      Center(child: Text('Sweet Room Medan', style: GoogleFonts.alexBrush(
+                          fontSize: 35,
+                          color: Color.fromRGBO(225, 80, 80, 1)
+                      ),),),
+                      SizedBox(
+                        height: 10,),
+                      Container(
+                        padding: EdgeInsets.only( left: 16, right: 16, bottom: 5),
+                        decoration: BoxDecoration(
+                            color: Colors.grey[100],
+                            borderRadius: BorderRadius.all(Radius.circular(20))
+                        ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(top: 10, left: 16, right: 16, bottom: 3),
+                        child: Expanded(
+                          child: Text(
+                            "Detail Pemesanan",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[700],
+                            ),
                           ),
                         ),
-                        Center(child: Text('Sweet Room Medan', style: GoogleFonts.alexBrush(
-                            fontSize: 35,
-                            color: Color.fromRGBO(225, 80, 80, 1)
-                        ),),),
-                        SizedBox(
-                          height: 10,),
-                        Container(
-                          padding: EdgeInsets.only( left: 16, right: 16, bottom: 5),
-                          height: MediaQuery.of(context).size.height*0.8,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                              color: Colors.grey[100],
-                              borderRadius: BorderRadius.all(Radius.circular(20))
-                          ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(top: 10, left: 16, right: 16, bottom: 5),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  "Detail Pemesanan",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey[700],
-                                  ),
-                                ),
-                              ),
-                              Material(
-                                borderRadius: BorderRadius.circular(5),
-                                elevation: 18.0,
-                                color:Colors.white,
-                                clipBehavior: Clip.antiAlias,
-                                child: Container(
-                                  width: 30,
-                                  child: Text(
-                                    "Edit",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey[700],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                      ),
+                      Container(
+                        height: MediaQuery.of(context).size.height*0.74,
+                        child: ListView(
+                          children: [
+                            _StatusStyle('Purchase Order',widget.cartList.produk),
+                            SizedBox(height: 10,),
+                            _ProdukStyle('Produk Detail',widget.cartList.produk,widget.cartList.seri,widget.cartList.qty, widget.cartList.harga),
+                            SizedBox(height: 10,),
+                            _AlamatStyle('Alamat Pengiriman'),
+                            SizedBox(height: 10,),
+                            _KeteranganStyle('Keterangan',widget.cartList.ket),
+                          ],
                         ),
-                        Container(
-                          height: 505,
-                          child: ListView(
-                            children: [
-                              Material(
-                                elevation: 18.0,
-                                color:onPressColor1,
-                                clipBehavior: Clip.antiAlias,
-                                child:
-                                _buildSpec('Purchase Order',widget.cartList.produk,widget.cartList.seri,widget.cartList.size,widget.cartList.qty.toString(),U.format(widget.cartList.harga).toString()),
-                              ),
-                              SizedBox(height: 10,),
-                              Material(
-                                elevation: 18.0,
-                                color:onPressColor1,
-                                clipBehavior: Clip.antiAlias,
-                                child:
-                                _buildSpec('Produk Detail',widget.cartList.produk,widget.cartList.seri,widget.cartList.size,widget.cartList.qty.toString(),U.format(widget.cartList.harga).toString()),
-                              ),
-                              SizedBox(height: 10,),
-                              Material(
-                                elevation: 18.0,
-                                color:onPressColor1,
-                                clipBehavior: Clip.antiAlias,
-                                child:
-                                _buildSpec('Alamat Pengiriman',widget.cartList.produk,widget.cartList.seri,widget.cartList.size,widget.cartList.qty.toString(),U.format(widget.cartList.harga).toString()),
-                              ),
-                              SizedBox(height: 10,),
-                              Material(
-                                elevation: 18.0,
-                                color:onPressColor1,
-                                clipBehavior: Clip.antiAlias,
-                                child:
-                                _buildSpec('Keterangan',widget.cartList.produk,widget.cartList.seri,widget.cartList.size,widget.cartList.qty.toString(),U.format(widget.cartList.harga).toString()),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
+                      )
+                    ],
+                  ),
                 ),
               ],
-            ),
-                  )
+            )
             ),
           ),
           ),
           Positioned(
             bottom: 0,
-            child: _bangunBeli(widget:widget, context:context),
-          )
+              child:Container(
+                  width: MediaQuery.of(context).size.width*0.94,
+                  height: 80,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(width: 2, color: Colors.red[900])
+                  ),
+                  padding: EdgeInsets.all(10),
+                  margin: EdgeInsets.only(bottom: 5, left: 10, right: 10),
+                  child: Row(
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Kupon Belanja', textAlign: TextAlign.left,),
+                          Text('KUPON')
+                        ],
+                      ),
+                      MaterialButton(
+                          minWidth: 5,
+                          onPressed: null,
+                          child: Icon(Icons.edit)),
+                      Expanded(
+                          child:  GestureDetector(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=> PaymentPage()));
+                            },
+                            child: Container(
+                              alignment: Alignment.center,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.grey[300]
+                              ),
+                              padding: EdgeInsets.all(2),
+                              child: Text('Total',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
+                            ),
+                          )
+                      )
+                    ],
+                  )),
+          ),
         ]
       )
     );
@@ -382,104 +386,182 @@ class _ProdukDetailsState extends State<CartDetails> with TickerProviderStateMix
       },
     );
   }
-  Widget _buildSpec(String header,String title, String seri, String size, String qty, String harga){
-    return Container(
-        height: 100,
-        padding: EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Text(header, textAlign: TextAlign.left, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-            Table(
-              border: TableBorder.all(width: 1, color: Colors.grey[300]),
-              children: [
-                TableRow(
-                    children: [
-                      TableCell(child: Text('No. Produk',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      )),
-                      TableCell(
-                        child: Text(title=='Katun Jepang'?'SR'+DateTime.now().toString():'Other',
-                          textAlign: TextAlign.end,
-                        ),
-                      ),
-                    ]
-                ),
-                TableRow(
-                    children: [
-                      TableCell(child: Text('Produk',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      )),
-                      TableCell(
-                        child: Text(title=='Katun Jepang'?'Kain Saja':title,
-                          textAlign: TextAlign.end,
-                        ),
-                      ),
-                    ]
-                ),
-                TableRow(
-                    children: [
-                      TableCell(child: Text('Jenis',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      )),
-                      TableCell(
-                        child: Text(title,
-                          textAlign: TextAlign.end,
-                        ),
-                      ),
-                    ]
-                ),
-                TableRow(
-                    children: [
-                      TableCell(child: Text('Model',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      )),
-                      TableCell(
-                        child: Text(seri,
-                          textAlign: TextAlign.end,
-                        ),
-                      ),
-                    ]
-                ),
-                TableRow(
-                    children: [
-                      TableCell(child: Text('Ukuran',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      )),
-                      TableCell(
-                        child: Text(size,
-                          textAlign: TextAlign.end,
-                        ),
-                      ),
-                    ]
-                ),
-                TableRow(
-                    children: [
-                      TableCell(child: Text('Quantity',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      )),
-                      TableCell(
-                        child: Text(qty,
-                          textAlign: TextAlign.end,
-                        ),
-                      ),
-                    ]
-                ),
-                TableRow(
-                    children: [
-                      TableCell(child: Text('Harga',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      )),
-                      TableCell(
-                        child: Text(harga,
-                          textAlign: TextAlign.end,
-                        ),
-                      ),
-                    ]
-                ),
+  Widget _StatusStyle(String header,String title){
+    return Material(
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+      elevation: 18.0,
+      color:onPressColor1,
+      clipBehavior: Clip.antiAlias,
+      child: Container(
+          height: 100,
+          padding: EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(header, style: TextStyle(fontWeight: FontWeight.bold),),
+              Text('Waiting Order', style: TextStyle(color: Colors.yellow[900], fontStyle: FontStyle.italic),),
+              Row(children: [
+                Expanded(
+                    child: Text("Kode Transaksi")),
+                Expanded(
+                    child: Text(
+                        'SR'+DateTime.now().year.toString()+DateTime.now().month.toString()+DateTime.now().day.toString()+DateTime.now().microsecond.toString(),
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )
+                )
               ],
-            ),
-          ],
-        )
+              ),
+            ],
+          )
+      ),
+    );
+  }
+  Widget _ProdukStyle(String header,String title, String seri, double qty, double harga){
+    return Material(
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+      elevation: 18.0,
+      color:onPressColor1,
+      clipBehavior: Clip.antiAlias,
+      child: Container(
+          height: 150,
+          padding: EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(child: Text(header, style: TextStyle(fontWeight: FontWeight.bold),)),
+                  Icon(Icons.edit)
+                ],
+              ),
+              Row(children: [
+                Expanded(
+                    child: Text("Produk")),
+                Expanded(
+                    child: Text(
+                     title,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )
+                )
+              ],
+              ),
+              Row(children: [
+                Expanded(
+                    child: Text("Model")),
+                Expanded(
+                    child: Text(
+                      seri,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )
+                )
+              ],
+              ),
+              Row(children: [
+                Expanded(
+                    child: Text("Harga/QTY")),
+                Expanded(
+                    child: Text(
+                      U.format(harga).toString(),
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )
+                )
+              ],
+              ),
+              Row(children: [
+                Expanded(
+                    child: Text("Quantity")),
+                Expanded(
+                    child: Text(
+                     QTY.format(qty).toString(),
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )
+                )
+              ],
+              ),
+              Row(children: [
+                Expanded(
+                    child: Text("Jumlah")),
+                Expanded(
+                    child: Text(
+                        U.format(qty*harga).toString(),
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red[800], fontSize: 18),
+                    )
+                )
+              ],
+              )
+            ],
+          )
+      ),
+    );
+  }
+ _AlamatStyle(String header){
+    return Material(
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+      elevation: 18.0,
+      color:onPressColor1,
+      clipBehavior: Clip.antiAlias,
+      child: Container(
+          height: 120,
+          padding: EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(child: Text(header)),
+                  Icon(Icons.edit)
+                ],
+              ),
+              Text(alamatdata, style: TextStyle(fontWeight: FontWeight.bold),),
+              Row(children: [
+                Expanded(
+                    child: Text("Kurir")),
+                Expanded(
+                    child: Text("JNE",
+                      style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold),)
+                )
+              ],
+              ),
+              Row(children: [
+                Expanded(
+                    child: Text("Ongkir")),
+                Expanded(
+                    child: Text("Menunggu Input Marketing",
+                      style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold),)
+                )
+              ],
+              )
+            ],
+          )
+      ),
+    );
+  }
+  Widget _KeteranganStyle(String header,String title){
+    return Material(
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+      elevation: 18.0,
+      color:onPressColor1,
+      clipBehavior: Clip.antiAlias,
+      child: Padding(
+        padding: EdgeInsets.all(20),
+        child: ConstrainedBox(
+          constraints: new BoxConstraints(
+            minHeight: 100
+          ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(child: Text(header)),
+                    Icon(Icons.edit)
+                  ],
+                ),
+                Text(title, style: TextStyle(fontWeight: FontWeight.bold),),
+              ],
+            )
+        ),
+      ),
     );
   }
   

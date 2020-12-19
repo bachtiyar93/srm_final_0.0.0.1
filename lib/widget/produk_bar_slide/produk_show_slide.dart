@@ -15,26 +15,6 @@ class ProdukShowSlide extends StatefulWidget {
 }
 
 class _ProdukShowSlideState extends State<ProdukShowSlide> {
-  bool whis=false;
-  Future<bool> cekWhis() async{
-    var box = await Hive.openBox(widget.produkList.seri);
-    var cek = box.get('whistlist');
-    if (cek==0||cek==null) {
-      box.put('whislist', 0);
-      setState(() {
-        whis=false;
-      });
-    }else {
-      setState(() {
-        whis=true;
-      });
-    }
-  }
-
-  @override
-  void initState(){
-    cekWhis();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,66 +56,6 @@ class _ProdukShowSlideState extends State<ProdukShowSlide> {
                     },
                   ),
                 ),
-                Positioned(
-                    top: 10,
-                    right: 10,
-                    child: GestureDetector(
-                      onTap: () async {
-                        if (whis==false) {
-                          var box = await Hive.openBox(widget.produkList.seri);
-                          box.put('whistlist',1);
-                          Hive.box('ProdukTabel').putAt(widget.index, Produk(
-                            id:widget.produkList.id,
-                            produk: widget.produkList.produk,
-                            seri: widget.produkList.seri,
-                            harga: widget.produkList.harga,
-                            stok: widget.produkList.stok,
-                            tglMasuk: widget.produkList.tglMasuk,
-                            kondisi: widget.produkList.kondisi,
-                            bidang: widget.produkList.bidang,
-                            rate: widget.produkList.rate,
-                            pembeli: widget.produkList.pembeli,
-                            dilihat: widget.produkList.dilihat,
-                            whistlist: 1,
-                            images: widget.produkList.images,
-                          ));
-                          setState(() {
-                            whis=true;
-                          });
-                        }else {
-                          var box = await Hive.openBox(widget.produkList.seri);
-                          box.put('whistlist',0);
-                          Hive.box('ProdukTabel').putAt(widget.index, Produk(
-                            id:widget.produkList.id,
-                            produk: widget.produkList.produk,
-                            seri: widget.produkList.seri,
-                            harga: widget.produkList.harga,
-                            stok: widget.produkList.stok,
-                            tglMasuk: widget.produkList.tglMasuk,
-                            kondisi: widget.produkList.kondisi,
-                            bidang: widget.produkList.bidang,
-                            rate: widget.produkList.rate,
-                            pembeli: widget.produkList.pembeli,
-                            dilihat: widget.produkList.dilihat,
-                            whistlist: 0,
-                            images: widget.produkList.images,
-                          ));
-                          setState(() {
-                            whis=false;
-                          });
-                        }
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(3)),
-                            color: whis==true?Colors.red[600]:Colors.grey[300]
-                        ),
-                        child: Icon(
-                          Icons.bookmark_border,
-                          color:  whis==true?Colors.white:Colors.grey,
-                        ),
-                      ),
-                    )),
                 Positioned(
                   bottom: 0,
                   left: 0,

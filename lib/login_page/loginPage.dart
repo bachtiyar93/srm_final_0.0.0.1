@@ -544,17 +544,6 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  var getId;
-  int getValueLogin;
-  //digunakan untuk pengiriman data logout
-  void konfirmasiDariServer() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    setState(() {
-      getValueLogin = preferences.getInt("valueLogin");
-      getId = preferences.getString("_id");
-      _loginStatus = getValueLogin == 1 ? LoginStatus.suksesSignIn : LoginStatus.belumSignIn;
-    });
-  }
   @override
   void dispose() {
     Hive.close();
