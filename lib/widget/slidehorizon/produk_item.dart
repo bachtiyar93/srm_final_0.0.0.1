@@ -18,7 +18,7 @@ class _ProdukItemState extends State<ProdukItem> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: () => Navigator.push(context,
           MaterialPageRoute(builder: (context) => ProdukDetails(produkList: widget.produkList, index: widget.index,))),
       child: Container(

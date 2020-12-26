@@ -339,7 +339,7 @@ return total;
                                         .asMap()
                                         .keys
                                         .map((value) {
-                                      return GestureDetector(
+                                      return InkWell(
                                         child: Opacity(
                                           opacity: currentIndex == value ? 0 : 1,
                                           child: menuList[value]==Icons.shopping_cart? Stack(

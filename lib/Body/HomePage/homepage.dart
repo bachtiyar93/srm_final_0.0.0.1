@@ -408,7 +408,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            GestureDetector(
+            InkWell(
               onTap: () => ShowMenuBar(context),
               child: Container(
                 width: 40,
@@ -465,7 +465,7 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text('Produk Kami',
+            Text('Akses Cepat',
               style: TextStyle(
                 color: Colors.red[300],
                 fontSize: spesialsize*0.06,
@@ -486,11 +486,11 @@ class _HomePageState extends State<HomePage> {
           height: MediaQuery.of(context).size.width*0.2,
           child: Row(
             children: [
-              _buttonMenu('assets/ic_roll.png','Kain'),
-              _buttonMenu('assets/ic_bed.png','Sprei'),
-              _buttonMenu('assets/ic_curtains.png','Tirai'),
-              _buttonMenu('assets/ic_send.png','Wallpaper'),
-              _buttonMenu('assets/ic_rod.png','Aksesoris'),
+              _buttonMenu('assets/ic_roll.png','Kain',DaftarProduk(widget.produkList.where((i) => i.produk=='Katun Jepang').toList())),
+              _buttonMenu('assets/ic_bed.png','Sprei',DaftarProduk(widget.produkList.where((i) => i.produk=='Sprei').toList())),
+              _buttonMenu('assets/ic_curtains.png','Tirai',DaftarProduk(widget.produkList.where((i) => i.produk=='Curtains').toList())),
+              _buttonMenu('assets/ic_send.png','Wallpaper',DaftarProduk(widget.produkList.where((i) => i.produk=='Wallpaper').toList())),
+              _buttonMenu('assets/ic_rod.png','Aksesoris',DaftarProduk(widget.produkList.where((i) => i.produk=='Aksesoris').toList())),
             ],
           )
         )
@@ -499,7 +499,7 @@ class _HomePageState extends State<HomePage> {
   );
 }
   Widget produkReady(List<dynamic> produkList) {
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         Navigator.push(
           context,
@@ -630,7 +630,7 @@ class _HomePageState extends State<HomePage> {
     return true;
   }
 
- Widget  _buttonMenu(String s, String t) {
+ Widget  _buttonMenu(String s, String t, tujuan) {
    var spesialsize, widthCustom;
    widthCustom = MediaQuery.of(context).size.width;
    //specialSize
@@ -660,21 +660,16 @@ class _HomePageState extends State<HomePage> {
         margin: EdgeInsets.fromLTRB(spesialsize*0.0025, 0, spesialsize*0.0025, 0),
         child: InkWell(
           onTap: () {
-            //                                 Navigator.push(context,
-            //                                     MaterialPageRoute( builder: (context) => MapGlobal()
-            //                                     ));
+                                            Navigator.push(context,
+                                                MaterialPageRoute( builder: (context) => tujuan
+                                                ));
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Image.asset(s,
-                  height: 25,
-                    width: 25,
-                  ),
-                ],
+              Image.asset(s,
+              height: 25,
+                width: 25,
               ),
               Text(
                 t,

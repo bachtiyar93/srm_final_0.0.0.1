@@ -103,7 +103,7 @@ class _DaftarCartState extends State<DaftarCart> {
                       physics: BouncingScrollPhysics(),
                       itemCount: model.cartList.length,
                       itemBuilder: (context, index) {
-                        return GestureDetector(
+                        return InkWell(
                           onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context) => CartDetails(
                             cartList: model.cartList[index],
                             )));},
@@ -199,7 +199,7 @@ class _DaftarCartState extends State<DaftarCart> {
                     onPressed: null,
                     child: Icon(Icons.edit)),
                 Expanded(
-                    child:  GestureDetector(
+                    child:  InkWell(
                       onTap: (){
                         Navigator.push(context, MaterialPageRoute(builder: (context)=> PaymentPage()));
                       },

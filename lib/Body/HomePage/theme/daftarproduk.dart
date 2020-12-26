@@ -46,7 +46,7 @@ class _DaftarProdukState extends State<DaftarProduk> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              GestureDetector(
+             InkWell(
                 onTap: () {
                   Navigator.pop(context);
                 },
@@ -156,7 +156,7 @@ class _DaftarProdukState extends State<DaftarProduk> {
   }
 
   Widget buildFilter(Filter filter){
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         setState(() {
           selectedFilter = filter;

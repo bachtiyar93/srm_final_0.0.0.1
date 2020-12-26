@@ -145,7 +145,7 @@ class _ProdukPage extends State<ProdukPage>{
           SingleChildScrollView(
             child: Column(
               children:[
-                GestureDetector(
+                InkWell(
                     onTap: (){
                       Navigator.push(
                         context,
@@ -153,7 +153,7 @@ class _ProdukPage extends State<ProdukPage>{
                       );
                     },
                     child: CardProduk('Semua Kain','Koleksi berbagai jenis kain')),
-            GestureDetector(
+            InkWell(
                 onTap: (){
                   Navigator.push(
                     context,
@@ -161,7 +161,7 @@ class _ProdukPage extends State<ProdukPage>{
                   );
                 },
                 child:CardProduk('Produk Ready','Berbagai macam sprei, bantal & guling')),
-            GestureDetector(
+            InkWell(
                 onTap: (){
                   Navigator.push(
                     context,
@@ -169,7 +169,7 @@ class _ProdukPage extends State<ProdukPage>{
                   );
                 },
                 child:CardProduk('Aksesoris & Perlengkapan Bed','Koleksi aksesoris bed, dacron, griper dll')),
-                GestureDetector(
+                InkWell(
                     onTap: (){
                       Navigator.push(
                         context,
@@ -177,7 +177,7 @@ class _ProdukPage extends State<ProdukPage>{
                       );
                     },
                 child:CardProduk('Curtains','Koleksi gordyn, roller, shade & blind dll')),
-                GestureDetector(
+                InkWell(
                     onTap: (){
                       Navigator.push(
                         context,

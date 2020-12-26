@@ -18,7 +18,7 @@ class _BodyChatState extends State<DashboardChat> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            GestureDetector(
+            InkWell(
               onTap: () {
                 Navigator.pop(context);
               },

@@ -20,7 +20,7 @@ class _ProdukShowSlideState extends State<ProdukShowSlide> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        GestureDetector(
+        InkWell(
           onTap: () => Navigator.push(context,
               MaterialPageRoute(builder: (context) => ProdukDetails(produkList: widget.produkList, index: widget.index,))),
           child: Container(
