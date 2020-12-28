@@ -770,7 +770,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
   }
 
 
-  void showPilihKain(BuildContext context) {
+  void showPilihSprei(BuildContext context) {
     Picker(
         adapter: PickerDataAdapter<String>(
             pickerdata: new JsonDecoder().convert(PickerSpreiKatunJepang)),
@@ -832,7 +832,34 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
         }
     ).showDialog(context, barrierDismissible: false);
   }
-
+  void showPilihBaby(BuildContext context) {
+    Picker(
+        adapter: PickerDataAdapter<String>(
+            pickerdata: new JsonDecoder().convert(PickerBabyBumper)),
+        hideHeader: true,
+        textScaleFactor: 0.6,
+        selectedTextStyle: TextStyle(fontWeight: FontWeight.bold),
+        title: Column(
+          children: [
+            new Text("Pilih ukuran & model"),
+            SizedBox(height: 15,),
+            Row(
+              children: [
+                Expanded(child: Text("Panjang", textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 14),)),
+                Expanded(child: Text("Lebar", textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 14)))
+              ],
+            )
+          ],
+        ),
+        onConfirm: (Picker picker, List hasil) {
+          print(picker.getSelectedValues()[2]);
+          print(hasil.toString());
+          print(picker.getSelectedValues());
+        }
+    ).showDialog(context, barrierDismissible: false);
+  }
   void showOptions(BuildContext context) {
     showModalBottomSheet(
       backgroundColor: Colors.transparent,
@@ -972,7 +999,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                                     .size
                                     .width,
                                 onPressed: () {
-                                  showPilihKain(context);
+                                  showPilihSprei(context);
                                 },
                                 child: _buildSpec('Sprei', 'Sprei Set & Sarung Kasur')),
                           )),
@@ -994,7 +1021,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                                 onPressed: () {
                                   showPilihBC(context);
                                 },
-                                child: _buildSpec('Selimut', 'Bedcover & Quilt')),
+                                child: _buildSpec('Selimut & Bantal', 'Bedcover, Quilt, Sarung Bantal & Guling')),
                           )),
                       SizedBox(width: 5,),
                       Container(
@@ -1012,29 +1039,9 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                                     .size
                                     .width,
                                 onPressed: () {
-                                  showPilihBC(context);
+                                  showPilihBaby(context);
                                 },
-                                child: _buildSpec('Bantal & Sarung', 'Sarung Bantal, Sarung Guling')),
-                          )),
-                      SizedBox(width: 5,),
-                      Container(
-                          width: 150,
-                          child: Material(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(22.0)),
-                            elevation: 18.0,
-                            color: onPressColor3,
-                            clipBehavior: Clip.antiAlias,
-                            child: MaterialButton(
-                                height: 100,
-                                minWidth: MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width,
-                                onPressed: () {
-                                  showPilihBC(context);
-                                },
-                                child: _buildSpec('For Baby', 'Baby Bumper Set')),
+                                child: _buildSpec('For Baby', 'Baby Bumper Set, Guling, Bantal, Mattress')),
                           ))
                     ],
                   ),
