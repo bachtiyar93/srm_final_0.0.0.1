@@ -41,7 +41,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
   double _translateY = 0;
   double _rotate = 0;
   double _scale = 1;
-  bool tapAllow = false;
+  var tapAllow = 0;
   bool show;
   bool sent = false;
   Color _color = Colors.red,
@@ -55,9 +55,11 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
 
   int _currentImage = 0;
   double _jumlahPesanan = 0;
+  double _setHarga = 0;
 
   var U = new NumberFormat("'Rp. '###,###.00#", "id_ID"),
-      _size,
+      _size="None",
+      _namaProduk='Produk name',
       _ket,
       _status = 0;
 
@@ -610,7 +612,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
               children: [
 
                 Text(
-                  "Belanja Anda",
+                  _namaProduk=="Produk name"?"Belanja Anda":_namaProduk,
                   style: TextStyle(
                     color: Colors.grey,
                     fontWeight: FontWeight.bold,
@@ -620,8 +622,7 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                 Row(
                   children: [
                     Text(
-                       U.format(
-                          widget.produkList.harga * _jumlahPesanan).toString(),
+                _setHarga==0.001?'Harga Nego':U.format(_setHarga * _jumlahPesanan).toString(),
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -636,16 +637,16 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
           Expanded(
             child: InkWell(
                 onTap: () {
-                  if (tapAllow == true) {
+                  if (tapAllow == 1) {
                     _animationController.forward();
                     Cart cart = Cart(
                         id: widget.produkList.id,
-                        produk: widget.produkList.produk,
+                        produk: _namaProduk,
                         seri: widget.produkList.seri,
-                        harga: widget.produkList.harga,
+                        harga: _setHarga,
                         qty: _jumlahPesanan,
                         tglTransaksi: widget.produkList.tglMasuk,
-                        size: _size == 'kain' ? 'kain' : 'Size Lainnya',
+                        size: _size,
                         ket: _ket == null ? 'Tidak ada catatan' : _ket,
                         //status 0 = ready atau jumlah hari
                         status: _status,
@@ -654,10 +655,12 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                     debugPrint('add to Cart');
                     hiveService.addBoxesTypeList(_cartList, "CartTabel");
                     setState(() {
-                      tapAllow = false;
+                      tapAllow = 2;
                     });
-                  } else {
+                  } else if(tapAllow==0){
                     showOptions(context);
+                  }else{
+                    Navigator.pop(context);
                   }
                 },
                 child: Center(
@@ -796,7 +799,100 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
           ],
         ),
         onConfirm: (Picker picker, List hasil) {
-          print(picker.getSelectedValues()[2]);
+          if (picker.getSelectedValues()[0]=="Karet"){
+            double tinggi = picker.getSelectedValues()[2]=="Custom"?0:double.parse(picker.getSelectedValues()[2]);
+            double untung = 0.30;
+            double lebar = picker.getSelectedValues()[1]=="100x200"? 100 :(picker.getSelectedValues()[1]=="120x200"?120:(picker.getSelectedValues()[1]=="160x200"?160:(picker.getSelectedValues()[1]=="180x200"?180:(picker.getSelectedValues()[1]=="200x200"?200:0))));
+            double bidang = double.parse(widget.produkList.bidang.toString());
+            double bantal_guling = picker.getSelectedValues()[1]=="100x200" || picker.getSelectedValues()[1]=="120x200"? 90:190;
+            double upah_jahit = picker.getSelectedValues()[1]=="100x200" || picker.getSelectedValues()[1]=="120x200"? 22500:25000;
+            double harga_kain = widget.produkList.harga/100;
+            double jahitan = 10;
+            double panjang = 200;
+            double tas = 6000;
+            double pemakaian_kain = (tinggi*2)+jahitan+lebar+((tinggi*2)+jahitan+panjang-bidang)+bantal_guling;
+            double harga =pemakaian_kain*harga_kain+upah_jahit+((pemakaian_kain*harga_kain+upah_jahit)*untung)+tas;
+            if (lebar==0) {
+              setState(() {
+                _namaProduk="Set Sprei Karet";
+                _setHarga=0.001;
+                _jumlahPesanan=double.parse(picker.getSelectedValues()[3]);
+                _size="Custom";
+                tapAllow = 1;
+              });
+            }  else {
+              setState(() {
+                _namaProduk="Set Sprei Karet";
+                _setHarga=harga;
+                _jumlahPesanan=double.parse(picker.getSelectedValues()[3]);
+                _size=picker.getSelectedValues()[1]+'x'+picker.getSelectedValues()[2];
+                tapAllow = 1;
+              });
+            }
+          }else if(picker.getSelectedValues()[0]=="Rimpel"){
+            double tinggi = picker.getSelectedValues()[2]=="Custom"?0:double.parse(picker.getSelectedValues()[2]);
+            double untung = 0.30;
+            double lebar = picker.getSelectedValues()[1]=="100x200"? 100 :(picker.getSelectedValues()[1]=="120x200"?120:(picker.getSelectedValues()[1]=="160x200"?160:(picker.getSelectedValues()[1]=="180x200"?180:(picker.getSelectedValues()[1]=="200x200"?200:0))));
+            double bidang = double.parse(widget.produkList.bidang.toString());
+            double bantal_guling = picker.getSelectedValues()[1]=="100x200" || picker.getSelectedValues()[1]=="120x200"? 90:190;
+            double upah_jahit = picker.getSelectedValues()[1]=="100x200" || picker.getSelectedValues()[1]=="120x200"? 22500:25000;
+            double harga_kain = widget.produkList.harga/100;
+            double jahitan = 10;
+            double panjang = 200;
+            double tas = 6000;
+            double jalur=picker.getSelectedValues()[1]=="100x200" || picker.getSelectedValues()[1]=="120x200"? 3:4;
+            double upah_rimpel=picker.getSelectedValues()[1]=="100x200" || picker.getSelectedValues()[1]=="120x200"? 10000:15000;
+            double rimpel=(jalur*60)*harga_kain+upah_rimpel;
+            double pemakaian_kain = (tinggi*2)+jahitan+lebar+((tinggi*2)+jahitan+panjang-bidang)+bantal_guling;
+            double harga =pemakaian_kain*harga_kain+upah_jahit+rimpel+((pemakaian_kain*harga_kain+upah_jahit+rimpel)*untung)+tas;
+           if(lebar==0){
+             setState(() {
+               _namaProduk="Set Sprei Rimpel";
+               _setHarga=.001;
+               _jumlahPesanan=double.parse(picker.getSelectedValues()[3]);
+               _size="Custom";
+               tapAllow = 1;
+             });
+           }else {
+             setState(() {
+               _namaProduk="Set Sprei Rimpel";
+               _setHarga=harga;
+               _jumlahPesanan=double.parse(picker.getSelectedValues()[3]);
+               _size=picker.getSelectedValues()[1]+'x'+picker.getSelectedValues()[2];
+               tapAllow = 1;
+             });
+           }
+          }else {
+            double tinggi = picker.getSelectedValues()[2]=="Custom"?0:double.parse(picker.getSelectedValues()[2]);
+            double untung = 0.30;
+            double lebar = picker.getSelectedValues()[1]=="100x200"? 100 :(picker.getSelectedValues()[1]=="120x200"?120:(picker.getSelectedValues()[1]=="160x200"?160:(picker.getSelectedValues()[1]=="180x200"?180:(picker.getSelectedValues()[1]=="200x200"?200:0.0))));
+            double upah_jahit = picker.getSelectedValues()[1]=="100x200" || picker.getSelectedValues()[1]=="120x200"? 22500:25000;
+            double harga_kain = widget.produkList.harga/100;
+            double jahitan = 10;
+            double tas = 6000;
+            double risleting = 15000;
+            double pemakaian_kain = (tinggi+lebar)*2+jahitan;
+            double harga =pemakaian_kain*harga_kain+upah_jahit+((pemakaian_kain*harga_kain+upah_jahit)*untung)+tas+risleting;
+            if(lebar==0){
+              setState(() {
+                _namaProduk="Sarung Kasur";
+                _setHarga=0.001;
+                _jumlahPesanan=double.parse(picker.getSelectedValues()[3]);
+                _size="Custom";
+                tapAllow = 1;
+              });
+            }else {
+              setState(() {
+                _namaProduk = "Sarung Kasur";
+                _setHarga = harga;
+                _jumlahPesanan = double.parse(picker.getSelectedValues()[3]);
+                _size = picker.getSelectedValues()[1] + 'x' +
+                    picker.getSelectedValues()[2];
+                tapAllow = 1;
+              });
+            }
+          }
+          Navigator.pop(context);
           print(hasil.toString());
           print(picker.getSelectedValues());
         }
@@ -826,7 +922,82 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
           ],
         ),
         onConfirm: (Picker picker, List hasil) {
-          print(picker.getSelectedValues()[2]);
+          if (picker.getSelectedValues()[0]=='Bedcover') {
+            double kain_dasar = picker.getSelectedValues()[1]=="100x200"?  320:(picker.getSelectedValues()[1]=="120x200"?360:(picker.getSelectedValues()[1]=="160x200"?440:(picker.getSelectedValues()[1]=="180x200"?480:(picker.getSelectedValues()[1]=="200x200"?520:0.0))));
+            double dacron = picker.getSelectedValues()[1]=="100x200"?  12000:(picker.getSelectedValues()[1]=="120x200"?130000:(picker.getSelectedValues()[1]=="160x200"?140000:(picker.getSelectedValues()[1]=="180x200"?150000:(picker.getSelectedValues()[1]=="200x200"?160000:0.0))));
+            double upah_jahit = picker.getSelectedValues()[1]=="100x200" || picker.getSelectedValues()[1]=="120x200"? 25000:30000;
+            double untung = 0.30;
+            double harga_kain =widget.produkList.harga/100;
+            double harga = kain_dasar*harga_kain+dacron+upah_jahit+((kain_dasar*harga_kain+dacron+upah_jahit)*untung);
+            if (picker.getSelectedValues()[1]=='Custom') {
+              setState(() {
+                _namaProduk = "Bedcover Only";
+                _setHarga = 0.001;
+                _jumlahPesanan = double.parse(picker.getSelectedValues()[2]);
+                _size = picker.getSelectedValues()[1];
+                tapAllow = 1;
+              });
+            }else{
+              setState(() {
+                _namaProduk = "Bedcover Only";
+                _setHarga = harga;
+                _jumlahPesanan = double.parse(picker.getSelectedValues()[2]);
+                _size = picker.getSelectedValues()[1];
+                tapAllow = 1;
+              });
+
+            }
+          }else if (picker.getSelectedValues()[0]=='Quilt Cover') {
+            double kain_dasar = picker.getSelectedValues()[1]=="100x200"?  320:(picker.getSelectedValues()[1]=="120x200"?360:(picker.getSelectedValues()[1]=="160x200"?440:(picker.getSelectedValues()[1]=="180x200"?480:(picker.getSelectedValues()[1]=="200x200"?520:0.0))));
+            double upah_jahit = picker.getSelectedValues()[1]=="100x200" || picker.getSelectedValues()[1]=="120x200"? 25000:30000;
+            double untung = 0.30;
+            double harga_kain =widget.produkList.harga/100;
+            double harga = kain_dasar*harga_kain+upah_jahit+((kain_dasar*harga_kain+upah_jahit)*untung);
+            if (picker.getSelectedValues()[1]=='Custom') {
+              setState(() {
+                _namaProduk = "Quilt Cover";
+                _setHarga = 0.001;
+                _jumlahPesanan = double.parse(picker.getSelectedValues()[2]);
+                _size = picker.getSelectedValues()[1];
+                tapAllow = 1;
+              });
+            }else{
+              setState(() {
+                _namaProduk = "Quilt Cover";
+                _setHarga = harga;
+                _jumlahPesanan = double.parse(picker.getSelectedValues()[2]);
+                _size = picker.getSelectedValues()[1];
+                tapAllow = 1;
+              });
+
+            }
+          }else if (picker.getSelectedValues()[0]=='Sarung Bantal') {
+            double harga = picker.getSelectedValues()[1]=='Sofa 40cm'?30000
+                :(picker.getSelectedValues()[1]=='Sofa 45cm'?30000
+                :(picker.getSelectedValues()[1]=='Standart'?30000
+                :(picker.getSelectedValues()[1]=='Kingkoil'?30000
+                :(picker.getSelectedValues()[1]=='Kapuk'?30000
+                :(picker.getSelectedValues()[1]=='Cinta'?30000
+                :(picker.getSelectedValues()[1]=='Poligami'?30000
+                :(picker.getSelectedValues()[1]=='Santai'?30000:0.001)))))));
+            setState(() {
+              _namaProduk = "Sarung Guling";
+              _setHarga = harga;
+              _jumlahPesanan = double.parse(picker.getSelectedValues()[2]);
+              _size = picker.getSelectedValues()[0];
+              tapAllow = 1;
+            });
+          }else{
+            double harga = picker.getSelectedValues()[1]=='Standart'?30000 :(picker.getSelectedValues()[1]=='Kingkoil'?30000:0.001);
+            setState(() {
+              _namaProduk = "Sarung Guling";
+              _setHarga = harga;
+              _jumlahPesanan = double.parse(picker.getSelectedValues()[2]);
+              _size = picker.getSelectedValues()[0];
+              tapAllow = 1;
+            });
+          }
+          Navigator.pop(context);
           print(hasil.toString());
           print(picker.getSelectedValues());
         }
@@ -848,13 +1019,23 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                 Expanded(child: Text("Panjang", textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 14),)),
                 Expanded(child: Text("Lebar", textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 14))),
+                Expanded(child: Text("Tinggi", textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 14)))
               ],
             )
           ],
         ),
         onConfirm: (Picker picker, List hasil) {
-          print(picker.getSelectedValues()[2]);
+          setState(() {
+            _namaProduk = "Baby Bumper";
+            _setHarga = 0.001;
+            _jumlahPesanan = 1;
+            _size = picker.getSelectedValues()[0] + 'x' +
+                picker.getSelectedValues()[1]+'x'+picker.getSelectedValues()[2];
+            tapAllow = 1;
+          });
+          Navigator.pop(context);
           print(hasil.toString());
           print(picker.getSelectedValues());
         }
@@ -967,10 +1148,12 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                                                       :
                                                   await save();
                                                   setState(() {
+                                                    _setHarga=widget.produkList.harga;
                                                     _jumlahPesanan;
-                                                    onPressColor1 =
-                                                    Colors.red[700];
-                                                    tapAllow = true;
+                                                    _namaProduk="Bahan Kain";
+                                                    _size="Bidang "+widget.produkList.bidang.toString();
+                                                    onPressColor1 = Colors.red[700];
+                                                    tapAllow = 1;
                                                   });
                                                   Navigator.pop(context);
                                                   Navigator.pop(context);

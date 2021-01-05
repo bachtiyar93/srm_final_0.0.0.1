@@ -82,7 +82,7 @@ Widget  _modelCart(BuildContext context) {
               bottom: 10,
               left: 10,
             child: Text(
-              'Jumlah : ' + U.format(widget.cart.qty*widget.cart.harga).toString(),
+              'Jumlah : ' + (widget.cart.harga==.001?'Harga Nego':U.format(widget.cart.qty*widget.cart.harga).toString()),
               style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold
               ),
             )

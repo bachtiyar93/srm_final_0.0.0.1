@@ -58,11 +58,13 @@ class _ProdukDetailsState extends State<CartDetails> with TickerProviderStateMix
       ),
     );
   }
-  var alamatdata='';
+  var alamatdata='', namadata='';
   bacaAlamat() async{
     var alamatadd = await Hive.openBox('alamat');
+    var namaadd = await Hive.openBox('nama');
     setState(() {
       alamatdata = alamatadd.get('alamat');
+      namadata = namaadd.get('nama');
     });
   }
   @override
@@ -176,84 +178,23 @@ void initState() {
               ),
             ),
           ),
-          NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              SliverAppBar(
-                backgroundColor: Colors.transparent,
-                pinned: false,
-                floating: true,
-                expandedHeight: MediaQuery.of(context).size.height*0.55,
-                flexibleSpace: FlexibleSpaceBar(
-                  centerTitle: true,
-                  title: widget.cartList.images.length > 1
-                      ? Container(
-                    margin: EdgeInsets.symmetric(vertical: 0.01),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: buildPageIndicator(),
-                    ),
-                  )
-                      : Container(),
-                    background: Container(
-                      child: PageView(
-                        physics: BouncingScrollPhysics(),
-                        onPageChanged: (int page){
-                          setState(() {
-                            _currentImage = page;
-                          });
-                        },
-                        children: widget.cartList.images.map((String path) {
-                          return Container(
-                            child: _bangunGambarDetail(path),
-                            height: MediaQuery.of(context).size.height*0.5,
-                          );
-                        }).toList(),
-                      ),
-                    ) ,
-                    ),
-                ),
-            ];
-          },
-            body: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20)),
-                  gradient: LinearGradient(
-                    begin: Alignment.topRight,
-                    end: Alignment.bottomLeft,
-                    colors: [
-                      Color.fromRGBO(40, 10, 10, 0.95),
-                      Colors.red[900].withOpacity(0.95),
-                      Colors.redAccent.withOpacity(0.95)
-                    ])
-              ),
-              padding: EdgeInsets.only(right: 10, left: 10, top: 10),
+           Container(
+             height: MediaQuery.of(context).size.height,
+             color: Colors.grey.withOpacity(0.7),
+              padding: EdgeInsets.only(right: 10, left: 10, top: 30),
               child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      Container(
-                        alignment: Alignment.topCenter,
-                        child: Container(
-                          height: 3,
-                          width: 30,
-                          color: Colors.black,
-                        ),
-                      ),
-                      Center(child: Text('Sweet Room Medan', style: GoogleFonts.alexBrush(
-                          fontSize: 35,
-                          color: Color.fromRGBO(225, 80, 80, 1)
-                      ),),),
+                      Center(child: Text('Purchase Order', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),),),
                       SizedBox(
                         height: 10,),
                       Container(
                         padding: EdgeInsets.only( left: 16, right: 16, bottom: 5),
                         decoration: BoxDecoration(
                             color: Colors.grey[100],
-                            borderRadius: BorderRadius.all(Radius.circular(20))
+                            borderRadius: BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(20))
                         ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -277,7 +218,7 @@ void initState() {
                           children: [
                             _StatusStyle('Purchase Order',widget.cartList.produk),
                             SizedBox(height: 10,),
-                            _ProdukStyle('Produk Detail',widget.cartList.produk,widget.cartList.seri,widget.cartList.qty, widget.cartList.harga),
+                            _ProdukStyle('Produk Detail',widget.cartList.produk,widget.cartList.seri,widget.cartList.qty, widget.cartList.size ,widget.cartList.harga),
                             SizedBox(height: 10,),
                             _AlamatStyle('Alamat Pengiriman'),
                             SizedBox(height: 10,),
@@ -291,7 +232,6 @@ void initState() {
               ],
             )
             ),
-          ),
           ),
           Positioned(
             bottom: 0,
@@ -312,7 +252,7 @@ void initState() {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('Kupon Belanja', textAlign: TextAlign.left,),
-                          Text('KUPON')
+                          Text('REGULER')
                         ],
                       ),
                       MaterialButton(
@@ -332,7 +272,7 @@ void initState() {
                                   color: Colors.grey[300]
                               ),
                               padding: EdgeInsets.all(2),
-                              child: Text('Total',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
+                              child: Text(widget.cartList.harga==.001?'Request':'Order Now',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
                             ),
                           )
                       )
@@ -402,10 +342,21 @@ void initState() {
               Text('Waiting Order', style: TextStyle(color: Colors.yellow[900], fontStyle: FontStyle.italic),),
               Row(children: [
                 Expanded(
+                    child: Text("Nama")),
+                Expanded(
+                    child: Text(
+                      namadata,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )
+                )
+              ],
+              ),
+              Row(children: [
+                Expanded(
                     child: Text("Kode Transaksi")),
                 Expanded(
                     child: Text(
-                        'SR'+DateTime.now().year.toString()+DateTime.now().month.toString()+DateTime.now().day.toString()+DateTime.now().microsecond.toString(),
+                        'SR'+DateTime.now().hour.toString()+DateTime.now().second.toString()+DateTime.now().year.toString()+DateTime.now().month.toString()+DateTime.now().day.toString()+DateTime.now().microsecond.toString(),
                       style: TextStyle(fontWeight: FontWeight.bold),
                     )
                 )
@@ -416,7 +367,7 @@ void initState() {
       ),
     );
   }
-  Widget _ProdukStyle(String header,String title, String seri, double qty, double harga){
+  Widget _ProdukStyle(String header,String title, String seri, double qty,String size ,double harga){
     return Material(
       borderRadius: BorderRadius.all(Radius.circular(10)),
       elevation: 18.0,
@@ -458,10 +409,21 @@ void initState() {
               ),
               Row(children: [
                 Expanded(
+                    child: Text("Size")),
+                Expanded(
+                    child: Text(
+                      size,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )
+                )
+              ],
+              ),
+              Row(children: [
+                Expanded(
                     child: Text("Harga/QTY")),
                 Expanded(
                     child: Text(
-                      U.format(harga).toString(),
+                      harga==.001?'Harga Nego':U.format(harga).toString(),
                       style: TextStyle(fontWeight: FontWeight.bold),
                     )
                 )
@@ -483,7 +445,7 @@ void initState() {
                     child: Text("Jumlah")),
                 Expanded(
                     child: Text(
-                        U.format(qty*harga).toString(),
+                      harga==.001?'Harga Nego':U.format(harga*qty).toString(),
                       style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red[800], fontSize: 18),
                     )
                 )
@@ -517,7 +479,7 @@ void initState() {
                 Expanded(
                     child: Text("Kurir")),
                 Expanded(
-                    child: Text("JNE",
+                    child: Text("None",
                       style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold),)
                 )
               ],
@@ -526,7 +488,7 @@ void initState() {
                 Expanded(
                     child: Text("Ongkir")),
                 Expanded(
-                    child: Text("Menunggu Input Marketing",
+                    child: Text("None",
                       style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold),)
                 )
               ],

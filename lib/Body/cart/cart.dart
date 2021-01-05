@@ -38,7 +38,7 @@ class _DaftarCartState extends State<DaftarCart> {
         _oldTotal = _total;
     }
   }
-  var U = new NumberFormat("'Rp. '###,###.00#", "id_ID"), kupon=0.0;
+  var U = new NumberFormat("'Rp. '###,###.00", "id_ID"), kupon=0.0;
 
   @override
   void initState() {
@@ -211,7 +211,7 @@ class _DaftarCartState extends State<DaftarCart> {
                             color: Colors.grey[300]
                         ),
                         padding: EdgeInsets.all(2),
-                        child: Text(_oldTotal==0?'Ayo Belanja!':U.format(_oldTotal).toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
+                        child: Text(_oldTotal==0?'Ayo Belanja!':(_oldTotal==.001?'Harga Nego':U.format(_oldTotal).toString()),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
                       ),
                     )
                 )
