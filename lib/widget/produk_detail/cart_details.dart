@@ -1,16 +1,12 @@
 import 'package:adobe_xd/pinned.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:srm_final/Body/payment.dart';
 import 'package:srm_final/widget/model_hive/cart.dart';
 import 'package:srm_final/widget/model_hive/hive_service.dart';
 import 'package:srm_final/widget/model_hive/locator.dart';
-import 'package:validators/validators.dart';
 
 
 
@@ -187,7 +183,39 @@ void initState() {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      Center(child: Text('Purchase Order', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),),),
+                      Row(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                                width: 45,
+                                height: 45,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(15),
+                                  ),
+                                  border: Border.all(
+                                    color: Colors.grey[300],
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Icon(
+                                  Icons.keyboard_arrow_left,
+                                  color: Colors.black,
+                                  size: 28,
+                                )
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,),
+                          Center(
+                            child: Text('Purchase Order',
+                              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),),),
+                        ],
+                      ),
                       SizedBox(
                         height: 10,),
                       Container(
@@ -283,49 +311,7 @@ void initState() {
       )
     );
   }
-  _bangunGambarDetail(String path) {
-    if (isURL(path)) {
-      return Hero(
-        tag: widget.cartList.seri,
-        child: GestureDetector(
-          onTap: () => showSimpleDialog(context, path),
-          child: CachedNetworkImage(
-            imageUrl:path,
-            placeholder: (context, url) => Container(
-              alignment: Alignment.topCenter,
-              child: Shimmer.fromColors(
-                  child: Image.asset('assets/ic_logo.png',
-                    fit: BoxFit.scaleDown,
-                  ), baseColor: Colors.grey, highlightColor: Colors.white),
-            ),
-            fit: BoxFit.cover,
-          ),
-        ),
-      );
-    }else{
-      return Hero(
-        tag: widget.cartList.seri,
-        child: Image.asset(
-          'assets/ic_logo.png',
-          fit: BoxFit.scaleDown,
-        ),
-      );
-    }
-  }
 
-  void showSimpleDialog(BuildContext context, String path) {
-    showDialog<Null>(
-      context: context,
-      builder: (BuildContext context) {
-        return SimpleDialog(
-          contentPadding: EdgeInsets.all(2),
-          children: <Widget>[
-            CachedNetworkImage(imageUrl: path,),
-          ],
-        );
-      },
-    );
-  }
   Widget _StatusStyle(String header,String title){
     return Material(
       borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -476,13 +462,12 @@ void initState() {
               ),
               Text(alamatdata, style: TextStyle(fontWeight: FontWeight.bold),),
               Row(children: [
-                Expanded(
-                    child: Text("Kurir")),
+                Expanded(child: Text("Kurir")),
                 Expanded(
                     child: Text("None",
                       style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold),)
                 )
-              ],
+              ]
               ),
               Row(children: [
                 Expanded(
@@ -491,11 +476,11 @@ void initState() {
                     child: Text("None",
                       style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold),)
                 )
-              ],
+              ]
               )
-            ],
+            ]
           )
-      ),
+      )
     );
   }
   Widget _KeteranganStyle(String header,String title){
@@ -523,75 +508,6 @@ void initState() {
               ],
             )
         ),
-      ),
-    );
-  }
-  
-  Widget  _bangunBeli({CartDetails widget, BuildContext context}) {
-    return Container(
-      height: 80,
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(20)),
-        color: Colors.red[600],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Total Item",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                ),
-                Row(
-                  children: [
-                    Text(
-                     U.format(widget.cartList.qty*widget.cartList.harga).toString(),
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: GestureDetector(
-              onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentPage()));
-              },
-              child: Container(
-                alignment: Alignment.center,
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                decoration:(
-                BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(100)),
-                  color: Colors.white,
-                )
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                   Icon(Icons.monetization_on_outlined),
-                    Text('Order Sekarang')
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

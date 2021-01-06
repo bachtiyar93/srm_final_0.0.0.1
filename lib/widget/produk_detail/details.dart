@@ -969,31 +969,50 @@ class _ProdukDetailsState extends State<ProdukDetails> with TickerProviderStateM
                 _size = picker.getSelectedValues()[1];
                 tapAllow = 1;
               });
-
             }
           }else if (picker.getSelectedValues()[0]=='Sarung Bantal') {
-            double harga = picker.getSelectedValues()[1]=='Sofa 40cm'?30000
-                :(picker.getSelectedValues()[1]=='Sofa 45cm'?30000
-                :(picker.getSelectedValues()[1]=='Standart'?30000
-                :(picker.getSelectedValues()[1]=='Kingkoil'?30000
-                :(picker.getSelectedValues()[1]=='Kapuk'?30000
-                :(picker.getSelectedValues()[1]=='Cinta'?30000
-                :(picker.getSelectedValues()[1]=='Poligami'?30000
-                :(picker.getSelectedValues()[1]=='Santai'?30000:0.001)))))));
+            double kain = picker.getSelectedValues()[1]=='Sofa 40cm'?25
+                :(picker.getSelectedValues()[1]=='Sofa 45cm'?27.5
+                :(picker.getSelectedValues()[1]=='Standart'?52.5
+                :(picker.getSelectedValues()[1]=='Kingkoil'?60
+                :(picker.getSelectedValues()[1]=='Kapuk'?50
+                :(picker.getSelectedValues()[1]=='Cinta'?60
+                :(picker.getSelectedValues()[1]=='Poligami'?130
+                :(picker.getSelectedValues()[1]=='Santai'?75
+                :0.001)))))));
+            double risleting = picker.getSelectedValues()[1]=='Sofa 40cm'?10000
+                :(picker.getSelectedValues()[1]=='Sofa 45cm'?10000
+                :(picker.getSelectedValues()[1]=='Standart'?10000
+                :(picker.getSelectedValues()[1]=='Kingkoil'?0
+                :(picker.getSelectedValues()[1]=='Kapuk'?0
+                :(picker.getSelectedValues()[1]=='Cinta'?10000
+                :(picker.getSelectedValues()[1]=='Poligami'?15000
+                :(picker.getSelectedValues()[1]=='Santai'?10000
+                :0.001)))))));
+            double upah_jahit =10000;
+            double harga_kain=widget.produkList.harga/100;
+            double untung =0.35;
+            double harga =(kain*harga_kain+upah_jahit+risleting)*untung+(kain*harga_kain+upah_jahit+risleting);
             setState(() {
-              _namaProduk = "Sarung Guling";
+              _namaProduk = "Sarung Bantal";
               _setHarga = harga;
               _jumlahPesanan = double.parse(picker.getSelectedValues()[2]);
-              _size = picker.getSelectedValues()[0];
+              _size = picker.getSelectedValues()[1];
               tapAllow = 1;
             });
           }else{
-            double harga = picker.getSelectedValues()[1]=='Standart'?30000 :(picker.getSelectedValues()[1]=='Kingkoil'?30000:0.001);
+            double kain = picker.getSelectedValues()[1]=='Standart'?40
+                :(picker.getSelectedValues()[1]=='Kingkoil'?55
+                :0.001);
+            double upah_jahit =10000;
+            double harga_kain=widget.produkList.harga/100;
+            double untung =0.35;
+            double harga =(kain*harga_kain+upah_jahit)*untung+(kain*harga_kain+upah_jahit);
             setState(() {
               _namaProduk = "Sarung Guling";
               _setHarga = harga;
               _jumlahPesanan = double.parse(picker.getSelectedValues()[2]);
-              _size = picker.getSelectedValues()[0];
+              _size = picker.getSelectedValues()[1];
               tapAllow = 1;
             });
           }
